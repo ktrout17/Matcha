@@ -67,3 +67,6 @@
 
     </body> 
       </html>
+<?php
+    require "style/footer.php";
+?>

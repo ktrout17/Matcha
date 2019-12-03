@@ -3,11 +3,13 @@ if (isset($_POST['signup-submit'])) {
 	include '../config/database.php';
 
 	$username = htmlspecialchars($_POST['username']);
+	$firstname = htmlspecialchars($_POST['firstname']);
+	$lastname = htmlspecialchars($_POST['lastname']);
 	$email = htmlspecialchars($_POST['email']);
 	$password = htmlspecialchars($_POST['pwd']);
 	$passwordRepeat = htmlspecialchars($_POST['pwd-repeat']);
 	
-	if (empty($username) || empty($email) || empty($password) || empty($passwordRepeat)) {
+	if (empty($username) || empty($firstname) || empty($lastname) || empty($email) || empty($password) || empty($passwordRepeat)) {
 		header("Location: ../signup.php?error=emptyfields&uid=" . $username . "&mail=" . $email);
 		exit();
 	} else if (!filter_var($email, FILTER_VALIDATE_EMAIL) && !preg_match("/^[a-zA-Z0-9]*$/", $username)) {
