@@ -64,9 +64,6 @@
             <!--/.Controls-->
         </div>
         <!--/.Carousel Wrapper-->
-    </body>
-</html>
 
-<?php
-    require "style/footer.php";
-?>
+    </body> 
+      </html>
