@@ -17,10 +17,10 @@
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav">
             <li class="nav-item active mr-5 mb-2">
-                <a class="nav-link " href="#"><div style="font-size: 20px;">Home</div><span class="sr-only">(current)</span></a>
+                <a class="nav-link " href="index.php"><div style="font-size: 20px;">Home</div><span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item mr-5">
-                <a class="nav-link" href="#"><div style="font-size: 20px;">Sign-In</div></a>
+                <a class="nav-link" href="login.php"><div style="font-size: 20px;">Sign-In</div></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="signup.php"><div style="font-size: 20px;">Sign-Up</div></a>

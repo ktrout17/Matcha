@@ -8,7 +8,7 @@
 </head>
 <body>
 <nav class="navbar fixed-bottom navbar-expand-lg navbar-dark bg-danger">
-    <a class="mx-auto">copyright | ©amaquena, ©ktrout</a>
+    <a class="mx-auto">copyright 2019 | ©amaquena, ©ktrout</a>
 </nav>
 </body>
 </html>
