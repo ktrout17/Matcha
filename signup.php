@@ -46,7 +46,7 @@
                     <div class="form-group row">
                         <label for="inputusername" class="col-sm-2 col-form-label">Username</label>
                         <div class="col-sm-10">
-                            <input class="form-control" type="text" name="username" value="<?php if (isset($_GET['uid'])) echo $_GET['uid']; ?>" placeholder="Username"><br>
+                            <input class="form-control" type="text" name="username" value="<?php if (isset($_GET['uid'])) echo $_GET['uid']; ?>" placeholder="Username" required autofocus><br>
                         </div>
                     </div>
                     <div class="form-group row">

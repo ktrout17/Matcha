@@ -16,6 +16,11 @@
         <ol class="carousel-indicators">
             <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
             <li data-target="#myCarousel" data-slide-to="1"></li>
+            <li data-target="#myCarousel" data-slide-to="2"></li>
+            <li data-target="#myCarousel" data-slide-to="3"></li>
+            <li data-target="#myCarousel" data-slide-to="4"></li>
+            <li data-target="#myCarousel" data-slide-to="5"></li>
+            <li data-target="#myCarousel" data-slide-to="6"></li>
         </ol>
         <div class="carousel-inner">
             <div class="carousel-item active" data-interval="5000">
@@ -29,6 +34,26 @@
                         </p>
                     </div>
                 </div>
+            </div>
+            <div class="carousel-item" data-interval="5000">
+                <img src="img/couple4.jpg" class="d-block w-100">
+                <div class="container"></div>
+            </div>
+            <div class="carousel-item" data-interval="5000">
+                <img src="img/couple6.jpg" class="d-block w-100">
+                <div class="container"></div>
+            </div>
+            <div class="carousel-item" data-interval="5000">
+                <img src="img/couple8.jpg" class="d-block w-100">
+                <div class="container"></div>
+            </div>
+            <div class="carousel-item" data-interval="5000">
+                <img src="img/couple9.jpg" class="d-block w-100">
+                <div class="container"></div>
+            </div>
+            <div class="carousel-item" data-interval="5000">
+                <img src="img/couple10.jpg" class="d-block w-100">
+                <div class="container"></div>
             </div>
             <div class="carousel-item" data-interval="5000">
                 <img src="img/couple5.jpg" class="d-block w-100">
@@ -52,6 +77,29 @@
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="sr-only">Next</span>
         </a>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="container-marketing">
+        <div class="row">
+            <div class="col-lg-4">
+                <img class="rounded-circle" src="img/rec1.jpg" alt="rec1" width="140" height="140">
+                <h2>Tyler & Mish</h2>
+                <p>Matcha is awesome! We connected instantly and have been together ever since.</p>
+            </div>
+            <div class="col-lg-4">
+                <img class="rounded-circle" src="img/rec2.jpg" alt="rec1" width="140" height="140">
+                <h2>Nathan & Tanya</h2>
+                <p>Matcha is awesome! We connected instantly and have been together ever since.</p>
+            </div>
+            <div class="col-lg-4">
+                <img class="rounded-circle" src="img/rec3.jpg" alt="rec1" width="140" height="140">
+                <h2>Andrew & Sam</h2>
+                <p>Matcha is awesome! We connected instantly and have been together ever since.</p>
+            </div>
+        </div>
     </div>
     </main>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
