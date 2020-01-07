@@ -4,8 +4,7 @@ const router = express.Router();
 // Render ejs view pages
 router.get('/login', (req, res) => res.render('login'));
 router.get('/register', (req, res) => res.render('register'));
-router.get('/profile', (req, res) => res.render('profile'));
-router.get('/', (req, res) => { res.render('welcome') });
+router.get('/dashboard', (req, res) => res.render('dashboard'));
 
 
 // Import Controllers

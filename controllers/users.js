@@ -26,10 +26,10 @@ exports.user_register = (req, res) => {
 		console.log(errors);
 		res.render('register', {
 			errors,
-			name,
+			username,
+			firstname,
+			lastname,
 			email,
-			pwd,
-			pwd_repeat
 		});
 	} else {
 		// Validation pass
@@ -41,10 +41,8 @@ exports.user_register = (req, res) => {
 						errors,
 						username,
 						email,
-						pwd,
 						firstname,
-						lastname,
-						pwd_repeat
+						lastname
 					});
 				} else {
 					// Validation pass

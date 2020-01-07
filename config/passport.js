@@ -9,13 +9,14 @@ module.exports = function(passport) {
 	passport.use(
 		new localStrategy({ usernameField: 'email' }, (email, password, done) => {
 			// Match user
-			User.findOne({ email: email }).then(user => {
+			var criteria = {$or: [{username:username},{email: email}]};
+			User.findOne({ email: email}).then(user => {
 				if (!user) {
 					return done(null, false, { error: 'That email is not registered' });
 				}
 
 				// Match password
-				bcrypt.compare(password, user.password, (err, isMatch) => {
+				bcrypt.compare(pwd, user.pwd, (err, isMatch) => {
 					if (err) throw err;
 					if (isMatch) {
 						return done(null, user);
