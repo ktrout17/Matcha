@@ -7,9 +7,10 @@ const UserSchema = new mongoose.Schema({
 	username: { type: String, required: true },
 	email: { type: String, required: true, unique: true, lowercase: true },
 	profilePic: { type: String },
-	pwd: {	type: String, required: true },
+	password: {	type: String, required: true },
 	dob: { type: Date, default: new Date() },
 	creationDate: {	type: Date,	default: Date.now },
+	verified: {type: Boolean, default: false },
 	bio: { type: String },
 	gender: {
 		male: { type: String },

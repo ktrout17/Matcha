@@ -9,19 +9,23 @@ module.exports = function(passport) {
 	passport.use(
 		new localStrategy({ usernameField: 'email' }, (email, password, done) => {
 			// Match user
-			var criteria = {$or: [{username:username},{email: email}]};
-			User.findOne({ email: email}).then(user => {
+			var criteria = {$or: [{username:email},{email: email}]};
+			User.findOne(criteria).then(user => {
 				if (!user) {
-					return done(null, false, { error: 'That email is not registered' });
+					return done(null, false, { message: 'That email is not registered' });
+				}
+
+				if (!user.verified){
+					return done(null, false, { message: 'Please verify email to log in.' });
 				}
 
 				// Match password
-				bcrypt.compare(pwd, user.pwd, (err, isMatch) => {
+				bcrypt.compare(password, user.password, (err, isMatch) => {
 					if (err) throw err;
 					if (isMatch) {
 						return done(null, user);
 					} else {
-						return done(null, false, { error: 'Password incorrect' });
+						return done(null, false, { message: 'Password incorrect' });
 					}
 				});
 			});
@@ -30,11 +34,11 @@ module.exports = function(passport) {
 
 	// Saves the user id as a session variable(req.session.passport.user)
 	passport.serializeUser((user, done) => {
-		done(null, user._id);
+		done(null, user.id);
 	});
 
 	passport.deserializeUser((id, done) => {
-		User.findById(_id, (err, user) => {
+		User.findById(id, (err, user) => {
 			done(err, user);
 		});
 	});

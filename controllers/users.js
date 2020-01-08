@@ -4,21 +4,21 @@ const mongoose = require('mongoose');
 const User = require('../models/User');
 
 exports.user_register = (req, res) => {
-	const { username, email, pwd, pwd_repeat, firstname, lastname } = req.body;
+	const { username, email, password, pwd_repeat, firstname, lastname } = req.body;
 	const errors = [];
 
 	// Check required fileds
-	if (!username || !email || !pwd || !pwd_repeat) {
+	if (!username || !email || !password || !pwd_repeat) {
 		errors.push({msg: 'Please fill in all fields' });
 	}
 
 	// Check passwords match
-	if (pwd != pwd_repeat) {
+	if (password != pwd_repeat) {
 		errors.push({ msg: 'Passwords do not match' });
 	}
 
 	// Check pwd length
-	if (pwd.length < 6) {
+	if (password.length < 6) {
 		errors.push({ msg: 'Password should be at least 6 characters' });
 	}
 
@@ -30,6 +30,7 @@ exports.user_register = (req, res) => {
 			firstname,
 			lastname,
 			email,
+			pwd
 		});
 	} else {
 		// Validation pass
@@ -52,14 +53,14 @@ exports.user_register = (req, res) => {
 						email,
 						firstname,
 						lastname,
-						pwd
+						password,
 					});
 					// Hash pwd
 					bcrypt.genSalt(10,(err, salt) =>
-						bcrypt.hash(newUser.pwd, salt, (err, hash) => {
+						bcrypt.hash(newUser.password, salt, (err, hash) => {
 							if (err) throw err;
 							// Set pwd to hashed
-							newUser.pwd = hash;
+							newUser.password = hash;
 							// Save user
 							newUser.save()
 								.then(user => {
