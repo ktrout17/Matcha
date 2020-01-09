@@ -11,6 +11,8 @@ const UserSchema = new mongoose.Schema({
 	dob: { type: Date, default: new Date() },
 	creationDate: {	type: Date,	default: Date.now },
 	verified: {type: Boolean, default: false },
+	passwordResetToken: {type: String },
+	passwordResetExpires: {type: Date },
 	bio: { type: String },
 	gender: {
 		male: { type: String },
