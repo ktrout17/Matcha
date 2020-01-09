@@ -12,6 +12,7 @@ const app = express();
 // console logs Dev information
 app.use(morgan('dev'));
 
+
 // Passport Config
 require('./config/passport')(passport);
 
