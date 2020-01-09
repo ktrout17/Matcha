@@ -1,24 +1,27 @@
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const mongoose = require('mongoose');
+const crypto =  require('crypto');
+const nodemailer = require('nodemailer');
 const User = require('../models/User');
+const Token = require('../models/Token');
 
 exports.user_register = (req, res) => {
-	const { username, email, pwd, pwd_repeat, firstname, lastname } = req.body;
+	const { username, email, password, pwd_repeat, firstname, lastname } = req.body;
 	const errors = [];
 
 	// Check required fileds
-	if (!username || !email || !pwd || !pwd_repeat) {
+	if (!username || !email || !password || !pwd_repeat) {
 		errors.push({msg: 'Please fill in all fields' });
 	}
 
 	// Check passwords match
-	if (pwd != pwd_repeat) {
+	if (password != pwd_repeat) {
 		errors.push({ msg: 'Passwords do not match' });
 	}
 
 	// Check pwd length
-	if (pwd.length < 6) {
+	if (password.length < 6) {
 		errors.push({ msg: 'Password should be at least 6 characters' });
 	}
 
@@ -26,10 +29,11 @@ exports.user_register = (req, res) => {
 		console.log(errors);
 		res.render('register', {
 			errors,
-			name,
+			username,
+			firstname,
+			lastname,
 			email,
-			pwd,
-			pwd_repeat
+			pwd
 		});
 	} else {
 		// Validation pass
@@ -41,10 +45,8 @@ exports.user_register = (req, res) => {
 						errors,
 						username,
 						email,
-						pwd,
 						firstname,
-						lastname,
-						pwd_repeat
+						lastname
 					});
 				} else {
 					// Validation pass
@@ -54,18 +56,38 @@ exports.user_register = (req, res) => {
 						email,
 						firstname,
 						lastname,
-						pwd
+						password
 					});
 					// Hash pwd
 					bcrypt.genSalt(10,(err, salt) =>
-						bcrypt.hash(newUser.pwd, salt, (err, hash) => {
+						bcrypt.hash(newUser.password, salt, (err, hash) => {
 							if (err) throw err;
 							// Set pwd to hashed
-							newUser.pwd = hash;
+							newUser.password = hash;
 							// Save user
 							newUser.save()
 								.then(user => {
-									req.flash('success_msg', 'You are now registered and can log in');
+									// Create token for user and save to the database
+									var newToken = new Token({
+										_userId: user._id,
+										token: crypto.randomBytes(16).toString('hex')
+									});
+									newToken.save((err) =>{
+										if (err) throw err;
+										// Send email
+										var transporter = nodemailer.createTransport({
+											service: 'Sendgid',
+											auth: {user: process.env.SENDGRID_USERNAME, pass: process.env.SENDGRID_PASSWORD}
+										});
+										var mailOptions = {
+											from: 'no-reply@matcha.com',
+											to: user.email,
+											subject: 'Account Verificatin',
+											text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/confirmation\/' + newToken.token + '.\n'
+										};
+										transporter.sendMail(mailOptions, req.flash('success_msg', 'You are now registered, Verify email to log in.'))
+									});
+									
 									res.redirect('/users/login');
 								})
 								.catch(err => console.log(err));
