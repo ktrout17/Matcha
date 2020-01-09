@@ -2,7 +2,12 @@ const express = require('express');
 const router = express.Router();
 
 // Render ejs view pages
-router.get('/login', (req, res) => res.render('login', {message: req.flash('error')}));
+router.get('/login', (req, res, next) => {
+	res.render('login', { 
+		message: req.flash('error')
+	});
+});
+// router.get('/login', (req, res) => res.render('login', {message: req.flash('error')}));
 router.get('/register', (req, res) => res.render('register'));
 router.get('/dashboard', (req, res) => res.render('dashboard'));
 
@@ -18,5 +23,10 @@ router.post('/login', UsersController.user_login);
 
 // Handles user Logout
 router.get('/logout', UsersController.user_logout);
+
+// Handles user Token for email verification
+router.post('/confirmation', (req, res, next) => {
+	
+});
 
 module.exports = router;
