@@ -32,8 +32,7 @@ exports.user_register = (req, res) => {
 			username,
 			firstname,
 			lastname,
-			email,
-			pwd
+			email
 		});
 	} else {
 		// Validation pass

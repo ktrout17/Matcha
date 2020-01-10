@@ -4,6 +4,7 @@ const { ensureAuthenticated } = require('../config/auth');
 
 // Render ejs view pages
 router.get('/', (req, res) => { res.render('welcome') });
+router.get('/extendedProfile', (req, res) => { res.render('extendedProfile') });
 
 // Dashboard
 router.get('/dashboard', ensureAuthenticated, (req, res) =>
