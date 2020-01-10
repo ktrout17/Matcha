@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs');
 // Load user model
 const User = require('../models/User');
 
-module.exports = function(passport) {
+module.exports = function(passport, res) {
 	passport.use(
 		new localStrategy({ usernameField: 'email' }, (email, password, done) => {
 			// Match user
@@ -21,7 +21,7 @@ module.exports = function(passport) {
 
 				// Match password
 				bcrypt.compare(password, user.password, (err, isMatch) => {
-					if (err) throw err;
+					if (err) { return res.status(401).send({msg: err.message }); }
 					if (isMatch) {
 						return done(null, user);
 					} else {

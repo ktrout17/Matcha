@@ -25,8 +25,6 @@ router.post('/login', UsersController.user_login);
 router.get('/logout', UsersController.user_logout);
 
 // Handles user Token for email verification
-router.post('/confirmation', (req, res, next) => {
-	
-});
+router.get('/confirmation/:userToken', UsersController.user_confirmation);
 
 module.exports = router;
