@@ -6,6 +6,16 @@ const nodemailer = require('nodemailer');
 const User = require('../models/User');
 const Token = require('../models/Token');
 
+const transporter = nodemailer.createTransport({
+	host: 'smtp.gmail.com',
+	port: '465',
+	secure: true,
+	auth: {
+		user: 'spiderbat2033@gmail.com',
+		pass: '!skullYb0B*'
+	}
+});
+
 exports.user_register = (req, res) => {
 	const { username, email, password, pwd_repeat, firstname, lastname } = req.body;
 	const errors = [];
@@ -77,15 +87,6 @@ exports.user_register = (req, res) => {
 							});
 
 							// Setup transporter for email
-							const transporter = nodemailer.createTransport({
-								host: 'smtp.gmail.com',
-								port: '465',
-								secure: true,
-								auth: {
-									user: 'spiderbat2033@gmail.com',
-									pass: '!skullYb0B*'
-								}
-							});
 
 							// Define email content
 							const mailOptions = {
@@ -97,7 +98,7 @@ exports.user_register = (req, res) => {
 
 							// Send email
 							transporter.sendMail(mailOptions, (err) => {
-								if (err) { return res.status(500).send({msg: err.message}); }
+								if (err) { return res.status(500).send({ msg: err.message }); }
 								res.status(200).redirect('/users/login');
 							});
 						});
@@ -107,7 +108,6 @@ exports.user_register = (req, res) => {
 		});
 	}
 }
-
 
 exports.user_login = (req, res, next) => {
 	passport.authenticate('local', {
@@ -124,25 +124,69 @@ exports.user_logout = (req, res) => {
 }
 
 exports.user_confirmation = (req, res) => {
-	Token.findOne({token: req.params.userToken}, (err, token) => {
-		if (err) { return res.status(500).send({msg: err.message}); }
-		
+	Token.findOne({ token: req.params.userToken }, (err, token) => {
+		if (err) { return res.status(500).send({ msg: err.message }); }
+
 		if (!token)
-			res.status(404).render('login', {'error': 'We could not find the token. Your token might have expired'});
-		
-		User.findOne({id: token.userId}, (err, user) => {
+			return res.status(404).render('login', { 'error': 'We could not find the token. Your token might have expired' });
+
+		User.findOne({ id: token.userId }, (err, user) => {
 			if (!user)
-				res.status(404).render('login', {'error': 'We were unable to find a user for this token.' });
+				return res.status(404).render('login', { 'error': 'We were unable to find a user for this token.' });
 			if (user.verified)
-				res.status(400).render('login', {'error': 'This user has already been verified.' });
-			
-				user.verified = true;
+				return res.status(400).render('login', { 'error': 'This user has already been verified.' });
+
+			user.verified = true;
 			user.save((err) => {
 				if (err)
-					res.status(500).send({msg: err.message });
-				res.status(200).render('login', {'success_msg': 'The account has been verified. Please log in.'});
+					return res.status(500).send({ msg: err.message });
+					return res.status(200).render('login', { 'success_msg': 'The account has been verified. Please log in.' });
 			});
 		});
-			// return res.status(200).send({msg: 'token found'});
+		// return res.status(200).send({msg: 'token found'});
 	});
-} 
+}
+
+exports.user_tokenResend = (req, res) => {
+	const email = req.body.email;
+	const errors = [];
+
+	if (!email)
+		errors.push({ msg: 'Please fill in all fields' });
+
+	if (errors.length > 0)
+		res.status(400).render('resend', { errors });
+	else {
+		User.findOne({ email: email }, (err, user) => {
+			if (err) { return res.status(500).send({msg: err.message}) };
+			if (!user)
+				return res.status(400).render('resend', { 'error_msg': 'We were unable to find a user with that email.' });
+			if (user.verified)
+				return res.status(400).render('resend', { 'error_msg': 'This account is already verified.' });
+
+			const newToken = new Token({
+				_userId: user.id,
+				token: crypto.randomBytes(16).toString('hex')
+			});
+
+			newToken.save()
+			.then(token => {
+				if (err) throw err;
+				console.log(user.email);
+				var mailOptions = { 
+					from: 'no-reply@codemoto.io',
+					to: user.email,
+					subject: 'Account Verification Token',
+					text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/users\/confirmation\/' + token.token + '.\n'
+				};
+				transporter.sendMail(mailOptions, (err) => {
+					if (err) { return res.status(500).send({msg: err.message}) };
+					return res.status(200).render('login', { 'success_msg': 'A verification email has been sent to ' + user.email + '.' });
+				});
+			})
+			.catch((err) => {
+				{ return res.status(500).send({msg: err.message}) };
+			});
+		});
+	}
+}

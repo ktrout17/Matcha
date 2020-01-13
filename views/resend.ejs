@@ -1,0 +1,6 @@
+<h5>Enter email to recieve email verification token</h5>
+<%- include ('./partials/messages'); -%>
+<form action="/users/resend" method="POST">
+<input type="email" name="email" placeholder="email">
+<button type="submit">Send</button>
+</form>
