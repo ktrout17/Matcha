@@ -11,6 +11,7 @@ router.get('/login', (req, res, next) => {
 router.get('/register', (req, res) => res.render('register'));
 router.get('/dashboard', (req, res) => res.render('dashboard'));
 router.get('/resend', (req, res) => res.render('resend'));
+router.get('/editProfile', (req, res) => res.render('editProfile'));
 
 
 // Import Controllers
