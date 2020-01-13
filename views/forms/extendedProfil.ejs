@@ -1,10 +1,10 @@
 <br>
 <h2 class="text-danger text-center">Welcome User</h2>
-<h4 class="text-center">Please complete your extended profile to gain access to the full website</h4>
+<h4 class="text-center">Please complete your extended profile to gain full access to the website</h4>
 <br>
 <div class="form-group">
     <label for="inputfile">Upload a Profile Picture</label>
-    <input type="file" class="form-control-file" id="inputfile" aria-describedby="fileHelp">
+    <input type="file" class="form-control-file" id="inputfile" aria-describedby="fileHelp" required="required">
     <small id="fileHelp" class="form-text text-muted">A profile picture is required to gain full access to the website</small>
 </div>
 <form action="">
@@ -148,7 +148,7 @@
             }
         }
         if (i >= 6){
-            document.getElementById('notvalid').innerHTML = "You can only select only 5 interests"
+            document.getElementById('notvalid').innerHTML = "You can select a maximum of 5 interests"
             return false;
         }
     }
