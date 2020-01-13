@@ -140,7 +140,7 @@ exports.user_confirmation = (req, res) => {
 			user.save((err) => {
 				if (err)
 					return res.status(500).send({ msg: err.message });
-					return res.status(200).render('login', { 'success_msg': 'The account has been verified. Please log in.' });
+				return res.status(200).render('login', { 'success_msg': 'The account has been verified. Please log in.' });
 			});
 		});
 		// return res.status(200).send({msg: 'token found'});
@@ -158,7 +158,7 @@ exports.user_tokenResend = (req, res) => {
 		res.status(400).render('resend', { errors });
 	else {
 		User.findOne({ email: email }, (err, user) => {
-			if (err) { return res.status(500).send({msg: err.message}) };
+			if (err) { return res.status(500).send({ msg: err.message }) };
 			if (!user)
 				return res.status(400).render('resend', { 'error_msg': 'We were unable to find a user with that email.' });
 			if (user.verified)
@@ -170,23 +170,23 @@ exports.user_tokenResend = (req, res) => {
 			});
 
 			newToken.save()
-			.then(token => {
-				if (err) throw err;
-				console.log(user.email);
-				var mailOptions = { 
-					from: 'no-reply@codemoto.io',
-					to: user.email,
-					subject: 'Account Verification Token',
-					text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/users\/confirmation\/' + token.token + '.\n'
-				};
-				transporter.sendMail(mailOptions, (err) => {
-					if (err) { return res.status(500).send({msg: err.message}) };
-					return res.status(200).render('login', { 'success_msg': 'A verification email has been sent to ' + user.email + '.' });
+				.then(token => {
+					if (err) throw err;
+					console.log(user.email);
+					var mailOptions = {
+						from: '"Admin" <no-reply@matcha.com>',
+						to: user.email,
+						subject: 'Account Verification Token',
+						text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/users\/confirmation\/' + token.token + '.\n'
+					};
+					transporter.sendMail(mailOptions, (err) => {
+						if (err) { return res.status(500).send({ msg: err.message }) };
+						return res.status(200).render('login', { 'success_msg': 'A verification email has been sent to ' + user.email + '.' });
+					});
+				})
+				.catch((err) => {
+					{ return res.status(500).send({ msg: err.message }) };
 				});
-			})
-			.catch((err) => {
-				{ return res.status(500).send({msg: err.message}) };
-			});
 		});
 	}
 }
