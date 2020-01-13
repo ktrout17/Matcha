@@ -32,7 +32,7 @@ exports.user_register = (req, res) => {
 			username,
 			firstname,
 			lastname,
-			email,
+			email
 		});
 	} else {
 		// Validation pass
