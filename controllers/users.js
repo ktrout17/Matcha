@@ -108,12 +108,28 @@ exports.user_register = (req, res) => {
 };
 
 exports.user_login = (req, res, next) => {
-	passport.authenticate('local', {
-		successRedirect: '/users/extendedProfile',
-		failureRedirect: '/users/login',
-		failureFlash: true
+	passport.authenticate('local', (err, user, info) => {
+		if (err) { return next(err); }
+
+		if (!user) { return res.render('login', { message: info.message}); }
+
+		if (!user.extendedProf) { return res.redirect('/users/extendedProfile'); }
+
+		req.logIn(user, (err) => {
+			if (err) { return next(err); }
+
+			return res.redirect('/dashboard');
+		})
 	})(req, res, next);
 };
+
+// exports.user_login = (req, res, next) => {
+// 	passport.authenticate('local', {
+// 		successRedirect: '/users/extendedProfile',
+// 		failureRedirect: '/users/login',
+// 		failureFlash: true
+// 	})(req, res, next);
+// };
 
 exports.user_logout = (req, res) => {
 	req.logout();
@@ -250,6 +266,7 @@ exports.user_changePwd = (req, res) => {
 	}
 
 	// Check pwd length
+	console.log(password);
 	if (password.length < 6) {
 		errors.push({ msg: 'Password should be at least 6 characters' });
 	}

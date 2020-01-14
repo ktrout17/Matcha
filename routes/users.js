@@ -2,11 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 // Render ejs view pages
-router.get('/login', (req, res, next) => {
-	res.render('login', { 
-		message: req.flash('error')
-	});
-});
+router.get('/login', (req, res, next) => res.render('login'));
 // router.get('/login', (req, res) => res.render('login', {message: req.flash('error')}));
 router.get('/register', (req, res) => res.render('register'));
 router.get('/resend', (req, res) => res.render('resend'));
