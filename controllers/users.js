@@ -128,10 +128,11 @@ exports.user_confirmation = (req, res) => {
 		if (!token)
 			return res.status(404).render('login', { 'error': 'We could not find the token. Your token might have expired' });
 
-		User.findOne({ id: token.userId }, (err, user) => {
+		User.findOne({ _id: token._userId }, (err, user) => {
 			if (!user)
 				return res.status(404).render('login', { 'error': 'We were unable to find a user for this token.' });
-			if (user.verified)
+			console.log(user);
+			if (user.verified === true)
 				return res.status(400).render('login', { 'error': 'This user has already been verified.' });
 
 			user.verified = true;
@@ -166,7 +167,7 @@ exports.user_tokenResend = (req, res) => {
 
 			const newToken = new Token({
 				_userId: user.id,
-				token: crypto.randomByte(16).toString('hex')
+				token: crypto.randomBytes(16).toString('hex')
 			});
 
 			newToken.save()
