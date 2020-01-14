@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const mongoose = require('mongoose');
-const crypto = require('crypto');
+const crypto = require('crypto-extra');
 const nodemailer = require('nodemailer');
 const User = require('../models/User');
 const Token = require('../models/Token');
@@ -77,8 +77,8 @@ exports.user_register = (req, res) => {
 
 							// Create token for user and save to the database
 							const newToken = new Token({
-								_userId: newUser.id,
-								token: crypto.randomBytes(16).toString('hex')
+								_userId: newUser._id,
+								token: crypto.randomKey(32)
 							});
 							newToken.save((err) => {
 								if (err) { return res.status(500).send({ msg: err.message }); }
@@ -88,7 +88,7 @@ exports.user_register = (req, res) => {
 
 							// Define email content
 							const mailOptions = {
-								from: '"Admin" <admin@mydomain.com>',
+								from: '"Admin" <no-reply@matcha.com>',
 								to: newUser.email,
 								subject: 'Account Verification',
 								text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/users\/confirmation\/' + newToken.token + '.\n'
@@ -97,7 +97,7 @@ exports.user_register = (req, res) => {
 							// Send email
 							transporter.sendMail(mailOptions, (err) => {
 								if (err) { return res.status(500).send({ msg: err.message }); }
-								res.status(200).redirect('/users/login');
+								res.status(200).render('login', {'success_msg': 'Account created please verify to log in.'});
 							});
 						});
 					});
@@ -109,7 +109,7 @@ exports.user_register = (req, res) => {
 
 exports.user_login = (req, res, next) => {
 	passport.authenticate('local', {
-		successRedirect: '/dashboard',
+		successRedirect: '/users/extendedProfile',
 		failureRedirect: '/users/login',
 		failureFlash: true
 	})(req, res, next);
@@ -129,6 +129,8 @@ exports.user_confirmation = (req, res) => {
 			return res.status(404).render('login', { 'error': 'We could not find the token. Your token might have expired' });
 
 		User.findOne({ _id: token._userId }, (err, user) => {
+			if (err) { return res.status(500).send({ msg: err.message }); }
+
 			if (!user)
 				return res.status(404).render('login', { 'error': 'We were unable to find a user for this token.' });
 			console.log(user);
@@ -167,7 +169,7 @@ exports.user_tokenResend = (req, res) => {
 
 			const newToken = new Token({
 				_userId: user.id,
-				token: crypto.randomBytes(16).toString('hex')
+				token: crypto.randomKey(32)
 			});
 
 			newToken.save()
@@ -175,7 +177,7 @@ exports.user_tokenResend = (req, res) => {
 					if (err) throw err;
 					console.log(user.email);
 					var mailOptions = {
-						from: 'no-reply@matcha.com',
+						from: '"Admin" <no-reply@matcha.com>',
 						to: user.email,
 						subject: 'Account Verification Token',
 						text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/users\/confirmation\/' + token.token + '.\n'
@@ -217,7 +219,7 @@ exports.user_forgotPwd = (req, res) => {
 				return res.status(400).render('forgotPwd', { 'error_msg': 'We were unable to find a user with that email.' });
 
 			var mailOptions = {
-				from: 'no-reply@gmail.com',
+				from: '"Admin" <no-reply@matcha.com>',
 				to: user.email,
 				subject: 'Forgotten Password',
 				text: 'Hello,\n\n' + 'Please click the link bellow to reset your password: \nhttp:\/\/' + req.headers.host + '\/users\/changePwd.\n'
