@@ -30,6 +30,6 @@ router.get('/logout', UsersController.user_logout);
 // Handles user Token for email verification
 router.get('/confirmation/:userToken', UsersController.user_confirmation);
 router.post('/resend', UsersController.user_tokenResend);
-router.post('/forgotPwd', UsersController.user_forgotPwd);
+// router.post('/forgotPwd', UsersController.user_forgotPwd);
 
 module.exports = router;
