@@ -1,0 +1,8 @@
+<h5>Enter your new password:</h5>
+<%- include ('./partials/messages'); -%>
+<form action="/users/changePwd" method="POST">
+	<input type="email" name="email" placeholder="Email">
+	<input type="password" name="password" placeholder="New password">
+	<input type="password" name="pwd_repeat" placeholder="Confirm new password">
+<button type="submit">Send</button>
+</form>

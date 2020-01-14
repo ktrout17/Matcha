@@ -12,6 +12,8 @@ router.get('/register', (req, res) => res.render('register'));
 router.get('/dashboard', (req, res) => res.render('dashboard'));
 router.get('/resend', (req, res) => res.render('resend'));
 router.get('/forgotPwd', (req, res) => res.render('forgotPwd'));
+router.get('/changePwd', (req, res) => res.render('changePwd'));
+
 
 // Import Controllers
 const UsersController = require('../controllers/users');
@@ -29,5 +31,6 @@ router.get('/logout', UsersController.user_logout);
 router.get('/confirmation/:userToken', UsersController.user_confirmation);
 router.post('/resend', UsersController.user_tokenResend);
 router.post('/forgotPwd', UsersController.user_forgotPwd);
+router.post('/changePwd', UsersController.user_changePwd);
 
 module.exports = router;

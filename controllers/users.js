@@ -7,12 +7,10 @@ const User = require('../models/User');
 const Token = require('../models/Token');
 
 const transporter = nodemailer.createTransport({
-	host: 'smtp.gmail.com',
-	port: '465',
-	secure: true,
+	service: 'gmail',
 	auth: {
-		user: 'spiderbat2033@gmail.com',
-		pass: '!skullYb0B*'
+		user: 'matcha420x@gmail.com',
+		pass: 'ThankU420x'
 	}
 });
 
@@ -174,11 +172,18 @@ exports.user_tokenResend = (req, res) => {
 					if (err) throw err;
 					console.log(user.email);
 					var mailOptions = {
-						from: '"Admin" <no-reply@matcha.com>',
+						from: 'no-reply@matcha.com',
 						to: user.email,
 						subject: 'Account Verification Token',
 						text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/users\/confirmation\/' + token.token + '.\n'
 					};
+					// transporter.verify(function (error, success) {
+					// 	if (error) {
+					// 		return res.status(500).send(error);
+					// 	} else {
+					// 		return res.status(500).send("Server is ready to take our messages");
+					// 	}
+					// });
 					transporter.sendMail(mailOptions, (err) => {
 						if (err) { return res.status(500).send({ msg: err.message }) };
 						return res.status(200).render('login', { 'success_msg': 'A verification email has been sent to ' + user.email + '.' });
@@ -187,6 +192,80 @@ exports.user_tokenResend = (req, res) => {
 				.catch((err) => {
 					{ return res.status(500).send({ msg: err.message }) };
 				});
+		});
+	}
+}
+
+exports.user_forgotPwd = (req, res) => {
+	const email = req.body.email;
+	const errors = [];
+
+	if (!email)
+		errors.push({ msg: 'Please fill in all fields' });
+
+	if (errors.length > 0)
+		res.status(400).render('forgotPwd', { errors });
+	else {
+		User.findOne({ email: email }, (err, user) => {
+			if (err) { return res.status(500).send({ msg: err.message }) };
+			if (!user)
+				return res.status(400).render('forgotPwd', { 'error_msg': 'We were unable to find a user with that email.' });
+
+			var mailOptions = {
+				from: 'no-reply@gmail.com',
+				to: user.email,
+				subject: 'Forgotten Password',
+				text: 'Hello,\n\n' + 'Please click the link bellow to reset your password: \nhttp:\/\/' + req.headers.host + '\/users\/changePwd.\n'
+			};
+			transporter.sendMail(mailOptions, (err) => {
+				if (err) { return res.status(500).send({ msg: err.message }) };
+				return res.status(200).render('login', { 'success_msg': 'A password reset email has been sent to ' + user.email + '.' });
+			});
+		});
+	}
+}
+
+exports.user_changePwd = (req, res) => {
+	const { email, password, pwd_repeat } = req.body;
+	const errors = [];
+
+	// regexp = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
+	// if (regexp.test(password))
+	// 	errors.push({ msg: 'Please use at least 1 Upper case letter'});
+
+	if (!email || !password || !pwd_repeat) {
+		errors.push({ msg: 'Please fill in all fields' });
+	}
+
+	// Check passwords match
+	if (password != pwd_repeat) {
+		errors.push({ msg: 'Passwords do not match' });
+	}
+
+	// Check pwd length
+	if (password.length < 6) {
+		errors.push({ msg: 'Password should be at least 6 characters' });
+	}
+
+	if (errors.length > 0) {
+		return res.status(400).render('changePwd', { errors });
+	}
+	else {
+		User.findOne({ email: email }).then((user) => {
+			if(!user)
+				{ return res.status(400).render('changePwd', {'error_msg': 'Incorrect email'}); }
+			bcrypt.genSalt(10, (err, salt) => {
+				bcrypt.hash(password, salt, (err, hash) => {
+					if (err) { return res.status(500).send({ msg: err.message }); }
+
+					user.password = hash;
+
+					user.save((err) => {
+						if (err) { return res.status(500).send({ msg: err.message }); }
+						return res.status(200).render('login', { 'success_msg': 'Your password has been updated and you can now login.' });
+					});
+				});
+			});
 		});
 	}
 }
