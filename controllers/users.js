@@ -200,7 +200,7 @@ exports.user_tokenResend = (req, res) => {
 				});
 		});
 	}
-}
+};
 
 exports.user_forgotPwd = (req, res) => {
 	const email = req.body.email;
@@ -229,7 +229,7 @@ exports.user_forgotPwd = (req, res) => {
 			});
 		});
 	}
-}
+};
 
 exports.user_changePwd = (req, res) => {
 	const { email, password, pwd_repeat } = req.body;
@@ -274,4 +274,4 @@ exports.user_changePwd = (req, res) => {
 			});
 		});
 	}
-}
+};
