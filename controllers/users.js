@@ -6,15 +6,16 @@ const nodemailer = require('nodemailer');
 const User = require('../models/User');
 const Token = require('../models/Token');
 
-const transporter = nodemailer.createTransport({
-	host: 'smtp.gmail.com',
-	port: '465',
-	secure: true,
-	auth: {
-		user: 'spiderbat2033@gmail.com',
-		pass: '!skullYb0B*'
-	}
-});
+// const transporter = nodemailer.createTransport({
+// 	host: 'smtp.gmail.com',
+// 	port: '465',
+// 	secure: true,
+// 	auth: {
+// 		user: 'spiderbat2033@gmail.com',
+// 		pass: '!skullYb0B*'
+// 	}
+// });
+var transporter = nodemailer.createTransport('smtps://user%40gmail.com:pass@smtp.gmail.com');
 
 exports.user_register = (req, res) => {
 	const { username, email, password, pwd_repeat, firstname, lastname } = req.body;
@@ -90,7 +91,7 @@ exports.user_register = (req, res) => {
 
 							// Define email content
 							const mailOptions = {
-								from: '"Admin" <no-reply@matcha.com>',
+								from: '"Admin" <admin@mydomain.com>',
 								to: newUser.email,
 								subject: 'Account Verification',
 								text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/users\/confirmation\/' + newToken.token + '.\n'
@@ -174,7 +175,7 @@ exports.user_tokenResend = (req, res) => {
 				if (err) throw err;
 				console.log(user.email);
 				var mailOptions = { 
-					from: 'no-reply@codemoto.io',
+					from: 'admin@mydomain.com',
 					to: user.email,
 					subject: 'Account Verification Token',
 					text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/users\/confirmation\/' + token.token + '.\n'
