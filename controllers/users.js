@@ -183,19 +183,6 @@ exports.user_tokenResend = (req, res) => {
 					transporter.sendMail(mailOptions, (err) => {
 						if (err) { return res.status(500).send({msg: err.message}) };
 						return res.status(200).render('login', { 'success_msg': 'A verification email has been sent to ' + user.email + '.' });
-
-				// .then(token => {
-				// 	if (err) throw err;
-				// 	console.log(user.email);
-				// 	var mailOptions = {
-				// 		from: '"Admin" <no-reply@matcha.com>',
-				// 		to: user.email,
-				// 		subject: 'Account Verification Token',
-				// 		text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/users\/confirmation\/' + token.token + '.\n'
-				// 	};
-				// 	transporter.sendMail(mailOptions, (err) => {
-				// 		if (err) { return res.status(500).send({ msg: err.message }) };
-				// 		return res.status(200).render('login', { 'success_msg': 'A verification email has been sent to ' + user.email + '.' });
 					});
 				})
 				.catch((err) => {
