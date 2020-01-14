@@ -88,7 +88,7 @@ exports.user_register = (req, res) => {
 
 							// Define email content
 							const mailOptions = {
-								from: '"Admin" <no-reply@matcha.com>',
+								from: '"Admin" <admin@mydomain.com>',
 								to: newUser.email,
 								subject: 'Account Verification',
 								text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/users\/confirmation\/' + newToken.token + '.\n'
@@ -185,7 +185,7 @@ exports.user_tokenResend = (req, res) => {
 					// 	}
 					// });
 					transporter.sendMail(mailOptions, (err) => {
-						if (err) { return res.status(500).send({ msg: err.message }) };
+						if (err) { return res.status(500).send({msg: err.message}) };
 						return res.status(200).render('login', { 'success_msg': 'A verification email has been sent to ' + user.email + '.' });
 					});
 				})
