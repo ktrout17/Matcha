@@ -1,6 +1,13 @@
-<h5>Enter email address:</h5>
-<%- include ('./partials/messages'); -%>
-<form action="/users/forgotPwd" method="POST">
-<input type="email" name="email" placeholder="email">
-<button type="submit">Send</button>
-</form>
+<head>
+    <%- include('./default/head'); -%>
+</head>
+<header>
+    <%- include('./default/header'); -%>
+</header>
+<main>
+    <%- include ('./partials/messages'); -%>
+    <%- include('./forms/forgotPw'); -%>
+</main>
+<footer>
+    <%- include('./default/footer'); -%>
+</footer>

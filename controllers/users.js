@@ -133,7 +133,8 @@ exports.user_confirmation = (req, res) => {
 
 			if (!user)
 				return res.status(404).render('login', { 'error': 'We were unable to find a user for this token.' });
-			if (user.verified)
+			console.log(user);
+			if (user.verified === true)
 				return res.status(400).render('login', { 'error': 'This user has already been verified.' });
 
 			user.verified = true;
