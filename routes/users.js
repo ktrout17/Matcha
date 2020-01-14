@@ -12,6 +12,7 @@ router.get('/register', (req, res) => res.render('register'));
 router.get('/dashboard', (req, res) => res.render('dashboard'));
 router.get('/resend', (req, res) => res.render('resend'));
 router.get('/editProfile', (req, res) => res.render('editProfile'));
+router.get('/forgotPwd', (req, res) => res.render('forgotPwd'));
 
 
 // Import Controllers
@@ -28,6 +29,7 @@ router.get('/logout', UsersController.user_logout);
 
 // Handles user Token for email verification
 router.get('/confirmation/:userToken', UsersController.user_confirmation);
-router.post('/resend', UsersController.user_tokenResend)
+router.post('/resend', UsersController.user_tokenResend);
+router.post('/forgotPwd', UsersController.user_forgotPwd);
 
 module.exports = router;
