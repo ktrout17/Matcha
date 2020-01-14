@@ -108,7 +108,7 @@ exports.user_register = (req, res) => {
 			}
 		});
 	}
-}
+};
 
 exports.user_login = (req, res, next) => {
 	passport.authenticate('local', {
@@ -116,13 +116,13 @@ exports.user_login = (req, res, next) => {
 		failureRedirect: '/users/login',
 		failureFlash: true
 	})(req, res, next);
-}
+};
 
 exports.user_logout = (req, res) => {
 	req.logout();
 	req.flash('success_msg', 'You are logged out');
 	res.redirect('/users/login');
-}
+};
 
 exports.user_confirmation = (req, res) => {
 	Token.findOne({ token: req.params.userToken }, (err, token) => {
@@ -146,7 +146,7 @@ exports.user_confirmation = (req, res) => {
 		});
 		// return res.status(200).send({msg: 'token found'});
 	});
-}
+};
 
 exports.user_tokenResend = (req, res) => {
 	const email = req.body.email;
@@ -159,7 +159,9 @@ exports.user_tokenResend = (req, res) => {
 		res.status(400).render('resend', { errors });
 	else {
 		User.findOne({ email: email }, (err, user) => {
-			if (err) { return res.status(500).send({ msg: err.message }) };
+			if (err) {
+				return res.status(500).send({msg: err.message})
+			}
 			if (!user)
 				return res.status(400).render('resend', { 'error_msg': 'We were unable to find a user with that email.' });
 			if (user.verified)
@@ -167,7 +169,7 @@ exports.user_tokenResend = (req, res) => {
 
 			const newToken = new Token({
 				_userId: user.id,
-				token: crypto.randomBytes(16).toString('hex')
+				token: crypto.randomByte(16).toString('hex')
 			});
 
 			newToken.save()
@@ -186,8 +188,10 @@ exports.user_tokenResend = (req, res) => {
 					});
 				})
 				.catch((err) => {
-					{ return res.status(500).send({ msg: err.message }) };
+					{
+						return res.status(500).send({msg: err.message})
+					}
 				});
 		});
 	}
-}
+};
