@@ -9,6 +9,7 @@ router.get('/resend', (req, res) => res.render('resend'));
 router.get('/extendedProfile', (req, res) => res.render('extendedProfile'));
 router.get('/forgotPwd', (req, res) => res.render('forgotPwd'));
 router.get('/changePwd', (req, res) => res.render('changePwd'));
+router.get('/editProfile', (req, res) => res.render('editProfile'));
 
 
 
