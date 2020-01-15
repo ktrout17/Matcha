@@ -11,13 +11,13 @@ const UserSchema = new mongoose.Schema({
 	dob: { type: Date, default: new Date() },
 	creationDate: {	type: Date,	default: Date.now },
 	verified: {type: Boolean, default: false },
+	extendedProf: {type: Boolean, default: false },
 	passwordResetToken: {type: String },
 	passwordResetExpires: {type: Date },
 	bio: { type: String },
 	gender: {
 		male: { type: String },
-		female: { type: String },
-		other: { type: String }
+		female: { type: String }
 	},
 
 	sexOrien: {
@@ -29,7 +29,7 @@ const UserSchema = new mongoose.Schema({
 	sexPref: {
 		male: { type: String },
 		female: { type: String },
-		bi: { type: String, default: 'bisexual'}
+		both: { type: String, default: 'bisexual'}
 	},
 	interests: {
 		first: { type: String },

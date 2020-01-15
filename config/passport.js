@@ -18,7 +18,7 @@ module.exports = function(passport, res) {
 				if (!user.verified){
 					return done(null, false, { message: 'Please verify email to log in.' });
 				}
-
+				
 				// Match password
 				bcrypt.compare(password, user.password, (err, isMatch) => {
 					if (err) { return res.status(401).send({msg: err.message }); }
