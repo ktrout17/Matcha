@@ -1,8 +1,17 @@
 const express = require('express');
 const router = express.Router();
+const { ensureAuthenticated } = require('../config/auth');
+const multer = require('multer');
+const storage = require('../config/fileStorage');
+console.log
+const upload = multer({
+	storage: storage.storage,
+	limits: storage.limits,
+	fileFilter: storage.fileFilter,
+});
 
 // Render ejs view pages
-router.get('/login', (req, res, next) => res.render('login'));
+router.get('/login', (req, res) => res.render('login'));
 // router.get('/login', (req, res) => res.render('login', {message: req.flash('error')}));
 router.get('/register', (req, res) => res.render('register'));
 router.get('/resend', (req, res) => res.render('resend'));
@@ -29,5 +38,6 @@ router.get('/confirmation/:userToken', UsersController.user_confirmation);
 router.post('/resend', UsersController.user_tokenResend);
 router.post('/forgotPwd', UsersController.user_forgotPwd);
 router.post('/changePwd', UsersController.user_changePwd);
+router.post('/extendedProfile', upload.single('profileImage'), UsersController.user_extendedProfile);
 
 module.exports = router;

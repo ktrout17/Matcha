@@ -15,6 +15,7 @@ const UserSchema = new mongoose.Schema({
 	passwordResetToken: {type: String },
 	passwordResetExpires: {type: Date },
 	bio: { type: String },
+	agePref: { type: String },
 	gender: {
 		male: { type: String },
 		female: { type: String }

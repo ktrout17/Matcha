@@ -3,6 +3,7 @@ const passport = require('passport');
 const mongoose = require('mongoose');
 const crypto = require('crypto-extra');
 const nodemailer = require('nodemailer');
+
 const User = require('../models/User');
 const Token = require('../models/Token');
 
@@ -97,7 +98,7 @@ exports.user_register = (req, res) => {
 							// Send email
 							transporter.sendMail(mailOptions, (err) => {
 								if (err) { return res.status(500).send({ msg: err.message }); }
-								res.status(200).render('login', {'success_msg': 'Account created please verify to log in.'});
+								res.status(200).render('login', { 'success_msg': 'Account created please verify to log in.' });
 							});
 						});
 					});
@@ -111,11 +112,10 @@ exports.user_login = (req, res, next) => {
 	passport.authenticate('local', (err, user, info) => {
 		if (err) { return next(err); }
 
-		if (!user) { return res.render('login', { message: info.message}); }
-
-		if (!user.extendedProf) { return res.redirect('/users/extendedProfile'); }
+		if (!user) { return res.render('login', { message: info.message }); }
 
 		req.logIn(user, (err) => {
+			if (!user.extendedProf) { return res.redirect('/users/extendedProfile'); }
 			if (err) { return next(err); }
 
 			return res.redirect('/dashboard');
@@ -176,7 +176,7 @@ exports.user_tokenResend = (req, res) => {
 	else {
 		User.findOne({ email: email }, (err, user) => {
 			if (err) {
-				return res.status(500).send({msg: err.message})
+				return res.status(500).send({ msg: err.message })
 			}
 			if (!user)
 				return res.status(400).render('resend', { 'error_msg': 'We were unable to find a user with that email.' });
@@ -206,13 +206,13 @@ exports.user_tokenResend = (req, res) => {
 					// 	}
 					// });
 					transporter.sendMail(mailOptions, (err) => {
-						if (err) { return res.status(500).send({msg: err.message}) };
+						if (err) { return res.status(500).send({ msg: err.message }) };
 						return res.status(200).render('login', { 'success_msg': 'A verification email has been sent to ' + user.email + '.' });
 					});
 				})
 				.catch((err) => {
 					{
-						return res.status(500).send({msg: err.message})
+						return res.status(500).send({ msg: err.message })
 					}
 				});
 		});
@@ -276,8 +276,7 @@ exports.user_changePwd = (req, res) => {
 	}
 	else {
 		User.findOne({ email: email }).then((user) => {
-			if(!user)
-				{ return res.status(400).render('changePwd', {'error_msg': 'Incorrect email'}); }
+			if (!user) { return res.status(400).render('changePwd', { 'error_msg': 'Incorrect email' }); }
 			bcrypt.genSalt(10, (err, salt) => {
 				bcrypt.hash(password, salt, (err, hash) => {
 					if (err) { return res.status(500).send({ msg: err.message }); }
@@ -292,4 +291,48 @@ exports.user_changePwd = (req, res) => {
 			});
 		});
 	}
+};
+
+exports.user_extendedProfile = (req, res) => {
+	// if (!req.file) { return res.status(500).render('extendedProfile', { 'error_msg': 'Invalid File!' }); }
+	const {
+		male: male,
+		female: female,
+		birthdate: birthdate,
+		age_preference: age_preference,
+		sex_orien: sex_orien,
+		sex_pref: sex_pref,
+		bio: bio,
+	} = req.body;
+	var first = req.body.interests[0];
+	var second = req.body.interests[0];
+	var third = req.body.interests[0];
+	var fourth = req.body.interests[0];
+	var fifth = req.body.interests[0];
+	const info = { $set: {
+		gender: { male: male, female: female},
+		dob: birthdate,
+		agePref: age_preference,
+		sexOrien: sex_orien,
+		sexPref: sex_pref,
+		bio: bio,
+		interests: {
+			first: first,
+			second: second,
+			third: third,
+			fourth: fourth,
+			fifth: fifth,
+		}}}
+	User.findOneAndUpdate({ id: req.user.id }, info, (err, user) => {
+		if (!user)
+			{ return console.log('no user');
+			res.end();
+	}
+	else {
+		user.save().then((err) => {
+			return console.log(err.message);
+		})
+	}
+	});
+	res.end();
 };
