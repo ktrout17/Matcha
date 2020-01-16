@@ -97,7 +97,7 @@ exports.user_register = (req, res) => {
 							// Send email
 							transporter.sendMail(mailOptions, (err) => {
 								if (err) { return res.status(500).send({ msg: err.message }); }
-								res.status(200).render('login', {'success_msg': 'Account created please verify to log in.'});
+								res.status(200).render('login', {'success_msg': 'Account created. Check your email to verify your account to log in.'});
 							});
 						});
 					});
@@ -157,7 +157,7 @@ exports.user_confirmation = (req, res) => {
 			user.save((err) => {
 				if (err)
 					return res.status(500).send({ msg: err.message });
-				return res.status(200).render('login', { 'success_msg': 'The account has been verified. Please log in.' });
+				return res.status(200).render('login', { 'success_msg': 'Your account has been verified. You may now log in.' });
 			});
 		});
 		// return res.status(200).send({msg: 'token found'});
