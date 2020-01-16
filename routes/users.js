@@ -6,12 +6,21 @@ router.get('/login', (req, res, next) => res.render('login'));
 // router.get('/login', (req, res) => res.render('login', {message: req.flash('error')}));
 router.get('/register', (req, res) => res.render('register'));
 router.get('/resend', (req, res) => res.render('resend'));
-router.get('/extendedProfile', (req, res) => res.render('extendedProfile'));
+router.get('/extendedProfile', (req, res) => {
+    res.render('extendedProfile', {
+        name: req.user.username
+    })
+});
 router.get('/forgotPwd', (req, res) => res.render('forgotPwd'));
 router.get('/changePwd', (req, res) => res.render('changePwd'));
-router.get('/editProfile', (req, res) => res.render('editProfile'));
-
-
+router.get('/editProfile', (req, res) => {
+    res.render('editProfile', {
+        name: req.user.username,
+        firstname: req.user.firstname,
+        lastname: req.user.lastname,
+        email: req.user.email
+    })
+});
 
 // Import Controllers
 const UsersController = require('../controllers/users');
