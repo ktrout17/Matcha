@@ -294,45 +294,29 @@ exports.user_changePwd = (req, res) => {
 };
 
 exports.user_extendedProfile = (req, res) => {
-	// if (!req.file) { return res.status(500).render('extendedProfile', { 'error_msg': 'Invalid File!' }); }
-	const {
-		male: male,
-		female: female,
-		birthdate: birthdate,
-		age_preference: age_preference,
-		sex_orien: sex_orien,
-		sex_pref: sex_pref,
-		bio: bio,
-	} = req.body;
-	var first = req.body.interests[0];
-	var second = req.body.interests[0];
-	var third = req.body.interests[0];
-	var fourth = req.body.interests[0];
-	var fifth = req.body.interests[0];
-	const info = { $set: {
-		gender: { male: male, female: female},
-		dob: birthdate,
-		agePref: age_preference,
-		sexOrien: sex_orien,
-		sexPref: sex_pref,
-		bio: bio,
-		interests: {
-			first: first,
-			second: second,
-			third: third,
-			fourth: fourth,
-			fifth: fifth,
-		}}}
-	User.findOneAndUpdate({ id: req.user.id }, info, (err, user) => {
-		if (!user)
-			{ return console.log('no user');
-			res.end();
-	}
-	else {
-		user.save().then((err) => {
-			return console.log(err.message);
-		})
-	}
+	if (!req.file) { return res.status(500).render('extendedProfile', { 'error_msg': 'Invalid File!' }); }
+
+	User.findById(req.user.id, (err, user) => {
+		if (!user) {
+			if (err) { return res.status(500).send({ msg: err.message }); }
+		}
+		else {
+			user.gender = req.body.gender;
+			user.dob = req.body.birthdate;
+			user.agePref = req.body.age_preference;
+			user.sexOrien = req.body.sex_orien;
+			user.sexPref = req.body.sex_pref;
+			user.bio = req.body.bio;
+			user.interests.first = req.body.interests[0];;
+			user.interests.second = req.body.interests[1];;
+			user.interests.third = req.body.interests[2];;
+			user.interests.fourth = req.body.interests[3];;
+			user.interests.fifth = req.body.interests[4];;
+			user.profileImages.image1 = req.file.path;
+			user.extendedProf = true;
+			user.save().then((err) => {
+				if (err) { return res.status(500).send({ msg: err.message }); }
+			})
+		}
 	});
-	res.end();
 };

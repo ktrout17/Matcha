@@ -16,22 +16,9 @@ const UserSchema = new mongoose.Schema({
 	passwordResetExpires: {type: Date },
 	bio: { type: String },
 	agePref: { type: String },
-	gender: {
-		male: { type: String },
-		female: { type: String }
-	},
-
-	sexOrien: {
-		hetero: { type: String },
-		homo: { type: String },
-		bi: { type: String, default: 'bisexual'} 
-	},
-	
-	sexPref: {
-		male: { type: String },
-		female: { type: String },
-		both: { type: String, default: 'bisexual'}
-	},
+	gender: { type: String },
+	sexOrien: { type: String, default: 'bisexual'} ,
+	sexPref: { type: String, default: 'bisexual'},
 	interests: {
 		first: { type: String },
 		second: { type: String },

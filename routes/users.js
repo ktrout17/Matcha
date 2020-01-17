@@ -3,7 +3,6 @@ const router = express.Router();
 const { ensureAuthenticated } = require('../config/auth');
 const multer = require('multer');
 const storage = require('../config/fileStorage');
-console.log
 const upload = multer({
 	storage: storage.storage,
 	limits: storage.limits,
