@@ -26,7 +26,10 @@ router.get('/editProfile', (req, res) => {
         name: req.user.username,
         firstname: req.user.firstname,
         lastname: req.user.lastname,
-        email: req.user.email
+        email: req.user.email,
+        gender: req.user.gender,
+        date: req.user.dob,
+        agePref: req.user.agePref
     })
 });
 

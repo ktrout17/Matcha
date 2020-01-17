@@ -24,3 +24,7 @@
 .container {
     margin-bottom: 50px;
 }
+
+.cap {
+    text-transform: capitalize;
+}

@@ -2,15 +2,15 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 <br>
-<h2 class="text-danger text-center">Welcome <%= name%></h2>
+<h2 class="text-danger text-center cap">Welcome <% if (typeof name != 'undefined') {%> <%= name %> <% } %></h2>
 <h4 class="text-center">Please complete your extended profile to gain full access to the website</h4>
 <br>
+<form action="/users/extendedProfile" method="POST" enctype="multipart/form-data">
 <div class="form-group">
     <label for="inputfile">Upload a Profile Picture</label>
-    <input type="file" class="form-control-file" id="inputfile" aria-describedby="fileHelp" required="required">
+    <input type="file" name="profileImage" class="form-control-file" id="inputfile" aria-describedby="fileHelp" required="required">
     <small id="fileHelp" class="form-text text-muted">A profile picture is required to gain full access to the website</small>
 </div>
-<form action="">
     <div class="form-group row">
         <label class="col-4">Gender</label>
         <div class="col-8">

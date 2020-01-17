@@ -312,11 +312,12 @@ exports.user_extendedProfile = (req, res) => {
 			user.interests.third = req.body.interests[2];;
 			user.interests.fourth = req.body.interests[3];;
 			user.interests.fifth = req.body.interests[4];;
-			user.profileImages.image1 = req.file.path;
+			user.profileImages.image1 = req.file.filename;
 			user.extendedProf = true;
-			user.save().then((err) => {
+			user.save((err) => {
 				if (err) { return res.status(500).send({ msg: err.message }); }
-			})
+				return res.status(200).redirect('/dashboard');
+			});
 		}
 	});
 };
