@@ -21,7 +21,7 @@ router.get('/extendedProfile', (req, res) => {
 });
 router.get('/forgotPwd', (req, res) => res.render('forgotPwd'));
 router.get('/changePwd', (req, res) => res.render('changePwd'));
-router.get('/editProfile', (req, res) => {
+router.get('/editProfile', ensureAuthenticated, (req, res) => {
     res.render('editProfile', {
         name: req.user.username,
         firstname: req.user.firstname,
@@ -29,7 +29,11 @@ router.get('/editProfile', (req, res) => {
         email: req.user.email,
         gender: req.user.gender,
         date: req.user.dob,
-        agePref: req.user.agePref
+        agePref: req.user.agePref,
+        sexOrien: req.user.sexOrien,
+        sexPref: req.user.sexPref,
+        bio: req.user.bio,
+        interests: req.user.interests
     })
 });
 
