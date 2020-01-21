@@ -7,7 +7,7 @@ const upload = multer({
 	storage: storage.storage,
 	limits: storage.limits,
 	fileFilter: storage.fileFilter,
-});
+}).single('profileImage');
 
 // Render ejs view pages
 router.get('/login', (req, res) => res.render('login'));
@@ -33,7 +33,7 @@ router.get('/editProfile', ensureAuthenticated, (req, res) => {
         sexOrien: req.user.sexOrien,
         sexPref: req.user.sexPref,
         bio: req.user.bio,
-        interests: req.user.interests,
+        interests: req.user.interests
     })
 });
 
@@ -54,7 +54,7 @@ router.get('/confirmation/:userToken', UsersController.user_confirmation);
 router.post('/resend', UsersController.user_tokenResend);
 router.post('/forgotPwd', UsersController.user_forgotPwd);
 router.post('/changePwd', UsersController.user_changePwd);
-router.post('/extendedProfile', upload.single('profileImage'), UsersController.user_extendedProfile);
-router.post('/editProfile', upload.single('profileImage'), UsersController.user_editProfile);
+router.post('/extendedProfile', upload, UsersController.user_extendedProfile);
+router.post('/editProfile', (req,res, next) => { res.locals.upload = upload; next(); },  UsersController.user_editProfile);
 
 module.exports = router;

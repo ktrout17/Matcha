@@ -3,6 +3,7 @@ const passport = require('passport');
 const mongoose = require('mongoose');
 const crypto = require('crypto-extra');
 const nodemailer = require('nodemailer');
+const multer = require('multer');
 
 const User = require('../models/User');
 const Token = require('../models/Token');
@@ -98,7 +99,7 @@ exports.user_register = (req, res) => {
 							// Send email
 							transporter.sendMail(mailOptions, (err) => {
 								if (err) { return res.status(500).send({ msg: err.message }); }
-								res.status(200).render('login', {'success_msg': 'Account created. Check your email to verify your account to log in.'});
+								res.status(200).render('login', { 'success_msg': 'Account created. Check your email to verify your account to log in.' });
 							});
 						});
 					});
@@ -319,36 +320,107 @@ exports.user_extendedProfile = (req, res) => {
 	});
 };
 
-exports.user_editProfile = (req, res) => {
-	if (!req.file) { return res.status(500).render('extendedProfile', { 'error_msg': 'Invalid File!' }); }
-
-	User.findById(req.user.id, (err, user) => {
-		if (!user) {
-			if (err) { return res.status(500).send({ msg: err.message }); }
+exports.user_editProfile = (req, res, next) => {
+	let uploads = res.locals.upload;
+	var val;
+	uploads(req, res, function (err) {
+		if (err instanceof multer.MulterError) {
+			req.flash('error_msg', err.message);
+			res.status(500).redirect('/users/editProfile');
 		}
-		else {
-			user.gender = req.body.gender;
-			user.dob = req.body.birthdate;
-			user.agePref = req.body.age_preference;
-			user.sexOrien = req.body.sex_orien;
-			user.sexPref = req.body.sex_pref;
-			user.bio = req.body.bio;
-			user.interests.first = req.body.interests[0];
-			user.interests.second = req.body.interests[1];
-			user.interests.third = req.body.interests[2];
-			user.interests.fourth = req.body.interests[3];
-			user.interests.fifth = req.body.interests[4];
-			user.country = req.body.country;
-			user.province = req.body.province;
-			user.city = req.body.city;
-			user.lat = req.body.lat;
-			user.long = req.body.long;
-			user.profileImages.image1 = req.file.filename;
-			user.extendedProf = true;
-			user.save((err) => {
-				if (err) { return res.status(500).send({ msg: err.message }); }
-				return res.status(200).redirect('/dashboard');
-			});
+		else if (err) {
+			req.flash('error_msg', err);
+			res.status(500).redirect('/users/editProfile');
+		}
+		else if (req.file) {
+			val = {
+				$set: {
+					username: req.body.username,
+					firstname: req.body.firstname,
+					lastname: req.body.lastname,
+					email: req.body.email,
+					gender: req.body.gender,
+					dob: req.body.birthdate,
+					agePref: req.body.age_preference,
+					sexOrien: req.body.sex_orien,
+					sexPref: req.body.sex_pref,
+					bio: req.body.bio,
+					interests: {
+						first: req.body.interests[0],
+						second: req.body.interests[1],
+						third: req.body.interests[2],
+						fourth: req.body.interests[3],
+						fifth: req.body.interests[4]
+					},
+					profileImages: {
+						image1: req.file.filename
+					},
+					country: req.body.country,
+					province: req.body.province,
+					city: req.body.city,
+					lat: req.body.lat,
+					long: req.body.long
+				}
+			}
+		} else if (req.file) {
+			val = {
+				$set: {
+					username: req.body.username,
+					firstname: req.body.firstname,
+					lastname: req.body.lastname,
+					email: req.body.email,
+					gender: req.body.gender,
+					dob: req.body.birthdate,
+					agePref: req.body.age_preference,
+					sexOrien: req.body.sex_orien,
+					sexPref: req.body.sex_pref,
+					bio: req.body.bio,
+					interests: {
+						first: req.body.interests[0],
+						second: req.body.interests[1],
+						third: req.body.interests[2],
+						fourth: req.body.interests[3],
+						fifth: req.body.interests[4]
+					},
+					country: req.body.country,
+					province: req.body.province,
+					city: req.body.city,
+					lat: req.body.lat,
+					long: req.body.long
+				}
+			};
 		}
 	});
+	console.log(val);
+		if (req.user.username !== req.body.username ||
+			req.user.firstname !== req.body.firstname ||
+			req.user.lastname !== req.body.lastname ||
+			req.user.username !== req.body.username ||
+			req.user.email !== req.body.email ||
+			req.user.gender !== req.body.gender ||
+			req.user.dob !== req.body.birthdate ||
+			req.user.agePref !== req.body.age_preference ||
+			req.user.sexOrien !== req.body.sex_orien ||
+			req.user.sexPref !== req.body.sex_pref ||
+			req.user.bio !== req.body.bio ||
+			req.user.interests.first !== req.body.interests[0] ||
+			req.user.interests.second !== req.body.interests[1] ||
+			req.user.interests.third !== req.body.interests[2] ||
+			req.user.interests.fourth !== req.body.interests[3] ||
+			req.user.interests.fifth !== req.body.interests[4] ||
+			req.user.country !== req.body.country ||
+			req.user.province !== req.body.province ||
+			req.user.city !== req.body.city ||
+			req.user.lat !== req.body.lat ||
+			req.user.long !== req.body.long
+		) {
+			User.findOneAndUpdate({ _id: req.user._id }, val, { new: true }, (err, doc) => {
+				if (err) {
+					req.flash('error_msg', err);
+					res.status(500).redirect('/users/editProfile');
+				}
+				req.flash('success_msg', 'Successfully updated information.');
+				res.redirect('/users/editProfile');
+			});
+		}
 };
