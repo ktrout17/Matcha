@@ -167,6 +167,11 @@
 			<button name="submit" type="submit" class="btn btn-danger bg-danger">Submit</button>
 		</div>
 	</div>
+	<input type="text" name="country" id="country" hidden>
+    <input type="text" name="province" id="province" hidden>
+    <input type="text" name="city" id="city" hidden>
+    <input type="text" name="lat" id="lat" hidden>
+    <input type="text" name="long" id="long" hidden>
 </form>
 <script type="text/javascript">
 	function maxSel(){
@@ -217,4 +222,14 @@
 				document.getElementById("interests_11").checked = true;
 		}
 	}, false)
+
+	$.getJSON('https://geolocation-db.com/json/')
+         .done (function(location) {
+            $('#country').val(location.country_name);
+            $('#province').val(location.state);
+            $('#city').val(location.city);
+            $('#lat').val(location.latitude);
+            $('#long').val(location.longitude);
+            $('#ip').val(location.IPv4);
+         });
 </script>

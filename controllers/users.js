@@ -123,14 +123,6 @@ exports.user_login = (req, res, next) => {
 	})(req, res, next);
 };
 
-// exports.user_login = (req, res, next) => {
-// 	passport.authenticate('local', {
-// 		successRedirect: '/users/extendedProfile',
-// 		failureRedirect: '/users/login',
-// 		failureFlash: true
-// 	})(req, res, next);
-// };
-
 exports.user_logout = (req, res) => {
 	req.logout();
 	req.flash('success_msg', 'You are logged out');
@@ -307,11 +299,50 @@ exports.user_extendedProfile = (req, res) => {
 			user.sexOrien = req.body.sex_orien;
 			user.sexPref = req.body.sex_pref;
 			user.bio = req.body.bio;
-			user.interests.first = req.body.interests[0];;
-			user.interests.second = req.body.interests[1];;
-			user.interests.third = req.body.interests[2];;
-			user.interests.fourth = req.body.interests[3];;
-			user.interests.fifth = req.body.interests[4];;
+			user.interests.first = req.body.interests[0];
+			user.interests.second = req.body.interests[1];
+			user.interests.third = req.body.interests[2];
+			user.interests.fourth = req.body.interests[3];
+			user.interests.fifth = req.body.interests[4];
+			user.country = req.body.country;
+			user.province = req.body.province;
+			user.city = req.body.city;
+			user.lat = req.body.lat;
+			user.long = req.body.long;
+			user.profileImages.image1 = req.file.filename;
+			user.extendedProf = true;
+			user.save((err) => {
+				if (err) { return res.status(500).send({ msg: err.message }); }
+				return res.status(200).redirect('/dashboard');
+			});
+		}
+	});
+};
+
+exports.user_editProfile = (req, res) => {
+	if (!req.file) { return res.status(500).render('extendedProfile', { 'error_msg': 'Invalid File!' }); }
+
+	User.findById(req.user.id, (err, user) => {
+		if (!user) {
+			if (err) { return res.status(500).send({ msg: err.message }); }
+		}
+		else {
+			user.gender = req.body.gender;
+			user.dob = req.body.birthdate;
+			user.agePref = req.body.age_preference;
+			user.sexOrien = req.body.sex_orien;
+			user.sexPref = req.body.sex_pref;
+			user.bio = req.body.bio;
+			user.interests.first = req.body.interests[0];
+			user.interests.second = req.body.interests[1];
+			user.interests.third = req.body.interests[2];
+			user.interests.fourth = req.body.interests[3];
+			user.interests.fifth = req.body.interests[4];
+			user.country = req.body.country;
+			user.province = req.body.province;
+			user.city = req.body.city;
+			user.lat = req.body.lat;
+			user.long = req.body.long;
 			user.profileImages.image1 = req.file.filename;
 			user.extendedProf = true;
 			user.save((err) => {

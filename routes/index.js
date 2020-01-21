@@ -10,7 +10,9 @@ router.get('/chats', (req, res) => res.render('chats'));
 router.get('/dashboard', ensureAuthenticated, (req, res) =>
 	res.render('dashboard', {
 		name: req.user.username,
-		pp: req.user.profileImages.image1
+		pp: req.user.profileImages.image1,
+		province: req.user.province,
+        city: req.user.city
 	}));
 
 module.exports = router;

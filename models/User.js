@@ -32,7 +32,12 @@ const UserSchema = new mongoose.Schema({
 		image3: { type: String },
 		image4: { type: String },
 		image5: { type: String }
-	}
+	},
+	country: String,
+	province: String,
+	city: String,
+	lat: String,
+	long: String,
 });
 
 const User = mongoose.model('User', UserSchema);
