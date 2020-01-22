@@ -5,7 +5,6 @@
     <%- include('./default/profileHeader'); -%>
 </header>
 <main>
-    <%- include ('./partials/messages'); -%>
     <div class="row py-5 px-4">
         <div class="mx-auto">
             <div class="bg-white shadow rounded overflow-hidden">
@@ -29,26 +28,47 @@
                 <div class="container mx-auto">
                     <h5 class="font-weight-light text-center text-lg-left mt-4 mb-0">Image Gallery</h5>
                     <hr class="mt-2 mb-5">
+                    <%- include ('./partials/messages'); -%>
                     <div class="row text-center text-lg-left">
                         <div class="col-lg-3 col-md-4 col-6">
+                            <form action="/dashboard" method="post" enctype="multipart/form-data">
                             <a href="/img/couple18.jpg" class="d-block mb-4 h-100">
                                 <img class="img-fluid img-thumbnail" src="/img/couple18.jpg" alt="" style="height: 100%;width: 150%">
                             </a>
+                            <input type="file" id="image1" name="image1" style="display: none;">
+                            <input type="button" value="Change" onclick="document.getElementById('image1').click();" />
+                            <button type="submit">save</button>
+                            </form>
                         </div>
                         <div class="col-lg-3 col-md-4 col-6">
+                            <form action="/dashboard" method="post">
                             <a href="/img/couple17.jpg" class="d-block mb-4 h-100">
                                 <img class="img-fluid img-thumbnail" src="/img/couple17.jpg" alt="" style="height: 100%; width: 150%">
                             </a>
+                            <input type="file" id="image2" name="image2" style="display: none;">
+                            <input type="button" value="Change" onclick="document.getElementById('image2').click();" />
+                            <button type="submit">save</button>
+                            </form>
                         </div>
                         <div class="col-lg-3 col-md-4 col-6">
+                            <form action="/dashboard" method="POST">
                             <a href="/img/couple16.jpg" class="d-block mb-4 h-100">
                                 <img class="img-fluid img-thumbnail" src="/img/couple16.jpg" alt="" style="height: 100%; width: 150%">
                             </a>
+                            <input type="file" id="image3" name="image3" style="display: none;">
+                            <input type="button" value="Change" onclick="document.getElementById('image3').click();" />
+                            <button type="submit">save</button>
+                            </form>
                         </div>
                         <div class="col-lg-3 col-md-4 col-6">
+                            <form action="/dashboard" method="POST">
                             <a href="/img/couple15.jpg" class="d-block mb-4 h-100">
                                 <img class="img-fluid img-thumbnail" src="/img/couple15.jpg" alt="" style="height: 100%; width: 150%">
                             </a>
+                            <input type="file" id="image4" name="image4" style="display: none;">
+                            <input type="button" value="Change" onclick="document.getElementById('image4').click();" />
+                            <button type="submit">save</button>
+                            </form>
                         </div>
                     </div>
                 </div>

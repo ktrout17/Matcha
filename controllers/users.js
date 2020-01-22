@@ -287,34 +287,47 @@ exports.user_changePwd = (req, res) => {
 };
 
 exports.user_extendedProfile = (req, res) => {
-	if (!req.file) { return res.status(500).render('extendedProfile', { 'error_msg': 'Invalid File!' }); }
-
-	User.findById(req.user.id, (err, user) => {
-		if (!user) {
-			if (err) { return res.status(500).send({ msg: err.message }); }
+	let uploads = res.locals.upload;
+	console.log(req.file);
+	uploads(req, res, async function (err) {
+		if (err instanceof multer.MulterError) {
+			req.flash('error_msg', err.message);
+			res.status(500).redirect('/users/extendedProfile');
 		}
-		else {
-			user.gender = req.body.gender;
-			user.dob = req.body.birthdate;
-			user.agePref = req.body.age_preference;
-			user.sexOrien = req.body.sex_orien;
-			user.sexPref = req.body.sex_pref;
-			user.bio = req.body.bio;
-			user.interests.first = req.body.interests[0];
-			user.interests.second = req.body.interests[1];
-			user.interests.third = req.body.interests[2];
-			user.interests.fourth = req.body.interests[3];
-			user.interests.fifth = req.body.interests[4];
-			user.country = req.body.country;
-			user.province = req.body.province;
-			user.city = req.body.city;
-			user.lat = req.body.lat;
-			user.long = req.body.long;
-			user.profileImages.image1 = req.file.filename;
-			user.extendedProf = true;
-			user.save((err) => {
-				if (err) { return res.status(500).send({ msg: err.message }); }
-				return res.status(200).redirect('/dashboard');
+		else if (err) {
+			req.flash('error_msg', err);
+			res.status(500).redirect('/users/extendedProfile');
+		}
+
+		if (req.file) {
+			await User.findById(req.user.id, (err, user) => {
+				if (!user) {
+					if (err) { return res.status(500).send({ msg: err.message }); }
+				}
+				else {
+					user.gender = req.body.gender;
+					user.dob = req.body.birthdate;
+					user.agePref = req.body.age_preference;
+					user.sexOrien = req.body.sex_orien;
+					user.sexPref = req.body.sex_pref;
+					user.bio = req.body.bio;
+					user.interests.first = req.body.interests[0];
+					user.interests.second = req.body.interests[1];
+					user.interests.third = req.body.interests[2];
+					user.interests.fourth = req.body.interests[3];
+					user.interests.fifth = req.body.interests[4];
+					user.country = req.body.country;
+					user.province = req.body.province;
+					user.city = req.body.city;
+					user.lat = req.body.lat;
+					user.long = req.body.long;
+					user.profileImages.image1 = req.file.filename;
+					user.extendedProf = true;
+					user.save((err) => {
+						if (err) { return res.status(500).send({ msg: err.message }); }
+						return res.status(200).redirect('/dashboard');
+					});
+				}
 			});
 		}
 	});

@@ -54,7 +54,7 @@ router.get('/confirmation/:userToken', UsersController.user_confirmation);
 router.post('/resend', UsersController.user_tokenResend);
 router.post('/forgotPwd', UsersController.user_forgotPwd);
 router.post('/changePwd', UsersController.user_changePwd);
-router.post('/extendedProfile', upload, UsersController.user_extendedProfile);
+router.post('/extendedProfile', (req,res, next) => { res.locals.upload = upload; next(); }, UsersController.user_extendedProfile);
 router.post('/editProfile', (req,res, next) => { res.locals.upload = upload; next(); },  UsersController.user_editProfile);
 
 module.exports = router;
