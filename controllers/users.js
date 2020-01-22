@@ -323,16 +323,16 @@ exports.user_extendedProfile = (req, res) => {
 exports.user_editProfile = (req, res, next) => {
 	let uploads = res.locals.upload;
 	var val;
-	uploads(req, res, function (err) {
+	uploads(req, res, async function (err) {
 		if (err instanceof multer.MulterError) {
-			req.flash('error_msg', err.message);
+			req.flash('error_msg', err);
 			res.status(500).redirect('/users/editProfile');
 		}
 		else if (err) {
 			req.flash('error_msg', err);
 			res.status(500).redirect('/users/editProfile');
 		}
-		else if (req.file) {
+		if (req.file) {
 			val = {
 				$set: {
 					username: req.body.username,
@@ -362,7 +362,7 @@ exports.user_editProfile = (req, res, next) => {
 					long: req.body.long
 				}
 			}
-		} else if (req.file) {
+		} else if (!req.file) {
 			val = {
 				$set: {
 					username: req.body.username,
@@ -390,8 +390,6 @@ exports.user_editProfile = (req, res, next) => {
 				}
 			};
 		}
-	});
-	console.log(val);
 		if (req.user.username !== req.body.username ||
 			req.user.firstname !== req.body.firstname ||
 			req.user.lastname !== req.body.lastname ||
@@ -414,7 +412,7 @@ exports.user_editProfile = (req, res, next) => {
 			req.user.lat !== req.body.lat ||
 			req.user.long !== req.body.long
 		) {
-			User.findOneAndUpdate({ _id: req.user._id }, val, { new: true }, (err, doc) => {
+			await User.findOneAndUpdate({ _id: req.user._id }, val, { new: true }, (err, doc) => {
 				if (err) {
 					req.flash('error_msg', err);
 					res.status(500).redirect('/users/editProfile');
@@ -423,4 +421,5 @@ exports.user_editProfile = (req, res, next) => {
 				res.redirect('/users/editProfile');
 			});
 		}
+	});
 };
