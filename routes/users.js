@@ -22,6 +22,7 @@ router.get('/editProfile', (req, res) => {
     })
 });
 
+
 // Import Controllers
 const UsersController = require('../controllers/users');
 
