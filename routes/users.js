@@ -33,7 +33,8 @@ router.get('/editProfile', ensureAuthenticated, (req, res) => {
         sexOrien: req.user.sexOrien,
         sexPref: req.user.sexPref,
         bio: req.user.bio,
-        interests: req.user.interests
+        interests: req.user.interests,
+        pp: req.user.profileImages.image1
     })
 });
 

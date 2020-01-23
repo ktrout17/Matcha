@@ -322,6 +322,10 @@ exports.user_extendedProfile = (req, res) => {
 					user.lat = req.body.lat;
 					user.long = req.body.long;
 					user.profileImages.image1 = req.file.filename;
+					user.profileImages.image2 = 'couple15.jpg';
+					user.profileImages.image3 = 'couple16.jpg';
+					user.profileImages.image4 = 'couple17.jpg';
+					user.profileImages.image5 = 'couple18.jpg';
 					user.extendedProf = true;
 					user.save((err) => {
 						if (err) { return res.status(500).send({ msg: err.message }); }
@@ -365,9 +369,7 @@ exports.user_editProfile = (req, res, next) => {
 						fourth: req.body.interests[3],
 						fifth: req.body.interests[4]
 					},
-					profileImages: {
-						image1: req.file.filename
-					},
+					"profileImages.image1": req.file.filename,
 					country: req.body.country,
 					province: req.body.province,
 					city: req.body.city,

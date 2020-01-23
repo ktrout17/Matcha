@@ -7,16 +7,7 @@ const upload = multer({
 	storage: storage.storage,
 	limits: storage.limits,
 	fileFilter: storage.fileFilter,
-}).fields([{
-	name: 'image1', maxCount: 1
-}, {
-	name: 'image2', maxCount: 1
-} , {
-	name: 'image3', maxCount: 1
-}, {
-	name: 'image4', maxCount: 1
-}
-]);
+});
 
 // Render ejs view pages
 router.get('/', (req, res) => { res.render('welcome') });
@@ -28,7 +19,11 @@ router.get('/dashboard', ensureAuthenticated, (req, res) =>
 		name: req.user.username,
 		pp: req.user.profileImages.image1,
 		province: req.user.province,
-        city: req.user.city
+		city: req.user.city,
+		image1: req.user.profileImages.image2,
+		image2: req.user.profileImages.image3,
+		image3: req.user.profileImages.image4,
+		image4: req.user.profileImages.image5
 	}));
 
 // Index Controller
