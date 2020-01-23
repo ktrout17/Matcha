@@ -38,6 +38,7 @@ router.get('/editProfile', ensureAuthenticated, (req, res) => {
     })
 });
 
+
 // Import Controllers
 const UsersController = require('../controllers/users');
 
