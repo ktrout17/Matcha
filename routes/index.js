@@ -12,16 +12,44 @@ const upload = multer({
 
 // Render ejs view pages
 router.get('/', (req, res) => { res.render('welcome') });
-router.get('/profiles', (req, res) => { res.render('profiles') });
+router.get('/profiles/:id', (req, res) => { res.render('profiles') });
 router.get('/chats', (req, res) => res.render('chats'));
 router.get('/suggestedMatchas', (req, res) => {
-	User.find({country: req.user.country, city: req.user.city})
+	User.find({$and:[{
+		city: req.user.city
+	},{$or:[{
+		"interests.first":{$in:[req.user.interests['first'],req.user.interests['second'],req.user.interests['third'],req.user.interests['fourth'],req.user.interests['fifth']]},
+	}, {
+		"interests.second":{$in:[req.user.interests['first'],req.user.interests['second'],req.user.interests['third'],req.user.interests['fourth'],req.user.interests['fifth']]},
+	}, {
+		"interests.third":{$in:[req.user.interests['first'],req.user.interests['second'],req.user.interests['third'],req.user.interests['fourth'],req.user.interests['fifth']]},
+	}, {
+		"interests.fourth":{$in:[req.user.interests['first'],req.user.interests['second'],req.user.interests['third'],req.user.interests['fourth'],req.user.interests['fifth']]},
+	}, {
+		"interests.fifth":{$in:[req.user.interests['first'],req.user.interests['second'],req.user.interests['third'],req.user.interests['fourth'],req.user.interests['fifth']]},
+	}
+]}, {$or: [{
+	$and: [{gender: {$eq: req.user.sexPref}}, {gender: {$eq: 'male'}}]},
+	{$and: [{gender: {$eq: req.user.sexPref}}, {gender: {$eq: 'female'}}]}, 
+	{gender2: {$eq: req.user.sexPref}}]}, { _id: {$ne: req.user.id}}
+]}).sort({fame: -1})
 	.select('firstname lastname username profileImages.image1')
 	.exec()
 	.then( docs => {
 		console.log(docs);
 		res.status(200).render('suggestedMatchas', {
-			"users": docs
+			"users": docs.map(doc => {
+				return {
+					firstname: doc.firstname,
+					lastname: doc.lastname,
+					username: doc.username,
+					profileImage: doc.profileImages.image1,
+					request: {
+						type: 'GET',
+						url: '/profiles/' + doc.id
+					}
+				}
+			})
 		});
 	})
 	.catch();

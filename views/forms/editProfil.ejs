@@ -85,21 +85,11 @@
 		</div>
 	</div>
 	<div class="form-group row">
-		<label for="sex_orien" class="col-4 col-form-label">Sexual Orientation</label>
-		<div class="col-8">
-			<select id="sex_orien" name="sex_orien" class="custom-select">
-				<option <%- (sexOrien === 'hetro') ? 'selected' : ''; %> value="hetero">Heterosexual</option>
-				<option <%- (sexOrien === 'homo') ? 'selected' : ''; %> value="homo">Homosexual</option>
-				<option <%- (sexOrien === 'bi') ? 'selected' : ''; %> value="bi">Bisexual</option>
-			</select>
-		</div>
-	</div>
-	<div class="form-group row">
 		<label for="sex_pref" class="col-4 col-form-label">Sexual Preference</label>
 		<div class="col-8">
 			<select id="sex_pref" name="sex_pref" class="custom-select">
-				<option <%- (sexPref === 'men') ? 'selected' : ''; %> value="men">Men</option>
-				<option <%- (sexPref === 'women') ? 'selected' : ''; %> value="women">Women</option>
+				<option <%- (sexPref === 'male') ? 'selected' : ''; %> value="male">Men</option>
+				<option <%- (sexPref === 'female') ? 'selected' : ''; %> value="female">Women</option>
 				<option <%- (sexPref === 'both') ? 'selected' : ''; %> value="both">Both</option>
 			</select>
 		</div>

@@ -308,7 +308,6 @@ exports.user_extendedProfile = (req, res) => {
 					user.gender = req.body.gender;
 					user.dob = req.body.birthdate;
 					user.agePref = req.body.age_preference;
-					user.sexOrien = req.body.sex_orien;
 					user.sexPref = req.body.sex_pref;
 					user.bio = req.body.bio;
 					user.interests.first = req.body.interests[0];
@@ -326,6 +325,7 @@ exports.user_extendedProfile = (req, res) => {
 					user.profileImages.image3 = 'couple16.jpg';
 					user.profileImages.image4 = 'couple17.jpg';
 					user.profileImages.image5 = 'couple18.jpg';
+					user.gender2 = req.body.gender2;
 					user.extendedProf = true;
 					user.save((err) => {
 						if (err) { return res.status(500).send({ msg: err.message }); }
@@ -359,7 +359,6 @@ exports.user_editProfile = (req, res, next) => {
 					gender: req.body.gender,
 					dob: req.body.birthdate,
 					agePref: req.body.age_preference,
-					sexOrien: req.body.sex_orien,
 					sexPref: req.body.sex_pref,
 					bio: req.body.bio,
 					interests: {
@@ -387,7 +386,6 @@ exports.user_editProfile = (req, res, next) => {
 					gender: req.body.gender,
 					dob: req.body.birthdate,
 					agePref: req.body.age_preference,
-					sexOrien: req.body.sex_orien,
 					sexPref: req.body.sex_pref,
 					bio: req.body.bio,
 					interests: {
@@ -413,7 +411,6 @@ exports.user_editProfile = (req, res, next) => {
 			req.user.gender !== req.body.gender ||
 			req.user.dob !== req.body.birthdate ||
 			req.user.agePref !== req.body.age_preference ||
-			req.user.sexOrien !== req.body.sex_orien ||
 			req.user.sexPref !== req.body.sex_pref ||
 			req.user.bio !== req.body.bio ||
 			req.user.interests.first !== req.body.interests[0] ||
@@ -426,7 +423,7 @@ exports.user_editProfile = (req, res, next) => {
 			req.user.city !== req.body.city ||
 			req.user.lat !== req.body.lat ||
 			req.user.long !== req.body.long
-		) {
+		){
 			await User.findOneAndUpdate({ _id: req.user._id }, val, { new: true }, (err, doc) => {
 				if (err) {
 					req.flash('error_msg', err);

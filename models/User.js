@@ -6,7 +6,6 @@ const UserSchema = new mongoose.Schema({
 	lastname: { type: String, required: true },
 	username: { type: String, required: true },
 	email: { type: String, required: true, unique: true, lowercase: true },
-	profilePic: { type: String },
 	password: {	type: String, required: true },
 	dob: { type: Date, default: new Date() },
 	creationDate: {	type: Date,	default: Date.now },
@@ -17,7 +16,7 @@ const UserSchema = new mongoose.Schema({
 	bio: { type: String },
 	agePref: { type: String },
 	gender: { type: String },
-	sexOrien: { type: String, default: 'bisexual'} ,
+	fame: { type: Number },
 	sexPref: { type: String, default: 'bisexual'},
 	interests: {
 		first: { type: String },
@@ -38,6 +37,7 @@ const UserSchema = new mongoose.Schema({
 	city: String,
 	lat: String,
 	long: String,
+	gender2: String
 });
 
 const User = mongoose.model('User', UserSchema);

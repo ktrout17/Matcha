@@ -10,19 +10,18 @@
 
 	<div class="container table-responsive">
 		<table class="table table-hover">
-			<tbody>
 				<% users.forEach(function (user) { %>
-					<tr>
-						<td class="image">
+					<tr onclick="window.location='<%= user.request.url %>'">
+							<td class="image">
 							<div class="col-lg-3 col-md-4 col-6">
-								<img src="/uploads/<%= user.profileImages.image1 %>" alt="" style="height: 100%;width: 150%">
+									<img src="/uploads/<%= user.profileImage %>" alt="" style="height: 100%;width: 150%">
 							</div>
 						</td>
 						<td class="product text-left"><strong><%= user.firstname %> <%= user.lastname %></strong><br><%= user.username %></td>
 						<td class="rate text-right"><span><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i></span><br>Popularity</td>
 					</tr>
 				<% }) %>
-			</tbody></table>
+			</table>
 	</div>
 </main>
 <footer>

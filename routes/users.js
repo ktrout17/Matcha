@@ -30,7 +30,6 @@ router.get('/editProfile', ensureAuthenticated, (req, res) => {
         gender: req.user.gender,
         date: req.user.dob,
         agePref: req.user.agePref,
-        sexOrien: req.user.sexOrien,
         sexPref: req.user.sexPref,
         bio: req.user.bio,
         interests: req.user.interests,
