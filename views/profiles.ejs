@@ -5,7 +5,7 @@
     <%- include('./default/profileHeader'); -%>
 </header>
 <main>
-    <%- include ('./partials/messages'); -%>d
+    <%- include ('./partials/messages'); -%>
     <div class="row py-5 px-4">
         <div class="bg-white shadow rounded overflow-hidden mx-auto">
             <div class="px-4 pt-0 pb-4 bg-danger">
@@ -31,7 +31,14 @@
                 </div>
             </div>
             <div class="container mx-auto">
-                <h5 class="font-weight-light text-center text-lg-left mt-4 mb-0">Image Gallery</h5>
+                <br><h4 class="text-danger"><%= user.username%>'s Info</h4>
+                <hr class="mt-2 mb-3">
+                <p class="font-weight-light"><span class="text-danger">Gender</span> : <%= user.gender%></p>
+                <p class="font-weight-light"><span class="text-danger">Sexual Preference</span> : <%= user.sexPref%></p>
+                <p class="font-weight-light"><span class="text-danger">Interests</span> : #<%= user.interests.first%> #<%= user.interests.second%> #<%= user.interests.third%> #<%= user.interests.fourth%> #<%= user.interests.fifth%></p>
+                <p class="font-weight-light"><span class="text-danger">Bio</span> : <%= user.bio%></p>
+                <p class="font-weight-light"><span class="text-danger">Popularity Score</span> : </p>
+                <h5 class="text-danger text-lg-left mt-4 mb-0">Image Gallery</h5>
                 <hr class="mt-2 mb-5">
                 <div class="row text-center text-lg-left">
                     <div class="col-lg-3 col-md-4 col-6">
@@ -55,8 +62,8 @@
                         </a>
                     </div>
                 </div>
-            </div>
 
+            </div>
         </div>
     </div>
     <script>

@@ -74,7 +74,12 @@ router.get('/dashboard', ensureAuthenticated, (req, res) =>
 		image1: req.user.profileImages.image2,
 		image2: req.user.profileImages.image3,
 		image3: req.user.profileImages.image4,
-		image4: req.user.profileImages.image5
+		image4: req.user.profileImages.image5,
+		gender: req.user.gender,
+		sexPref: req.user.sexPref,
+		interests: req.user.interests,
+		bio: req.user.bio
+
 	}));
 router.get('/notifications', (req, res) => res.render('notifications'));
 
