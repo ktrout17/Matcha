@@ -100,12 +100,11 @@ exports.index_profile = (req, res) => {
 			});
 			// console.log("found");
 			// res.redirect('/profiles/' + id);
-		} else if (!user) {
+		} else {
 			User.findOneAndUpdate({_id: id}, {$inc: {likes: 1}}, (err) => {
 				if (err) {
 					req.flash('error_msg', err);
 					console.log("err" + err);
-					console.log("user" + doc);
 					res.status(500).redirect('/profiles/' + id);
 				}
 			})
