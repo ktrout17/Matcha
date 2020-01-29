@@ -12,7 +12,18 @@ const upload = multer({
 
 // Render ejs view pages
 router.get('/', (req, res) => { res.render('welcome') });
-router.get('/profiles/:id', (req, res) => { res.render('profiles') });
+router.get('/profiles/:id', (req, res) => {
+	const id = req.params.id;
+	User.findById(id)
+	.exec()
+	.then( doc => {
+		res.render('profiles', {
+			"user": doc
+		})
+	})
+	.catch();
+});
+
 router.get('/chats', (req, res) => res.render('chats'));
 router.get('/suggestedMatchas', (req, res) => {
 	User.find({$and:[{
@@ -45,7 +56,6 @@ router.get('/suggestedMatchas', (req, res) => {
 					username: doc.username,
 					profileImage: doc.profileImages.image1,
 					request: {
-						type: 'GET',
 						url: '/profiles/' + doc.id
 					}
 				}
@@ -70,6 +80,7 @@ router.get('/dashboard', ensureAuthenticated, (req, res) =>
 // Index Controller
 const IndexController = require("../controllers/index");
 
-router.post('/dashboard', (req, res, next) => { res.locals.upload = upload; next(); }, IndexController.index_dashboard)
+router.post('/dashboard', (req, res, next) => { res.locals.upload = upload; next(); }, IndexController.index_dashboard);
+router.post('/profiles/:id', IndexController.index_profile);
 
 module.exports = router;

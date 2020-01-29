@@ -5,22 +5,24 @@
     <%- include('./default/profileHeader'); -%>
 </header>
 <main>
-    <%- include ('./partials/messages'); -%>
+    <%- include ('./partials/messages'); -%>d
     <div class="row py-5 px-4">
         <div class="bg-white shadow rounded overflow-hidden mx-auto">
             <div class="px-4 pt-0 pb-4 bg-danger">
                 <div class="mx-auto">
-                    <h5><button name="submit" type="submit" class="btn btn-secondary"><i class="fa fa-heart"> Like</i></button></h5>
+                    <form id="form" action="/profiles/<%= user.id %>" method="POST">
+                        <h5><button type="submit" class="btn btn-secondary"><i class="fa fa-heart">Like</i></button></h5>
+                    </form>
                 </div>
                 <div class="media align-items-end profile-header">
-                    <div class="profile mr-3 mt-3"><a href="/img/pp.png"><img src="/img/pp.png" alt="..." width="250" class="rounded mb-2 img-fluid"></a></div>
+                    <div class="profile mr-3 mt-3"><a href="/uploads/<%= user.profileImages.image1 %>"><img src="/uploads/<%= user.profileImages.image1 %>" alt="..." width="250" class="rounded mb-2 img-fluid"></a></div>
                     <div class="media-body text-white text-center mb-auto mt-3">
-                        <h4 class="mt-0 mb-0">Username</h4>
-                        <p class="small mb-4"> <i class="fa fa-map-marker mr-2"></i>Location</p>
+                        <h4 class="mt-0 mb-0"><%= user.username %></h4>
+                        <p class="small mb-4"> <i class="fa fa-map-marker mr-2"></i><%= user.province %>, <%= user.city %></p>
                     </div>
                     <ul class="list-inline mb-0 bg-light p-4 d-flex justify-content-end rounded bg-transparent border border-dark">
                         <li class="list-inline-item">
-                            <h5 class="font-weight-bold mb-0 d-block">241</h5><small class="text-muted"> <i class="fa fa-heart mr-1"></i>Likes</small>
+                            <h5 class="font-weight-bold mb-0 d-block"><%= user.likes %></h5><small class="text-muted"> <i class="fa fa-heart mr-1"></i>Likes</small>
                         </li>
                         <li class="list-inline-item">
                             <h5 class="font-weight-bold mb-0 d-block">84K</h5><small class="text-muted"> <i class="fa fa-eye mr-1"></i>Views</small>
@@ -33,29 +35,45 @@
                 <hr class="mt-2 mb-5">
                 <div class="row text-center text-lg-left">
                     <div class="col-lg-3 col-md-4 col-6">
-                        <a href="/img/couple18.jpg" class="d-block mb-4 h-100">
-                            <img class="img-fluid img-thumbnail" src="/img/couple18.jpg" alt="" style="height: 100%;width: 150%">
+                        <a href="/uploads/<%= user.profileImages.image2 %>" class="d-block mb-4 h-100">
+                            <img class="img-fluid img-thumbnail" src="/uploads/<%= user.profileImages.image2 %>" alt="" style="height: 100%;width: 150%">
                         </a>
                     </div>
                     <div class="col-lg-3 col-md-4 col-6">
-                        <a href="/img/couple17.jpg" class="d-block mb-4 h-100">
-                            <img class="img-fluid img-thumbnail" src="/img/couple17.jpg" alt="" style="height: 100%; width: 150%">
+                        <a href="/uploads/<%= user.profileImages.image3 %>" class="d-block mb-4 h-100">
+                            <img class="img-fluid img-thumbnail" src="/uploads/<%= user.profileImages.image3 %>" alt="" style="height: 100%; width: 150%">
                         </a>
                     </div>
                     <div class="col-lg-3 col-md-4 col-6">
-                        <a href="/img/couple16.jpg" class="d-block mb-4 h-100">
-                            <img class="img-fluid img-thumbnail" src="/img/couple16.jpg" alt="" style="height: 100%; width: 150%">
+                        <a href="/uploads/<%= user.profileImages.image4 %>" class="d-block mb-4 h-100">
+                            <img class="img-fluid img-thumbnail" src="/uploads/<%= user.profileImages.image4 %>" alt="" style="height: 100%; width: 150%">
                         </a>
                     </div>
                     <div class="col-lg-3 col-md-4 col-6">
-                        <a href="/img/couple15.jpg" class="d-block mb-4 h-100">
-                            <img class="img-fluid img-thumbnail" src="/img/couple15.jpg" alt="" style="height: 100%; width: 150%">
+                        <a href="/uploads/<%= user.profileImages.image5 %>" class="d-block mb-4 h-100">
+                            <img class="img-fluid img-thumbnail" src="/uploads/<%= user.profileImages.image5 %>" alt="" style="height: 100%; width: 150%">
                         </a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <script>
+            // function like() {
+                // document.getElementById("form").submit();
+                // var x =  document.getElementById("unlike");
+                // if (x.style.display === "none")
+                //     x.style.display = "block";
+                // else
+                //     x.style.display = "none"
+                // var y =  document.getElementById("like");
+                // if (y.style.display === "none")
+                //     y.style.display = "block";
+                // else
+                //     y.style.display = "none"
+                // document.getElementById("like").style.display = "none";
+            // }
+        </script>
 </main>
 <footer>
     <%- include('./default/footer'); -%>

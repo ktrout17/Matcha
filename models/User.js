@@ -17,6 +17,7 @@ const UserSchema = new mongoose.Schema({
 	agePref: { type: String },
 	gender: { type: String },
 	fame: { type: Number },
+	likes: {type: Number, default: 0 },
 	sexPref: { type: String, default: 'bisexual'},
 	interests: {
 		first: { type: String },
