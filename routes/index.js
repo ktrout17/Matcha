@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
+const Likes = require('../models/Likes');
 const { ensureAuthenticated } = require('../config/auth');
 const multer = require('multer');
 const storage = require('../config/fileStorage');
@@ -12,19 +13,41 @@ const upload = multer({
 
 // Render ejs view pages
 router.get('/', (req, res) => { res.render('welcome') });
+
 router.get('/profiles/:id', (req, res) => {
 	const id = req.params.id;
 	User.findById(id)
 	.exec()
 	.then( doc => {
-		res.render('profiles', {
-			"user": doc
+		Likes.findOne({$and: [{_userId: req.user.id}, {likedId: id}]}, (err) => {
+			if (err) {
+					req.flash('error_msg', err.message);
+					console.log("err" + err);
+					res.status(500).redirect('/profiles/' + id);
+				}
+		})
+		.exec()
+		.then((likeDoc) => {
+			console.log(likeDoc);
+			if (likeDoc) {
+				res.render('profiles', {
+					"user": doc,
+					"liked": "unlike"
+				});
+			}
+			else {
+				res.render('profiles', {
+					"user": doc,
+					"liked": "like"
+				});
+			}
 		})
 	})
 	.catch();
 });
 
 router.get('/chats', (req, res) => res.render('chats'));
+
 router.get('/suggestedMatchas', (req, res) => {
 	User.find({$and:[{
 		city: req.user.city

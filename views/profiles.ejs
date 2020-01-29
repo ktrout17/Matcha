@@ -1,8 +1,8 @@
 <head>
-    <%- include('./default/head'); -%>
+	<%- include('./default/head'); -%>
 </head>
 <header>
-    <%- include('./default/profileHeader'); -%>
+	<%- include('./default/profileHeader'); -%>
 </header>
 <main>
     <%- include ('./partials/messages'); -%>
@@ -11,7 +11,7 @@
             <div class="px-4 pt-0 pb-4 bg-danger">
                 <div class="mx-auto">
                     <form id="form" action="/profiles/<%= user.id %>" method="POST">
-                        <h5><button type="submit" class="btn btn-secondary"><i class="fa fa-heart">Like</i></button></h5>
+                        <h5><button type="submit" class="btn btn-secondary"><i class="fa fa-heart"><%= liked %></i></button></h5>
                     </form>
                 </div>
                 <div class="media align-items-end profile-header">
@@ -66,23 +66,7 @@
             </div>
         </div>
     </div>
-    <script>
-            // function like() {
-                // document.getElementById("form").submit();
-                // var x =  document.getElementById("unlike");
-                // if (x.style.display === "none")
-                //     x.style.display = "block";
-                // else
-                //     x.style.display = "none"
-                // var y =  document.getElementById("like");
-                // if (y.style.display === "none")
-                //     y.style.display = "block";
-                // else
-                //     y.style.display = "none"
-                // document.getElementById("like").style.display = "none";
-            // }
-        </script>
 </main>
 <footer>
-    <%- include('./default/footer'); -%>
+	<%- include('./default/footer'); -%>
 </footer>
