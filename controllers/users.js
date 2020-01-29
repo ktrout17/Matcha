@@ -295,7 +295,7 @@ exports.user_extendedProfile = (req, res) => {
 			res.status(500).redirect('/users/extendedProfile');
 		}
 		else if (err) {
-			req.flash('error_msg', err);
+			req.flash('error_msg', err.message);
 			res.status(500).redirect('/users/extendedProfile');
 		}
 

@@ -76,6 +76,7 @@ router.get('/dashboard', ensureAuthenticated, (req, res) =>
 		image3: req.user.profileImages.image4,
 		image4: req.user.profileImages.image5
 	}));
+router.get('/notifications', (req, res) => res.render('notifications'));
 
 // Index Controller
 const IndexController = require("../controllers/index");
