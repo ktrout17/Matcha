@@ -100,7 +100,8 @@ router.get('/dashboard', ensureAuthenticated, (req, res) =>
 		gender: req.user.gender,
 		sexPref: req.user.sexPref,
 		interests: req.user.interests,
-		bio: req.user.bio
+		bio: req.user.bio,
+        likes : req.user.likes
 
 	}));
 router.get('/notifications', (req, res) => res.render('notifications'));
