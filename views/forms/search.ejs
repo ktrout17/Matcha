@@ -1,12 +1,11 @@
 <br>
-<div class="container-fluid border-danger">
-            <div class="input-group mb-3">
-                <input class="form-control" type="text" id="search" placeholder="Search for a User by Username">
-                <div class="input-group-append">
-                    <button class="btn btn-danger" type="submit" name="action"><i class="fa fa-search"></i></button>
-                </div>
-            </div>
-            <h4 class="text-danger">Advanced Criteria Search</h4>
+<div class="container">
+    <input class="form-control" type="text" id="search" placeholder="Search for a User by Username">
+    <br><button class="btn btn-danger" type="submit" name="action" >Search</button>
+</div>
+<hr class="mt-2 mb-3">
+<a class="btn btn-danger" data-toggle="collapse" href="#searchUser" role="button" aria-expanded="false" aria-controls="searchUser" id="userSearch">Click here for Advanced Criteria Search</a>
+<div class="container-fluid border-danger collapse" id="searchUser">
             <div class="form-group row">
                 <label for="age_preference" class="col-4 col-form-label">Age Preference</label>
                 <div class="col-8">

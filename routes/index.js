@@ -103,7 +103,6 @@ router.get('/dashboard', ensureAuthenticated, (req, res) =>
 		interests: req.user.interests,
 		bio: req.user.bio,
         likes : req.user.likes
-
 	}));
 router.get('/notifications', (req, res) => res.render('notifications'));
 
