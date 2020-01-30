@@ -148,60 +148,117 @@ exports.index_advancedMathas = (req, res) => {
 			});
 	}
 	else if (req.body.aSubmit === 'aSubmit') {
-		const age = req.body.age_preference;
+		const agePref = req.body.age_preference;
 		const interests = req.body.interests;
 		let interestsQuery;
+		let ageQuery;
 
-		const age2 = Date.now() - req.user.dob.getTime();
-		const age3 = new Date(age2);
-		console.log(Math.abs(age3.getUTCFullYear() - 1970))
-		res.end();
+		switch (agePref) {
+			case 'age1':
+				ageQuery = {
+					$and: [
+						{ age: { $gte: 18 } },
+						{ age: { $lte: 24 } }
+					]
+				}
+				break;
+			case 'age2':
+				ageQuery = {
+					$and: [
+						{ age: { $gte: 25 } },
+						{ age: { $lte: 31 } }
+					]
+				}
+				break;
+			case 'age3':
+				ageQuery = {
+					$and: [
+						{ age: { $gte: 32 } },
+						{ age: { $lte: 38 } }
+					]
+				}
+				break;
+			case 'age4':
+				ageQuery = {
+					$and: [
+						{ age: { $gte: 39 } },
+						{ age: { $lte: 45 } }
+					]
+				}
+				break;
+			case 'age5':
+				ageQuery = {
+					$and: [
+						{ age: { $gte: 46 } },
+						{ age: { $lte: 52 } }
+					]
+				}
+				break;
+			case 'age6':
+				ageQuery = {
+					$and: [
+						{ age: { $gte: 53 } },
+						{ age: { $lte: 59 } }
+					]
+				}
+				break;
+			case 'age7':
+				ageQuery = {
+					$and: [
+						{ age: { $gte: 60 } },
+						{ age: { $lte: 60 } }
+					]
+				}
+				break;
+				default:
+					ageQuery = {};
+		}
 
-		// if (typeof interests !== 'undefined') {
-		// 	if (Array.isArray(interests)) {
-		// 		interestsQuery = {
-		// 			$or: [{
-		// 				"interests.first": { $in: [interests[0], interests[1], interests[2], interests[3], interests[4]] },
-		// 			}, {
-		// 				"interests.second": { $in: [interests[0], interests[1], interests[2], interests[3], interests[4]] },
-		// 			}, {
-		// 				"interests.third": { $in: [interests[0], interests[1], interests[2], interests[3], interests[4]] },
-		// 			}, {
-		// 				"interests.fourth": { $in: [interests[0], interests[1], interests[2], interests[3], interests[4]] },
-		// 			}, {
-		// 				"interests.fifth": { $in: [interests[0], interests[1], interests[2], interests[3], interests[4]] },
-		// 			}]
-		// 		};
-		// 	} else {
-		// 		interestsQuery = {
-		// 			$or: [{
-		// 				"interests.first": { $eq: interests }
-		// 			}, {
-		// 				"interests.second": { $eq: interests }
-		// 			}, {
-		// 				"interests.third": { $eq: interests }
-		// 			}, {
-		// 				"interests.fourth": { $eq: interests }
-		// 			}, {
-		// 				"interests.fifth": { $eq: interests }
-		// 			}]
-		// 		};
-		// 	}
-		// }
-		// else {
-		// 	interestsQuery = {};
-		// }
-		// User.find({
-		// 	$and:
-		// 		[
-		// 			{ age: { $eq: age } },
-		// 			interestsQuery,
-		// 		]
-		// })
-		// 	.exec()
-		// 	.then(doc => {
-		// 		console.log(doc);
-		// 		res.end()
-		// 	});
+		if (typeof interests !== 'undefined') {
+			if (Array.isArray(interests)) {
+				interestsQuery = {
+					$or: [{
+						"interests.first": { $in: [interests[0], interests[1], interests[2], interests[3], interests[4]] },
+					}, {
+						"interests.second": { $in: [interests[0], interests[1], interests[2], interests[3], interests[4]] },
+					}, {
+						"interests.third": { $in: [interests[0], interests[1], interests[2], interests[3], interests[4]] },
+					}, {
+						"interests.fourth": { $in: [interests[0], interests[1], interests[2], interests[3], interests[4]] },
+					}, {
+						"interests.fifth": { $in: [interests[0], interests[1], interests[2], interests[3], interests[4]] },
+					}]
+				};
+			} else {
+				interestsQuery = {
+					$or: [{
+						"interests.first": { $eq: interests }
+					}, {
+						"interests.second": { $eq: interests }
+					}, {
+						"interests.third": { $eq: interests }
+					}, {
+						"interests.fourth": { $eq: interests }
+					}, {
+						"interests.fifth": { $eq: interests }
+					}]
+				};
+			}
+		}
+		else {
+			interestsQuery = {};
+		}
+		User.find({
+			$and:
+				[
+					ageQuery,
+					interestsQuery
+				]
+		})
+			.exec()
+			.then(doc => {
+				console.log(doc);
+				res.end()
+			});
 	}
 }

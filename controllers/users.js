@@ -305,6 +305,11 @@ exports.user_extendedProfile = (req, res) => {
 					if (err) { return res.status(500).send({ msg: err.message }); }
 				}
 				else {
+					const newDate = new Date(req.body.birthdate);
+					const ageDifMs = Date.now() - newDate.getTime();
+					const ageDate = new Date(ageDifMs);
+					const age = Math.abs(ageDate.getUTCFullYear() - 1970);
+
 					user.gender = req.body.gender;
 					user.dob = req.body.birthdate;
 					user.agePref = req.body.age_preference;
@@ -326,6 +331,7 @@ exports.user_extendedProfile = (req, res) => {
 					user.profileImages.image4 = 'couple17.jpg';
 					user.profileImages.image5 = 'couple18.jpg';
 					user.gender2 = req.body.gender2;
+					user.age = age;
 					user.extendedProf = true;
 					user.save((err) => {
 						if (err) { return res.status(500).send({ msg: err.message }); }
@@ -423,7 +429,7 @@ exports.user_editProfile = (req, res, next) => {
 			req.user.city !== req.body.city ||
 			req.user.lat !== req.body.lat ||
 			req.user.long !== req.body.long
-		){
+		) {
 			await User.findOneAndUpdate({ _id: req.user._id }, val, { new: true }, (err, doc) => {
 				if (err) {
 					req.flash('error_msg', err);
