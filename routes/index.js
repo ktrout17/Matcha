@@ -70,7 +70,6 @@ router.get('/suggestedMatchas', (req, res) => {
 	.select('firstname lastname username profileImages.image1')
 	.exec()
 	.then( docs => {
-		console.log(docs);
 		res.status(200).render('suggestedMatchas', {
 			"users": docs.map(doc => {
 				return {
@@ -111,5 +110,6 @@ const IndexController = require("../controllers/index");
 
 router.post('/dashboard', (req, res, next) => { res.locals.upload = upload; next(); }, IndexController.index_dashboard);
 router.post('/profiles/:id', IndexController.index_profile);
+router.post('/suggestedMatchas', IndexController.index_advancedMathas);
 
 module.exports = router;

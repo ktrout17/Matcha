@@ -1,7 +1,8 @@
 <br>
+<form action="/suggestedMatchas" method="POST">
 <div class="container">
     <input class="form-control" type="text" id="search" placeholder="Search for a User by Username">
-    <br><button class="btn btn-danger" type="submit" name="action" >Search</button>
+    <br><button class="btn btn-danger" type="submit" name="sSubmit" value="sSubmit" >Search</button>
 </div>
 <hr class="mt-2 mb-3">
 <a class="btn btn-danger" data-toggle="collapse" href="#searchUser" role="button" aria-expanded="false" aria-controls="searchUser" id="userSearch">Click here for Advanced Criteria Search</a>
@@ -9,7 +10,7 @@
             <div class="form-group row">
                 <label for="age_preference" class="col-4 col-form-label">Age Preference</label>
                 <div class="col-8">
-                    <select id="age_preference" name="age_preference" class="custom-select" required="required">
+                    <select id="age_preference" name="age_preference" class="custom-select">
                         <option value="age1">18-24</option>
                         <option value="age2">25-31</option>
                         <option value="age3">32-38</option>
@@ -24,51 +25,51 @@
                 <label class="col-4">Interests</label>
                 <div class="col-8 options">
                     <div class="custom-control custom-checkbox custom-control-inline">
-                        <input name="interests" id="interests_0" type="checkbox" class="custom-control-input" onclick="return maxSel()" value="gaming" required="required" aria-describedby="interestsHelpBlock">
+                        <input name="interests" id="interests_0" type="checkbox" class="custom-control-input" onclick="return maxSel()" value="gaming" aria-describedby="interestsHelpBlock">
                         <label for="interests_0" class="custom-control-label">#gaming</label>
                     </div>
                     <div class="custom-control custom-checkbox custom-control-inline">
-                        <input name="interests" id="interests_1" type="checkbox" class="custom-control-input" onclick="return maxSel()" value="coding" required="required" aria-describedby="interestsHelpBlock">
+                        <input name="interests" id="interests_1" type="checkbox" class="custom-control-input" onclick="return maxSel()" value="coding" aria-describedby="interestsHelpBlock">
                         <label for="interests_1" class="custom-control-label">#coding</label>
                     </div>
                     <div class="custom-control custom-checkbox custom-control-inline">
-                        <input name="interests" id="interests_2" type="checkbox" class="custom-control-input" onclick="return maxSel()" value="love" required="required" aria-describedby="interestsHelpBlock">
+                        <input name="interests" id="interests_2" type="checkbox" class="custom-control-input" onclick="return maxSel()" value="love" aria-describedby="interestsHelpBlock">
                         <label for="interests_2" class="custom-control-label">#love</label>
                     </div>
                     <div class="custom-control custom-checkbox custom-control-inline">
-                        <input name="interests" id="interests_3" type="checkbox" required="required" class="custom-control-input" onclick="return maxSel()" value="family" aria-describedby="interestsHelpBlock">
+                        <input name="interests" id="interests_3" type="checkbox" class="custom-control-input" onclick="return maxSel()" value="family" aria-describedby="interestsHelpBlock">
                         <label for="interests_3" class="custom-control-label">#family</label>
                     </div>
                     <div class="custom-control custom-checkbox custom-control-inline">
-                        <input name="interests" id="interests_4" type="checkbox" required="required" class="custom-control-input" onclick="return maxSel()" value="friends" aria-describedby="interestsHelpBlock">
+                        <input name="interests" id="interests_4" type="checkbox" class="custom-control-input" onclick="return maxSel()" value="friends" aria-describedby="interestsHelpBlock">
                         <label for="interests_4" class="custom-control-label">#friends</label>
                     </div>
                     <div class="custom-control custom-checkbox custom-control-inline">
-                        <input name="interests" id="interests_5" type="checkbox" required="required" class="custom-control-input" onclick="return maxSel()" value="geek" aria-describedby="interestsHelpBlock">
+                        <input name="interests" id="interests_5" type="checkbox" class="custom-control-input" onclick="return maxSel()" value="geek" aria-describedby="interestsHelpBlock">
                         <label for="interests_5" class="custom-control-label">#geek</label>
                     </div>
                     <div class="custom-control custom-checkbox custom-control-inline">
-                        <input name="interests" id="interests_6" type="checkbox" required="required" class="custom-control-input" onclick="return maxSel()" value="exercise" aria-describedby="interestsHelpBlock">
+                        <input name="interests" id="interests_6" type="checkbox" class="custom-control-input" onclick="return maxSel()" value="exercise" aria-describedby="interestsHelpBlock">
                         <label for="interests_6" class="custom-control-label">#exercise</label>
                     </div>
                     <div class="custom-control custom-checkbox custom-control-inline">
-                        <input name="interests" id="interests_7" type="checkbox" required="required" class="custom-control-input" onclick="return maxSel()" value="photography" aria-describedby="interestsHelpBlock">
+                        <input name="interests" id="interests_7" type="checkbox" class="custom-control-input" onclick="return maxSel()" value="photography" aria-describedby="interestsHelpBlock">
                         <label for="interests_7" class="custom-control-label">#photography</label>
                     </div>
                     <div class="custom-control custom-checkbox custom-control-inline">
-                        <input name="interests" id="interests_8" type="checkbox" required="required" class="custom-control-input" onclick="return maxSel()" value="traveling" aria-describedby="interestsHelpBlock">
+                        <input name="interests" id="interests_8" type="checkbox" class="custom-control-input" onclick="return maxSel()" value="traveling" aria-describedby="interestsHelpBlock">
                         <label for="interests_8" class="custom-control-label">#traveling</label>
                     </div>
                     <div class="custom-control custom-checkbox custom-control-inline">
-                        <input name="interests" id="interests_9" type="checkbox" required="required" class="custom-control-input" onclick="return maxSel()" value="cooking" aria-describedby="interestsHelpBlock">
+                        <input name="interests" id="interests_9" type="checkbox" class="custom-control-input" onclick="return maxSel()" value="cooking" aria-describedby="interestsHelpBlock">
                         <label for="interests_9" class="custom-control-label">#cooking</label>
                     </div>
                     <div class="custom-control custom-checkbox custom-control-inline">
-                        <input name="interests" id="interests_10" type="checkbox" required="required" class="custom-control-input" onclick="return maxSel()" value="pets" aria-describedby="interestsHelpBlock">
+                        <input name="interests" id="interests_10" type="checkbox" class="custom-control-input" onclick="return maxSel()" value="pets" aria-describedby="interestsHelpBlock">
                         <label for="interests_10" class="custom-control-label">#pets</label>
                     </div>
                     <div class="custom-control custom-checkbox custom-control-inline">
-                        <input name="interests" id="interests_11" type="checkbox" required="required" class="custom-control-input" onclick="return maxSel()" value="sport" aria-describedby="interestsHelpBlock">
+                        <input name="interests" id="interests_11" type="checkbox" class="custom-control-input" onclick="return maxSel()" value="sport" aria-describedby="interestsHelpBlock">
                         <label for="interests_11" class="custom-control-label">#sport</label>
                     </div>
                     <div>
@@ -80,9 +81,7 @@
         <label class="col-4">Popularity rating range between 1 and 5 (out of 5)</label>
         <div class="col-8 d-flex">
             <span class="font-weight-bold text-danger mr-2 mt-1">1</span>
-            <form class="range-field">
-                <input class="border-0" type="range" min="1" max="5" />
-            </form>
+                <input class="border-0 range-field" type="range" min="1" max="5" />
             <span class="font-weight-bold text-danger ml-2 mt-1">5</span>
         </div>
     </div>
@@ -98,7 +97,8 @@
     </div>
     <div class="form-group row">
         <div class="offset-4 col-8">
-            <button name="submit" type="submit" class="btn btn-danger bg-danger">Find me a match!</button>
+            <button type="submit" name="aSubmit" value="aSubmit" class="btn btn-danger bg-danger">Find me a match!</button>
         </div>
     </div>
 </div>
+</form>
