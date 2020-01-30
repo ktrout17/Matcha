@@ -98,8 +98,6 @@ exports.index_profile = (req, res) => {
 							if (doc) res.redirect('/profiles/' + id);
 						});
 				});
-				// console.log("found");
-				// res.redirect('/profiles/' + id);
 			} else {
 				User.findOneAndUpdate({ _id: id }, { $inc: { likes: 1 } }, (err) => {
 					if (err) {
@@ -118,8 +116,6 @@ exports.index_profile = (req, res) => {
 							if (doc) res.redirect('/profiles/' + id);
 						});
 					});
-				// console.log("Not found");
-				// res.redirect('/profiles/' + id);
 			}
 		});
 };
@@ -155,60 +151,25 @@ exports.index_advancedMathas = (req, res) => {
 
 		switch (agePref) {
 			case 'age1':
-				ageQuery = {
-					$and: [
-						{ age: { $gte: 18 } },
-						{ age: { $lte: 24 } }
-					]
-				}
+				ageQuery = { age: { $gte: 18, $lte: 24 } }
 				break;
 			case 'age2':
-				ageQuery = {
-					$and: [
-						{ age: { $gte: 25 } },
-						{ age: { $lte: 31 } }
-					]
-				}
+				ageQuery = { age: { $gte: 25, $lte: 31 } }
 				break;
 			case 'age3':
-				ageQuery = {
-					$and: [
-						{ age: { $gte: 32 } },
-						{ age: { $lte: 38 } }
-					]
-				}
+				ageQuery = { age: { $gte: 32, $lte: 38 } }
 				break;
 			case 'age4':
-				ageQuery = {
-					$and: [
-						{ age: { $gte: 39 } },
-						{ age: { $lte: 45 } }
-					]
-				}
+				ageQuery = { age: { $gte: 39, $lte: 45 } }
 				break;
 			case 'age5':
-				ageQuery = {
-					$and: [
-						{ age: { $gte: 46 } },
-						{ age: { $lte: 52 } }
-					]
-				}
+				ageQuery = { age: { $gte: 46, $lte: 52 } }
 				break;
 			case 'age6':
-				ageQuery = {
-					$and: [
-						{ age: { $gte: 53 } },
-						{ age: { $lte: 59 } }
-					]
-				}
+				ageQuery = { age: { $gte: 53, $lte: 59 } }
 				break;
 			case 'age7':
-				ageQuery = {
-					$and: [
-						{ age: { $gte: 60 } },
-						{ age: { $lte: 60 } }
-					]
-				}
+				ageQuery = { age: { $gte: 60, $lte: 66 } }
 				break;
 				default:
 					ageQuery = {};
@@ -258,7 +219,7 @@ exports.index_advancedMathas = (req, res) => {
 			.exec()
 			.then(doc => {
 				console.log(doc);
-				res.end()
+				res.send(doc)
 			});
 	}
 }

@@ -25,13 +25,13 @@
                             <h5 class="font-weight-bold mb-0 d-block"><%= user.likes %></h5><small class="text-muted"> <i class="fa fa-heart mr-1"></i>Likes</small>
                         </li>
                         <li class="list-inline-item">
-                            <h5 class="font-weight-bold mb-0 d-block">84K</h5><small class="text-muted"> <i class="fa fa-eye mr-1"></i>Views</small>
+                            <h5 class="font-weight-bold mb-0 d-block"><%= user.views %></h5><small class="text-muted"> <i class="fa fa-eye mr-1"></i>Views</small>
                         </li>
                     </ul>
                 </div>
             </div>
             <div class="container mx-auto">
-                <br><h4 class="text-danger"><%= user.username%>'s Info</h4>
+                <br><h4 class="text-danger"><%= user.username %>'s Info</h4>
                 <hr class="mt-2 mb-3">
                 <p class="font-weight-light"><span class="text-danger">Gender</span> : <%= user.gender%></p>
                 <p class="font-weight-light"><span class="text-danger">Sexual Preference</span> : <%= user.sexPref%></p>

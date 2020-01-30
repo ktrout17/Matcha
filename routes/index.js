@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const Likes = require('../models/Likes');
+const Views = require('../models/Views');
 const { ensureAuthenticated } = require('../config/auth');
 const multer = require('multer');
 const storage = require('../config/fileStorage');
@@ -14,77 +15,109 @@ const upload = multer({
 // Render ejs view pages
 router.get('/', (req, res) => { res.render('welcome') });
 
-router.get('/profiles/:id', (req, res) => {
+router.get('/profiles/:id', async (req, res) => {
 	const id = req.params.id;
-	User.findById(id)
-	.exec()
-	.then( doc => {
-		Likes.findOne({$and: [{_userId: req.user.id}, {likedId: id}]}, (err) => {
+	let liked;
+
+	const newView = new Views({
+		_userId: req.user.id,
+		viewedId: id
+	})
+
+	newView.save(err => {
+		if (err) {
+			req.flash('error_msg', err.message);
+			console.log("err" + err);
+			res.status(500).redirect('/profiles/' + id);
+		}
+		User.findOneAndUpdate({ _id: id }, { $inc: { views: 1 } }, (err) => {
 			if (err) {
+				req.flash('error_msg', err.message);
+				console.log("err" + err);
+				res.status(500).redirect('/profiles/' + id);
+			}
+		})
+	})
+
+	await User.findById(id)
+		.exec()
+		.then(doc => {
+			Likes.findOne({ $and: [{ _userId: req.user.id }, { likedId: id }] }, (err) => {
+				if (err) {
 					req.flash('error_msg', err.message);
 					console.log("err" + err);
 					res.status(500).redirect('/profiles/' + id);
 				}
-		})
-		.exec()
-		.then((likeDoc) => {
-			console.log(likeDoc);
-			if (likeDoc) {
-				res.render('profiles', {
-					"user": doc,
-					"liked": "unlike"
-				});
-			}
-			else {
-				res.render('profiles', {
-					"user": doc,
-					"liked": "like"
-				});
-			}
-		})
-	})
-	.catch();
+			})
+				.exec()
+				.then((likeDoc) => {
+					Views.count({ viewedId: { $eq: id } }, (err) => {
+						if (err) {
+							req.flash('error_msg', err.message);
+							console.log("err" + err);
+							res.status(500).redirect('/profiles/' + id);
+						}
+						if (likeDoc) liked = "unlike";
+						else liked = "like";
+					})
+						.exec()
+						.then(result => {
+							res.render('profiles', {
+								"user": doc,
+								"liked": liked,
+								"viewed": result
+							})
+						});
+				})
+		});
 });
 
-router.get('/chats', (req, res) => res.render('chats'));
+router.get('/chats', ensureAuthenticated, (req, res) => res.render('chats'));
 
 router.get('/suggestedMatchas', (req, res) => {
-	User.find({$and:[{
-		city: req.user.city
-	},{$or:[{
-		"interests.first":{$in:[req.user.interests['first'],req.user.interests['second'],req.user.interests['third'],req.user.interests['fourth'],req.user.interests['fifth']]},
-	}, {
-		"interests.second":{$in:[req.user.interests['first'],req.user.interests['second'],req.user.interests['third'],req.user.interests['fourth'],req.user.interests['fifth']]},
-	}, {
-		"interests.third":{$in:[req.user.interests['first'],req.user.interests['second'],req.user.interests['third'],req.user.interests['fourth'],req.user.interests['fifth']]},
-	}, {
-		"interests.fourth":{$in:[req.user.interests['first'],req.user.interests['second'],req.user.interests['third'],req.user.interests['fourth'],req.user.interests['fifth']]},
-	}, {
-		"interests.fifth":{$in:[req.user.interests['first'],req.user.interests['second'],req.user.interests['third'],req.user.interests['fourth'],req.user.interests['fifth']]},
-	}
-]}, {$or: [{
-	$and: [{gender: {$eq: req.user.sexPref}}, {gender: {$eq: 'male'}}]},
-	{$and: [{gender: {$eq: req.user.sexPref}}, {gender: {$eq: 'female'}}]}, 
-	{gender2: {$eq: req.user.sexPref}}]}, { _id: {$ne: req.user.id}}
-]}).sort({fame: -1})
-	.select('firstname lastname username profileImages.image1')
-	.exec()
-	.then( docs => {
-		res.status(200).render('suggestedMatchas', {
-			"users": docs.map(doc => {
-				return {
-					firstname: doc.firstname,
-					lastname: doc.lastname,
-					username: doc.username,
-					profileImage: doc.profileImages.image1,
-					request: {
-						url: '/profiles/' + doc.id
+	User.find({
+		$and: [{
+			city: req.user.city
+		}, {
+			$or: [{
+				"interests.first": { $in: [req.user.interests['first'], req.user.interests['second'], req.user.interests['third'], req.user.interests['fourth'], req.user.interests['fifth']] },
+			}, {
+				"interests.second": { $in: [req.user.interests['first'], req.user.interests['second'], req.user.interests['third'], req.user.interests['fourth'], req.user.interests['fifth']] },
+			}, {
+				"interests.third": { $in: [req.user.interests['first'], req.user.interests['second'], req.user.interests['third'], req.user.interests['fourth'], req.user.interests['fifth']] },
+			}, {
+				"interests.fourth": { $in: [req.user.interests['first'], req.user.interests['second'], req.user.interests['third'], req.user.interests['fourth'], req.user.interests['fifth']] },
+			}, {
+				"interests.fifth": { $in: [req.user.interests['first'], req.user.interests['second'], req.user.interests['third'], req.user.interests['fourth'], req.user.interests['fifth']] },
+			}
+			]
+		}, {
+			$or: [{
+				$and: [{ gender: { $eq: req.user.sexPref } }, { gender: { $eq: 'male' } }]
+			},
+			{ $and: [{ gender: { $eq: req.user.sexPref } }, { gender: { $eq: 'female' } }] },
+			{ gender2: { $eq: req.user.sexPref } }]
+		}, { _id: { $ne: req.user.id } }
+		]
+	}).sort({ fame: -1 })
+		.select('firstname lastname username profileImages.image1')
+		.exec()
+		.then(docs => {
+			res.status(200).render('suggestedMatchas', {
+				"users": docs.map(doc => {
+					return {
+						firstname: doc.firstname,
+						lastname: doc.lastname,
+						username: doc.username,
+						profileImage: doc.profileImages.image1,
+						request: {
+							url: '/profiles/' + doc.id
+						}
 					}
-				}
-			})
-		});
-	})
-	.catch();
+				})
+			});
+		})
+		.catch();
 });
 // Dashboard
 router.get('/dashboard', ensureAuthenticated, (req, res) =>
@@ -101,7 +134,7 @@ router.get('/dashboard', ensureAuthenticated, (req, res) =>
 		sexPref: req.user.sexPref,
 		interests: req.user.interests,
 		bio: req.user.bio,
-        likes : req.user.likes
+		likes: req.user.likes
 	}));
 router.get('/notifications', (req, res) => res.render('notifications'));
 
