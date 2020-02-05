@@ -125,9 +125,9 @@ exports.index_advancedMathas = (req, res) => {
 
 	if (req.body.sSubmit === 'sSubmit') {
 		User.find({ username: search })
-			.exec()
-			.then(docs => {
-				console.log(docs);
+		.exec()
+		.then(docs => {
+			console.log(docs);
 				res.render("suggestedMatchas", {
 					"users": docs.map(doc => {
 						return {
