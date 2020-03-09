@@ -15,7 +15,7 @@
                     </form>
                 </div>
                 <div class="media align-items-end profile-header">
-                    <div class="profile mr-3 mt-3"><a href="<%= user.profileImages.image1 %>"><img src="<%= user.profileImages.image1 %>" alt="..." width="250" class="rounded mb-2 img-fluid"></a></div>
+                    <div class="profile mr-3 mt-3"><a href="<%= user.profileImages.image1 %>"><img src="/<%= user.profileImages.image1 %>" alt="..." width="250" class="rounded mb-2 img-fluid"></a></div>
                     <div class="media-body text-white text-center mb-auto mt-3">
                         <h4 class="mt-0 mb-0"><%= user.username %></h4>
                         <p class="small mb-4"> <i class="fa fa-map-marker mr-2"></i><%= user.province %>, <%= user.city %></p>
@@ -35,30 +35,30 @@
                 <hr class="mt-2 mb-3">
                 <p class="font-weight-light"><span class="text-danger">Gender</span> : <%= user.gender%></p>
                 <p class="font-weight-light"><span class="text-danger">Sexual Preference</span> : <%= user.sexPref%></p>
-                <p class="font-weight-light"><span class="text-danger">Interests</span> : #<%= user.interests.first%> #<%= user.interests.second%> #<%= user.interests.third%> #<%= user.interests.fourth%> #<%= user.interests.fifth%></p>
+                <p class="font-weight-light"><span class="text-danger">Interests</span> : #<%= user.first%> #<%= user.second%> #<%= user.third%> #<%= user.fourth%> #<%= user.fifth%></p>
                 <p class="font-weight-light"><span class="text-danger">Bio</span> : <%= user.bio%></p>
                 <p class="font-weight-light"><span class="text-danger">Popularity Score</span> : </p>
                 <h5 class="text-danger text-lg-left mt-4 mb-0">Image Gallery</h5>
                 <hr class="mt-2 mb-5">
                 <div class="row text-center text-lg-left">
                     <div class="col-lg-3 col-md-4 col-6">
-                        <a href="<%= user.profileImages.image2 %>" class="d-block mb-4 h-100">
-                            <img class="img-fluid img-thumbnail" src="<%= user.profileImages.image2 %>" alt="" style="height: 100%;width: 150%">
+                        <a href="<%= user.image2 %>" class="d-block mb-4 h-100">
+                            <img class="img-fluid img-thumbnail" src="<%= user.image2 %>" alt="" style="height: 100%;width: 150%">
                         </a>
                     </div>
                     <div class="col-lg-3 col-md-4 col-6">
-                        <a href="<%= user.profileImages.image3 %>" class="d-block mb-4 h-100">
-                            <img class="img-fluid img-thumbnail" src="<%= user.profileImages.image3 %>" alt="" style="height: 100%; width: 150%">
+                        <a href="<%= user.image3 %>" class="d-block mb-4 h-100">
+                            <img class="img-fluid img-thumbnail" src="<%= user.image3 %>" alt="" style="height: 100%; width: 150%">
                         </a>
                     </div>
                     <div class="col-lg-3 col-md-4 col-6">
-                        <a href="<%= user.profileImages.image4 %>" class="d-block mb-4 h-100">
-                            <img class="img-fluid img-thumbnail" src="<%= user.profileImages.image4 %>" alt="" style="height: 100%; width: 150%">
+                        <a href="<%= user.image4 %>" class="d-block mb-4 h-100">
+                            <img class="img-fluid img-thumbnail" src="<%= user.image4 %>" alt="" style="height: 100%; width: 150%">
                         </a>
                     </div>
                     <div class="col-lg-3 col-md-4 col-6">
-                        <a href="<%= user.profileImages.image5 %>" class="d-block mb-4 h-100">
-                            <img class="img-fluid img-thumbnail" src="<%= user.profileImages.image5 %>" alt="" style="height: 100%; width: 150%">
+                        <a href="<%= user.image5 %>" class="d-block mb-4 h-100">
+                            <img class="img-fluid img-thumbnail" src="<%= user.image5 %>" alt="" style="height: 100%; width: 150%">
                         </a>
                     </div>
                 </div>

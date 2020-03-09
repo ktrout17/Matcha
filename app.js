@@ -6,12 +6,15 @@ const session = require('express-session');
 const passport = require('passport');
 const morgan = require('morgan');
 const path = require('path');
+const favicon = require("serve-favicon");
 
 const app = express();
 
 // console logs Dev information
 app.use(morgan('dev'));
 
+// set favicon
+app.use(favicon(__dirname + "/public/img/favicon.ico"));
 
 // Passport Config
 require('./config/passport')(passport);

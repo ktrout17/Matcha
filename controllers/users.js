@@ -119,6 +119,12 @@ exports.user_login = (req, res, next) => {
 			if (!user.extendedProf) { return res.redirect('/users/extendedProfile'); }
 			if (err) { return next(err); }
 
+			let fame = Math.floor((user.likes / user.views) * 5);
+
+			console.log(user.fame);
+			User.findByIdAndUpdate(user.id, {$set:{fame: fame}}, {new: true}, (err) => {
+				if(err) return next(err);
+			})
 			return res.redirect('/dashboard');
 		})
 	})(req, res, next);
@@ -288,7 +294,6 @@ exports.user_changePwd = (req, res) => {
 
 exports.user_extendedProfile = (req, res) => {
 	let uploads = res.locals.upload;
-	console.log(req.file);
 	uploads(req, res, async function (err) {
 		if (err instanceof multer.MulterError) {
 			req.flash('error_msg', err.message);
