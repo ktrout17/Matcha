@@ -12,17 +12,18 @@
             <div class="bg-white shadow rounded overflow-hidden">
                 <div class="px-4 pt-0 pb-4 bg-danger">
                     <div class="media align-items-end profile-header">
-                        <div class="profile mr-3 mt-3"><img src="/uploads/<%= pp %>" alt="..." width="250" class="rounded mb-2 img-thumbnail"><a href="/users/editProfile" class="btn btn-dark btn-sm btn-block">Edit profile</a></div>
+                        <div class="profile mr-3 mt-3"><img src="<%= pp %>" alt="..." width="250" class="rounded mb-2 img-thumbnail"><a href="/users/editProfile" class="btn btn-dark btn-sm btn-block">Edit profile</a></div>
+                        <h1>Fame: <%= fame %></h1>
                         <div class="media-body text-white text-center mb-auto mt-3">
                             <h4 class="mt-0 mb-0 cap"><% if (typeof name != 'undefined') {%> <%= name %> <% } %></h4>
                             <p class="small mb-4" id="location"> <i class="fa fa-map-marker mr-2"></i><%= province %>, <%= city %></p>
                         </div>
                         <ul class="list-inline mb-0 bg-light p-4 d-flex justify-content-end rounded bg-transparent border border-dark">
                             <li class="list-inline-item">
-                                <button class="bg-danger border-danger" data-toggle="modal" data-target="#likes"><h5 class="font-weight-bold mb-0 d-block"><%= likes%></h5><small class="text-muted"> <i class="fa fa-heart mr-1"></i>Likes</small></button>
+                                <button class="bg-danger border-danger" data-toggle="modal" data-target="#likes"><h5 class="font-weight-bold mb-0 d-block"><%= likes %></h5><small class="text-muted"> <i class="fa fa-heart mr-1"></i>Likes</small></button>
                             </li>
                             <li class="list-inline-item">
-                                <button class="bg-danger border-danger" data-toggle="modal" data-target="#views"><h5 class="font-weight-bold mb-0 d-block">84K</h5><small class="text-muted"> <i class="fa fa-eye mr-1"></i>Views</small></button>
+                                <button class="bg-danger border-danger" data-toggle="modal" data-target="#views"><h5 class="font-weight-bold mb-0 d-block"><%= views %></h5><small class="text-muted"> <i class="fa fa-eye mr-1"></i>Views</small></button>
                             </li>
                         </ul>
                     </div>
@@ -42,8 +43,8 @@
                     <div class="row text-center text-lg-left">
                         <div class="col-lg-3 col-md-4 col-6">
                             <form action="/dashboard" method="post" enctype="multipart/form-data">
-                            <a href="/uploads/<%= image1 %>" class="d-block mb-4 h-100">
-                                <img class="img-fluid img-thumbnail" src="/uploads/<%= image1 %>" alt="" style="height: 100%;width: 150%">
+                            <a href="<%= image1 %>" class="d-block mb-4 h-100">
+                                <img class="img-fluid img-thumbnail" src="<%= image1 %>" alt="" style="height: 100%;width: 150%">
                             </a>
                             <input type="file" id="image1" name="image1" style="display: none;">
                             <input type="button" value="Change" onclick="document.getElementById('image1').click();" />
@@ -52,8 +53,8 @@
                         </div>
                         <div class="col-lg-3 col-md-4 col-6">
                             <form action="/dashboard" method="post" enctype="multipart/form-data">
-                            <a href="/uploads/<%= image2 %>" class="d-block mb-4 h-100">
-                                <img class="img-fluid img-thumbnail" src="/uploads/<%= image2 %>" alt="" style="height: 100%; width: 150%">
+                            <a href="<%= image2 %>" class="d-block mb-4 h-100">
+                                <img class="img-fluid img-thumbnail" src="<%= image2 %>" alt="" style="height: 100%; width: 150%">
                             </a>
                             <input type="file" id="image2" name="image2" style="display: none;">
                             <input type="button" value="Change" onclick="document.getElementById('image2').click();" />
@@ -62,8 +63,8 @@
                         </div>
                         <div class="col-lg-3 col-md-4 col-6">
                             <form action="/dashboard" method="POST" enctype="multipart/form-data">
-                            <a href="/uploads/<%= image3 %>" class="d-block mb-4 h-100">
-                                <img class="img-fluid img-thumbnail" src="/uploads/<%= image3 %>" alt="" style="height: 100%; width: 150%">
+                            <a href="<%= image3 %>" class="d-block mb-4 h-100">
+                                <img class="img-fluid img-thumbnail" src="<%= image3 %>" alt="" style="height: 100%; width: 150%">
                             </a>
                             <input type="file" id="image3" name="image3" style="display: none;">
                             <input type="button" value="Change" onclick="document.getElementById('image3').click();" />
@@ -72,8 +73,8 @@
                         </div>
                         <div class="col-lg-3 col-md-4 col-6">
                             <form action="/dashboard" method="POST" enctype="multipart/form-data">
-                            <a href="/uploads/<%= image4 %>" class="d-block mb-4 h-100">
-                                <img class="img-fluid img-thumbnail" src="/uploads/<%= image4 %>" alt="" style="height: 100%; width: 150%">
+                            <a href="<%= image4 %>" class="d-block mb-4 h-100">
+                                <img class="img-fluid img-thumbnail" src="<%= image4 %>" alt="" style="height: 100%; width: 150%">
                             </a>
                             <input type="file" id="image4" name="image4" style="display: none;">
                             <input type="button" value="Change" onclick="document.getElementById('image4').click();" />

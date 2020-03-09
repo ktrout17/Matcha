@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "devStart": "nodemon server.js"
+    "devStart": "nodemon server.js",
+    "start_local": "nodemon -r dotenv/config server.js"
   },
   "author": "Alvin",
   "license": "ISC",
@@ -13,11 +14,11 @@
     "bcryptjs": "^2.4.3",
     "connect-flash": "^0.1.1",
     "crypto-extra": "^1.0.1",
-    "dotenv": "^8.2.0",
     "ejs": "^3.0.1",
     "express": "^4.17.1",
     "express-ejs-layouts": "^2.5.0",
     "express-session": "^1.17.0",
+    "faker": "^4.1.0",
     "mongodb": "^3.4.1",
     "mongoose": "^5.8.6",
     "morgan": "^1.9.1",
@@ -25,9 +26,11 @@
     "nodemailer": "^6.4.2",
     "npm": "^6.13.6",
     "passport": "^0.4.1",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "serve-favicon": "^2.5.0"
   },
   "devDependencies": {
+    "dotenv": "^8.2.0",
     "nodemon": "^2.0.2"
   }
 }

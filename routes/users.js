@@ -10,7 +10,7 @@ const upload = multer({
 }).single('profileImage');
 
 // Render ejs view pages
-router.get('/login', (req, res) => res.render('login'));
+router.get('/login', (req, res) => res.render('login',));
 // router.get('/login', (req, res) => res.render('login', {message: req.flash('error')}));
 router.get('/register', (req, res) => res.render('register'));
 router.get('/resend', (req, res) => res.render('resend'));
@@ -59,3 +59,6 @@ router.post('/extendedProfile', (req,res, next) => { res.locals.upload = upload;
 router.post('/editProfile', (req,res, next) => { res.locals.upload = upload; next(); },  UsersController.user_editProfile);
 
 module.exports = router;
+
+
+router.get('/login',(err) => {});

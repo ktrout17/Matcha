@@ -69,63 +69,54 @@ exports.index_dashboard = (req, res, next) => {
 
 exports.index_profile = (req, res) => {
 	const id = req.params.id;
+	let liked;
 
-	Likes.findOne({ $and: [{ _userId: req.user.id }, { likedId: id }] }, (err, doc) => {
-		if (err) {
-			req.flash('error_msg', err.message);
-			console.log("err" + err);
-			console.log("user" + doc);
-			res.status(500).redirect('/profiles/' + id);
-		}
-	})
+	Likes.findOne({ $and: [{ _userId: req.user.id }, { likedId: id }] })
 		.exec()
 		.then((user) => {
-			if (user) {
-				User.findOneAndUpdate({ _id: id }, { $inc: { likes: -1 } }, (err, doc) => {
-					if (err) {
-						req.flash('error_msg', err);
-						console.log("err" + err);
-						console.log("user" + doc);
-						res.status(500).redirect('/profiles/' + id);
-					}
-				}).then((doc) => {
-					Likes.deleteOne({ $and: [{ _userId: req.user.id }, { likedId: id }] }, (err, doc) => {
-						if (err) {
-							req.flash('error_msg', err);
-							console.log("err" + err);
-							console.log("user" + doc);
-							res.status(500).redirect('/profiles/' + id);
-						}
-					})
-						.exec()
-						.then((doc) => {
-							if (doc) res.redirect('/profiles/' + id);
-						});
-				});
-				// console.log("found");
-				// res.redirect('/profiles/' + id);
-			} else {
-				User.findOneAndUpdate({ _id: id }, { $inc: { likes: 1 } }, (err) => {
-					if (err) {
-						req.flash('error_msg', err);
-						console.log("err" + err);
-						res.status(500).redirect('/profiles/' + id);
-					}
-				})
+			if (!user) {
+				liked = "liked";
+				User.findByIdAndUpdate(id, { $inc: { likes: 1 } })
 					.exec()
-					.then((doc) => {
+					.then(() => {
 						const newLike = new Likes({
 							_userId: req.user.id,
 							likedId: id
 						});
-						newLike.save().then((doc) => {
-							if (doc) res.redirect('/profiles/' + id);
-						});
-					});
-				// console.log("Not found");
-				// res.redirect('/profiles/' + id);
+						newLike.save()
+						User.findById(id)
+			.exec()
+			.then( doc => {
+				res.render("profiles", {
+					user: doc,
+					liked: liked
+				})
+			})
+			.catch(err => {console.log(err); res.end(); })
+					}).catch((err) => {console.log(err); res.end(); });
+			} else {
+				liked = "like";
+				User.findByIdAndUpdate(id, { $inc: { likes: -1 }})
+					.exec()
+					.then(() => { 
+						Likes.deleteOne({ $and: [{ _userId: req.user.id }, { likedId: id }] })
+							.exec()
+							.then(
+								User.findById(id)
+			.exec()
+			.then( doc => {
+				res.render("profiles", {
+					user: doc,
+					liked: liked
+				})
+			})
+			.catch(err => {console.log(err); res.end(); })
+							)
+							.catch(err => {console.log(err); res.end()});
+						}).catch(err => {console.log(err); res.end();});
 			}
-		});
+
+		}).catch((err) => {console.log(err); res.end(); });
 };
 
 exports.index_advancedMathas = (req, res) => {
@@ -133,9 +124,9 @@ exports.index_advancedMathas = (req, res) => {
 
 	if (req.body.sSubmit === 'sSubmit') {
 		User.find({ username: search })
-			.exec()
-			.then(docs => {
-				console.log(docs);
+		.exec()
+		.then(docs => {
+			console.log(docs);
 				res.render("suggestedMatchas", {
 					"users": docs.map(doc => {
 						return {
@@ -154,65 +145,32 @@ exports.index_advancedMathas = (req, res) => {
 	else if (req.body.aSubmit === 'aSubmit') {
 		const agePref = req.body.age_preference;
 		const interests = req.body.interests;
+		const fame = parseInt(req.body.fame);
 		let interestsQuery;
 		let ageQuery;
+		let fameQuery;
 
 		switch (agePref) {
 			case 'age1':
-				ageQuery = {
-					$and: [
-						{ age: { $gte: 18 } },
-						{ age: { $lte: 24 } }
-					]
-				}
+				ageQuery = { age: { $gte: 18, $lte: 24 } }
 				break;
 			case 'age2':
-				ageQuery = {
-					$and: [
-						{ age: { $gte: 25 } },
-						{ age: { $lte: 31 } }
-					]
-				}
+				ageQuery = { age: { $gte: 25, $lte: 31 } }
 				break;
 			case 'age3':
-				ageQuery = {
-					$and: [
-						{ age: { $gte: 32 } },
-						{ age: { $lte: 38 } }
-					]
-				}
+				ageQuery = { age: { $gte: 32, $lte: 38 } }
 				break;
 			case 'age4':
-				ageQuery = {
-					$and: [
-						{ age: { $gte: 39 } },
-						{ age: { $lte: 45 } }
-					]
-				}
+				ageQuery = { age: { $gte: 39, $lte: 45 } }
 				break;
 			case 'age5':
-				ageQuery = {
-					$and: [
-						{ age: { $gte: 46 } },
-						{ age: { $lte: 52 } }
-					]
-				}
+				ageQuery = { age: { $gte: 46, $lte: 52 } }
 				break;
 			case 'age6':
-				ageQuery = {
-					$and: [
-						{ age: { $gte: 53 } },
-						{ age: { $lte: 59 } }
-					]
-				}
+				ageQuery = { age: { $gte: 53, $lte: 59 } }
 				break;
 			case 'age7':
-				ageQuery = {
-					$and: [
-						{ age: { $gte: 60 } },
-						{ age: { $lte: 60 } }
-					]
-				}
+				ageQuery = { age: { $gte: 60, $lte: 66 } }
 				break;
 				default:
 					ageQuery = {};
@@ -252,17 +210,19 @@ exports.index_advancedMathas = (req, res) => {
 		else {
 			interestsQuery = {};
 		}
+
+		fameQuery = {fame: fame};
 		User.find({
 			$and:
 				[
 					ageQuery,
-					interestsQuery
+					interestsQuery,
+					fameQuery
 				]
 		})
 			.exec()
 			.then(doc => {
-				console.log(doc);
-				res.end()
+				res.send(doc)
 			});
 	}
 }

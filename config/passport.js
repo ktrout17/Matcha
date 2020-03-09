@@ -9,7 +9,7 @@ module.exports = function(passport, res) {
 	passport.use(
 		new localStrategy({ usernameField: 'email' }, (email, password, done) => {
 			// Match user
-			var criteria = {$or: [{username:email},{email: email}]};
+			var criteria = {$or: [{username: email}, {email: email}]};
 			User.findOne(criteria).then(user => {
 				if (!user) {
 					return done(null, false, { message: 'That email is not registered' });
