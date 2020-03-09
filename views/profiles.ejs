@@ -11,7 +11,7 @@
             <div class="px-4 pt-0 pb-4 bg-danger">
                 <div class="mx-auto">
                     <form id="form" action="/profiles/<%= user.id %>" method="POST">
-                        <h5><button type="submit" class="btn btn-secondary"><i class="fa fa-heart "> <%= liked %></i></button></h5>
+                        <h5><button type="submit" class="btn btn-secondary"><i class="fa fa-heart "></i> <%= liked %></button></h5>
                     </form>
                 </div>
                 <div class="media align-items-end profile-header">
@@ -36,6 +36,7 @@
                 <p class="font-weight-light"><span class="text-danger">Gender</span> : <%= user.gender%></p>
                 <p class="font-weight-light"><span class="text-danger">Sexual Preference</span> : <%= user.sexPref%></p>
                 <p class="font-weight-light"><span class="text-danger">Interests</span> : #<%= user.first%> #<%= user.second%> #<%= user.third%> #<%= user.fourth%> #<%= user.fifth%></p>
+                <p class="font-weight-light"><span class="text-danger">Age</span> : <%= user.age%></p>
                 <p class="font-weight-light"><span class="text-danger">Bio</span> : <%= user.bio%></p>
                 <p class="font-weight-light"><span class="text-danger">Popularity Score</span> : </p>
                 <h5 class="text-danger text-lg-left mt-4 mb-0">Image Gallery</h5>

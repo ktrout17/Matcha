@@ -3,7 +3,7 @@ const multer = require('multer');
 const User = require('../models/User');
 const Likes = require('../models/Likes');
 
-exports.index_dashboard = (req, res) => {
+exports.index_dashboard = (req, res, next) => {
 	let uploads = res.locals.upload.fields([{
 		name: 'image1', maxCount: 1
 	}, {
@@ -18,10 +18,12 @@ exports.index_dashboard = (req, res) => {
 		if (err instanceof multer.MulterError) {
 			req.flash('error_msg', err);
 			res.status(500).redirect('/dashboard');
+			next();
 		}
 		else if (err) {
 			req.flash('error_msg', err);
 			res.status(500).redirect('/dashboard');
+			next();
 		}
 		if (req.files['image1']) {
 			var val = {
@@ -55,10 +57,12 @@ exports.index_dashboard = (req, res) => {
 			if (err) {
 				req.flash('error_msg', err);
 				res.status(500).redirect('/dashboard');
+				next();
 			}
 			req.flash('success_msg', 'Successfully updated picture.');
 
 			res.redirect('/dashboard');
+			next();
 		});
 	});
 };

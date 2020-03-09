@@ -224,6 +224,7 @@ router.get("/dashboard", ensureAuthenticated, (req, res) =>
 );
 router.get("/notifications", (req, res) => res.render("notifications"));
 
+
 // Index Controller
 const IndexController = require("../controllers/index");
 
