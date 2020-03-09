@@ -217,7 +217,16 @@ exports.index_advancedMathas = (req, res) => {
 
 		switch (loc) {
 			case 'near':
-				locQuery = {}
+				locQuery = { city: req.user.city };
+				break;
+			case 'far':
+				locQuery = { province: req.user.province };
+				break;
+			case 'any':
+				locQuery = { country: req.user.country };
+				break;
+			default:
+				locQuery = {};
 
 		}
 
@@ -226,7 +235,8 @@ exports.index_advancedMathas = (req, res) => {
 				[
 					ageQuery,
 					interestsQuery,
-					fameQuery
+					fameQuery,
+					locQuery
 				]
 		})
 			.exec()
