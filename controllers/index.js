@@ -146,9 +146,11 @@ exports.index_advancedMathas = (req, res) => {
 		const agePref = req.body.age_preference;
 		const interests = req.body.interests;
 		const fame = parseInt(req.body.fame);
+		const loc = req.body.loc;
 		let interestsQuery;
 		let ageQuery;
 		let fameQuery;
+		let locQuery;
 
 		switch (agePref) {
 			case 'age1':
@@ -212,6 +214,13 @@ exports.index_advancedMathas = (req, res) => {
 		}
 
 		fameQuery = {fame: fame};
+
+		switch (loc) {
+			case 'near':
+				locQuery = {}
+
+		}
+
 		User.find({
 			$and:
 				[

@@ -219,7 +219,8 @@ router.get("/dashboard", ensureAuthenticated, (req, res) =>
 		bio: req.user.bio,
 		views: req.user.views,
 		likes: req.user.likes,
-		fame: req.user.fame
+		fame: req.user.fame,
+		age: req.user.age
 	})
 );
 router.get("/notifications", (req, res) => res.render("notifications"));
