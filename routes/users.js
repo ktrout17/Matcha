@@ -59,6 +59,3 @@ router.post('/extendedProfile', (req,res, next) => { res.locals.upload = upload;
 router.post('/editProfile', (req,res, next) => { res.locals.upload = upload; next(); },  UsersController.user_editProfile);
 
 module.exports = router;
-
-
-router.get('/login',(err) => {});

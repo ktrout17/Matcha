@@ -1,8 +1,4 @@
-<head>
-    <%- include('./default/head'); -%>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-          crossorigin="anonymous">
-</head>
+<%- include('./default/head'); -%>
 <header>
     <%- include('./default/profileHeader'); -%>
 </header>
@@ -95,7 +91,11 @@
                         <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
                     </div>
                     <div class="modal-body">
-                        <p> liked your profile!</p>
+                        <% if (typeof userLikes !== 'undefined') { %> 
+                            <% userLikes.forEach(function (like) { %>
+                        <p> <%= like %> liked your profile!</p>
+                        <% })
+                    } %>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Thanks</button>
@@ -112,7 +112,11 @@
                             <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
                         </div>
                         <div class="modal-body">
-                            <p> viewed your profile!</p>
+                            <% if (typeof userViews !== 'undefined') { %> 
+                            <% userViews.forEach(function (view) { %>
+                        <p> <%= view %> viewed your profile!</p>
+                        <% })
+                    } %>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Thanks</button>
@@ -121,6 +125,19 @@
                 </div>
             </div>
 </main>
+<script>
+    
+    function showPosition() {
+        if(navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+            });
+        } else {
+            alert("Sorry, your browser does not support HTML5 geolocation.");
+        }
+    }
+    showPosition();
+
+</script>
 <footer>
     <%- include('./default/footer'); -%>
 </footer>

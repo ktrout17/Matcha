@@ -121,7 +121,6 @@ exports.user_login = (req, res, next) => {
 
 			let fame = Math.floor((user.likes / user.views) * 5);
 
-			console.log(user.fame);
 			User.findByIdAndUpdate(user.id, {$set:{fame: fame}}, {new: true}, (err) => {
 				if(err) return next(err);
 			})

@@ -126,7 +126,6 @@ exports.index_advancedMathas = (req, res) => {
 		User.find({ username: search })
 		.exec()
 		.then(docs => {
-			console.log(docs);
 				res.render("suggestedMatchas", {
 					"users": docs.map(doc => {
 						return {
@@ -147,11 +146,48 @@ exports.index_advancedMathas = (req, res) => {
 		const interests = req.body.interests;
 		const fame = parseInt(req.body.fame);
 		const loc = req.body.loc;
+		const sortby = req.body.sortby;
+		// const sortbyTag;
+
 		let interestsQuery;
 		let ageQuery;
 		let fameQuery;
 		let locQuery;
+		let sortQuery;
 
+		// sortQuery = { $sort: { age: 1, city: 1, fame: 1} };
+		// sortQuery = { age: 1, city: 1, fame: 1 };
+
+
+		let a = -1, b = -1, c = -1, tagsSort = {};
+		if (Array.isArray(sortby)) {
+			sortby.forEach(function(value){
+				
+				if (value === 'age')
+					a=1;
+				if (value === 'loc')
+					b=1;
+				if (value === 'fame')
+					c=1;
+				if (value  === 'tags')
+					tagsSort = {"interests.first": 1, "interests.second": 1, "interests.third": 1, "interests.fourth": 1, "interests.fifth": 1 };
+			});
+		} else {
+			if (sortby === 'age')
+				a=1;
+			if (sortby === 'loc')
+				b=1;
+			if (sortby === 'fame')
+				c=1;
+			if (sortby  === 'tags')
+				tagsSort = {"interests.first": 1, "interests.second": 1, "interests.third": 1, "interests.fourth": 1, "interests.fifth": 1 };
+		}
+		  sortQuery = { age: `${a}`, city: `${b}`, fame: `${c}`};
+		  
+		  const SortResult = {}
+		  Object.keys(sortQuery).forEach(key => SortResult[key] = sortQuery[key])
+		  Object.keys(tagsSort).forEach(key => SortResult[key] = tagsSort[key])		  
+		  
 		switch (agePref) {
 			case 'age1':
 				ageQuery = { age: { $gte: 18, $lte: 24 } }
@@ -192,7 +228,7 @@ exports.index_advancedMathas = (req, res) => {
 					}, {
 						"interests.fifth": { $in: [interests[0], interests[1], interests[2], interests[3], interests[4]] },
 					}]
-				};
+				}
 			} else {
 				interestsQuery = {
 					$or: [{
@@ -223,10 +259,10 @@ exports.index_advancedMathas = (req, res) => {
 				locQuery = { province: req.user.province };
 				break;
 			case 'any':
-				locQuery = { country: req.user.country };
+				locQuery = {}; // {country: req.user.country }
 				break;
 			default:
-				locQuery = {};
+				locQuery = {}
 
 		}
 
@@ -236,12 +272,26 @@ exports.index_advancedMathas = (req, res) => {
 					ageQuery,
 					interestsQuery,
 					fameQuery,
-					locQuery
+					locQuery,
+					{ _id: { $ne: req.user.id } }
 				]
 		})
+			.sort(SortResult)
 			.exec()
-			.then(doc => {
-				res.send(doc)
+			.then(docs => {
+				res.render("suggestedMatchas", {
+					"users": docs.map(doc => {
+						return {
+							firstname: doc.firstname,
+							lastname: doc.lastname,
+							username: doc.username,
+							profileImage: doc.profileImages.image1,
+							request: {
+								url: '/profiles/' + doc.id
+							}
+						}
+					})
+				});
 			});
-	}
+		}
 }
