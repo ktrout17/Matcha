@@ -1,11 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
-const mongoose = require("mongoose");
+const Chat = require('../models/Chats');
 const Likes = require("../models/Likes");
 const Views = require("../models/Views");
 const { ensureAuthenticated } = require("../config/auth");
 const multer = require("multer");
+const mongoose = require("mongoose");
 const dummyData = require("../faker");
 const storage = require("../config/fileStorage");
 const upload = multer({
@@ -21,7 +22,7 @@ router.get("/", (req, res) => {
   res.render("welcome");
 });
 
-router.get("/profiles/:id", (req, res, next) => {
+router.get("/profiles/:id", ensureAuthenticated,(req, res, next) => {
   const id = req.params.id;
   let visitor = false;
   let liked;
@@ -71,12 +72,14 @@ router.get("/profiles/:id", (req, res, next) => {
                 .then(doc => {
                   res.render("profiles", {
                     user: doc,
-                    liked: liked
+                    liked: liked,
+                    curr_userUsername: req.user.username,
+                    curr_userId: req.user.id
                   });
                   next();
                 })
                 .catch(err => {
-                  console.log("catch err: " + err), res.end();
+                  console.log("catch err: " + err);
                 });
             }
           }
@@ -87,7 +90,9 @@ router.get("/profiles/:id", (req, res, next) => {
               if (docs) {
                 res.render("profiles", {
                   user: docs,
-                  liked: liked
+                  liked: liked,
+                  curr_userUsername: req.user.username,
+                  curr_userId: req.user.id
                 });
                 res.end();
               }
@@ -103,9 +108,63 @@ router.get("/profiles/:id", (req, res, next) => {
     });
 });
 
-router.get("/chats", ensureAuthenticated, (req, res) => res.render("chats"));
+function matches(likedByUsers, likedUsers) {
+  let _ = require('underscore')
+  let matches = [];
 
-router.get("/suggestedMatchas", (req, res) => {
+  matches = _.intersection(likedByUsers, likedUsers)
+  return matches;
+}
+
+router.get("/chats", ensureAuthenticated, (req, res,next) => {
+  const user = req.user;
+  let likedUsers = [];
+  let likedByUsers = [];
+  let matchedUsers = [];
+
+  Likes.find({user_username: user.username}, (err, likes) => {
+    likes.forEach(users => {
+      likedUsers.push(users.liked_username)
+    });
+      Likes.find({liked_username: user.username}, (err, currUserliked) => {
+        currUserliked.forEach(likedby => {
+          likedByUsers.push(likedby.user_username)
+        })
+       matchedUsers = matches(likedByUsers,likedUsers);
+       User.find({username: {$in: matchedUsers, $nin: user.blocked}}, (err, nonBlockedUsers) => {
+        res.locals.user = user;
+        res.locals.nonBlockedUsers = nonBlockedUsers; 
+        next()
+       });
+      })
+  })
+}, (req, res, next) => {
+  let nonBlockedUsers = res.locals.nonBlockedUsers;
+  let user = res.locals.user;
+  let chatId = req.url.split('?', 2)[1];
+
+  Chat.find({$and: [{$or: [{to: user.username}, {from: user.username}]}, {chatId: chatId}]}).sort({time: 1}).then(messages => {
+      res.render("chats", {
+        user: user,
+        chatId: chatId,
+        messages: messages,
+        nonBlockedUsers: nonBlockedUsers.map(nonBlockedUser => {
+          return {
+            username: nonBlockedUser.username,
+            pp: nonBlockedUser.profileImages.image1,
+            lastSeen: nonBlockedUser.lastSeen,
+            loggedIn: nonBlockedUser.loggedIn,
+            bio: nonBlockedUser.bio,
+            request: {
+              url: "/chats?" + [user.username, nonBlockedUser.username].sort().join('-')
+            }
+          }
+        })
+      });
+  });
+});
+
+router.get("/suggestedMatchas", ensureAuthenticated, (req, res) => {
   User.find({
     $and: [
       // change $or back to $and for suggested searches
@@ -188,10 +247,11 @@ router.get("/suggestedMatchas", (req, res) => {
           { gender2: { $eq: req.user.sexPref } }
         ]
       },
-      {
-        fame: 5
-      },
-      { _id: { $ne: req.user.id } }
+      // {
+      //   fame: 5
+      // },
+      { _id: { $ne: req.user.id } },
+      { username: {$nin: req.user.blocked} }
     ]
   })
     .sort({ fame: -1 })
@@ -220,48 +280,59 @@ router.get(
   "/dashboard",
   ensureAuthenticated,
   (req, res, next) => {
-    let totalLikes = [];
     let totalViews = [];
 
     Views.find({ viewedId: req.user.id }, (err, viewsDoc) => {
+      if (viewsDoc. length != 0) {
       viewsDoc.forEach(value => {
         User.find({ _id: value._userId }, (err, userViewsDoc) => {
           userViewsDoc.forEach(valued => {
             totalViews.push(valued.username);
           });
         })
-          .exec()
-          .then(() => {
-            res.locals.totalViews = totalViews;
-
-            Likes.find({ likedId: req.user.id }, (err, likesDoc) => {
-              likesDoc.forEach(value => {
-                User.find({ _id: value._userId }, (err, userLikesDoc) => {
-                  userLikesDoc.forEach(valued => {
-                    totalLikes.push(valued.username);
-                  });
-                  res.locals.totalLikes = totalLikes;
-                })
-                .exec()
-                .then(() => {
-                    next();
-                  })
-                  .catch();
-              });
-            })
-              .exec()
-              .catch();
+        .exec()
+        .then(() => {
+          res.locals.totalViews = totalViews;
+          next();
           })
           .catch();
       });
+      } else {
+        next()
+      }
     })
       .exec()
       .catch();
+  }, (req, res, next) => {
+    let totalLikes = [];
+
+    Likes.find({ likedId: req.user.id }, (err, likesDoc) => {
+      if (likesDoc.length != 0) {
+      likesDoc.forEach(value => {
+        User.find({ _id: value._userId }, (err, userLikesDoc) => {
+          userLikesDoc.forEach(valued => {
+            totalLikes.push(valued.username);
+          });
+         
+        })
+        .exec()
+        .then(() => {
+          res.locals.totalLikes = totalLikes;
+            next();
+          })
+          .catch();
+      });
+      } else {
+        next();
+      }
+    })
+      .exec()
+      .catch();
+
   },
   (req, res, next) => {
     const { totalLikes } = res.locals;
     const { totalViews } = res.locals;
-    console.log(totalLikes);
 
     res.render("dashboard", {
       name: req.user.username,
@@ -287,8 +358,6 @@ router.get(
   }
 );
 
-router.get("/notifications", (req, res) => res.render("notifications"));
-
 // Index Controller
 const IndexController = require("../controllers/index");
 
@@ -301,6 +370,7 @@ router.post(
   IndexController.index_dashboard
 );
 router.post("/profiles/:id", IndexController.index_profile);
+
 router.post("/suggestedMatchas", IndexController.index_advancedMathas);
 
 module.exports = router;

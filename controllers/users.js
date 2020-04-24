@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const crypto = require('crypto-extra');
 const nodemailer = require('nodemailer');
 const multer = require('multer');
+const { gmail_email, gmail_password } = require('../config/config');
 
 const User = require('../models/User');
 const Token = require('../models/Token');
@@ -11,8 +12,8 @@ const Token = require('../models/Token');
 const transporter = nodemailer.createTransport({
 	service: 'gmail',
 	auth: {
-		user: 'matcha420x@gmail.com',
-		pass: 'ThankU420x'
+		user: gmail_email,
+		pass: gmail_password
 	}
 });
 
@@ -46,10 +47,10 @@ exports.user_register = (req, res) => {
 		});
 	} else {
 		// Validation pass
-		User.findOne({ email: email }).then(user => {
+		User.findOne({$or:[{username: username},{ email: email }]}).then(user => {
 			if (user) {
 				// User exists
-				errors.push({ msg: 'Email already Registered' });
+				errors.push({ msg: 'Email/Username already Registered' });
 				res.status(400).render('register', {
 					errors,
 					username,
@@ -111,28 +112,35 @@ exports.user_register = (req, res) => {
 
 exports.user_login = (req, res, next) => {
 	passport.authenticate('local', (err, user, info) => {
-		if (err) { return next(err); }
+		if (err) { return console.log(err) }
 
 		if (!user) { return res.render('login', { message: info.message }); }
 
 		req.logIn(user, (err) => {
 			if (!user.extendedProf) { return res.redirect('/users/extendedProfile'); }
-			if (err) { return next(err); }
+			if (err) { return console.log(err) }
 
-			let fame = Math.floor((user.likes / user.views) * 5);
+			if (!user.views == 0 || !user.likes == 0) {
+				let fame = Math.floor((user.likes / user.views) * 5);
 
-			User.findByIdAndUpdate(user.id, {$set:{fame: fame}}, {new: true}, (err) => {
-				if(err) return next(err);
-			})
+				User.findByIdAndUpdate(user.id, {$set:{fame: fame, loggedIn: true}}, {new: true}, (err) => {
+					if(err) return console.log(err);
+				})
+			}
+			
 			return res.redirect('/dashboard');
 		})
 	})(req, res, next);
 };
 
 exports.user_logout = (req, res) => {
-	req.logout();
-	req.flash('success_msg', 'You are logged out');
-	res.redirect('/users/login');
+	User.findByIdAndUpdate(req.user.id,
+		{$set: {loggedIn: false, lastSeen: getDateTime()}}, (err) => {
+			if (err) throw err;
+			req.logout();
+			req.flash('success_msg', 'You are logged out');
+			res.redirect('/users/login');
+		})
 };
 
 exports.user_confirmation = (req, res) => {
@@ -158,7 +166,6 @@ exports.user_confirmation = (req, res) => {
 				return res.status(200).render('login', { 'success_msg': 'Your account has been verified. You may now log in.' });
 			});
 		});
-		// return res.status(200).send({msg: 'token found'});
 	});
 };
 
@@ -196,13 +203,6 @@ exports.user_tokenResend = (req, res) => {
 						subject: 'Account Verification Token',
 						text: 'Hello,\n\n' + 'Please verify your account by clicking the link: \nhttp:\/\/' + req.headers.host + '\/users\/confirmation\/' + token.token + '.\n'
 					};
-					// transporter.verify(function (error, success) {
-					// 	if (error) {
-					// 		return res.status(500).send(error);
-					// 	} else {
-					// 		return res.status(500).send("Server is ready to take our messages");
-					// 	}
-					// });
 					transporter.sendMail(mailOptions, (err) => {
 						if (err) { return res.status(500).send({ msg: err.message }) };
 						return res.status(200).render('login', { 'success_msg': 'A verification email has been sent to ' + user.email + '.' });
@@ -445,3 +445,58 @@ exports.user_editProfile = (req, res, next) => {
 		}
 	});
 };
+
+function getDateTime() {
+	var date = new Date();
+	
+	var hour = date.getHours();
+	hour = (hour < 10 ? "0" : "") + hour;
+	
+	var min  = date.getMinutes();
+	min = (min < 10 ? "0" : "") + min;
+	
+	var sec  = date.getSeconds();
+	sec = (sec < 10 ? "0" : "") + sec;
+	
+	var year = date.getFullYear();
+	
+	var month = date.getMonth() + 1;
+	month = getMonth(parseInt((month < 10 ? "0" : "") + month));
+	
+	var day  = date.getDate();
+	day = (day < 10 ? "0" : "") + day;
+	
+	return month + " " + day + " " + hour + ":" + min;
+	
+}
+	
+function getMonth(m){
+	switch (m) {
+		case 1:
+			return "Jan"
+		case 2:
+			return "Feb"
+		case 3:
+			return "Mar"
+		case 4:
+			return "Apr"
+		case 5:
+			return "May"
+		case 6:
+			return "Jun"
+		case 7:
+			return "Jul"
+		case 8:
+			return "Aug"
+		case 9:
+			return "Sep"
+		case 10:
+			return "Oct"
+		case 11:
+			return "Nov"
+		case 12:
+			return "Dec"
+		default:
+			console.log(m)
+	}
+}
