@@ -40,7 +40,11 @@ const UserSchema = new mongoose.Schema({
 	city: String,
 	lat: String,
 	long: String,
-	gender2: String
+	gender2: String,
+	likedby: [{type: String, default: null}],
+	blocked: [{type: String, default: null}],
+	loggedIn: {type: Boolean, default: false},
+	lastSeen: {type: String}
 });
 
 const User = mongoose.model('User', UserSchema);

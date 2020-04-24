@@ -5,5 +5,7 @@ module.exports = {
 	db_host: process.env.MATCHA_MONGODB_HOST,
 	db_ip: process.env.MATCHA_MONGODB_IP,
 	db_port: process.env.MATCHA_MONGODB_PORT,
-	db_name: process.env.MATCHA_MONGODB_DATABASE
+	db_name: process.env.MATCHA_MONGODB_DATABASE,
+	gmail_email: process.env.GMAIL_EMAIL,
+	gmail_password: process.env.GMAIL_PASSWORD
 };

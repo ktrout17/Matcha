@@ -1,7 +1,7 @@
 <br>
 <form action="/suggestedMatchas" method="POST">
 <div class="container">
-    <input class="form-control" type="text" id="search" name="search" placeholder="Search for a User by Username">
+    <input class="form-control" type="text" id="search" name="search" placeholder="Search for a User by Username" autofocus>
     <br><button class="btn btn-danger" type="submit" name="sSubmit" value="sSubmit" >Search</button>
 </div>
 <hr class="mt-2 mb-3">
@@ -81,15 +81,15 @@
     <div class="form-group row">
         <label class="col-4">Popularity rating range between 1 and 5 (out of 5)</label>
         <div class="col-8 d-flex">
-            <span class="font-weight-bold text-danger mr-2 mt-1">1</span>
-                <input class="border-0 range-field" name="fame" type="range" min="1" max="5" />
+            <span class="font-weight-bold text-danger mr-2 mt-1">0</span>
+                <input class="border-0 range-field" name="fame" type="range" min="0" max="5" />
             <span class="font-weight-bold text-danger ml-2 mt-1">5</span>
         </div>
     </div>
     <div class="form-group row">
         <label for="select" class="col-4 col-form-label">Location</label>
         <div class="col-8">
-            <select id="select" name="select" class="custom-select">
+            <select id="select" name="loc" class="custom-select">
                 <option value="near">Near me</option>
                 <option value="far">Far away</option>
                 <option value="any">I don't mind</option>
@@ -97,6 +97,10 @@
         </div>
     </div>
     <div class="form-group row">
+        <input type="checkbox" name="sortby" value="age">  <label for="sortby">age</label>
+        <input type="checkbox" name="sortby" value="loc">  <label for="sortby">loc</label>
+        <input type="checkbox" name="sortby" value="fame">  <label for="sortby">fame</label>
+        <input type="checkbox" name="sortby" value="tags">  <label for="sortby">tags</label> 
         <div class="offset-4 col-8">
             <button type="submit" name="aSubmit" value="aSubmit" class="btn btn-danger bg-danger">Find me a match!</button>
         </div>

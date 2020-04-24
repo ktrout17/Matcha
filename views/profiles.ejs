@@ -1,9 +1,13 @@
-<head>
-	<%- include('./default/head'); -%>
-</head>
+<%- include('./default/head'); -%>
 <header>
 	<%- include('./default/profileHeader'); -%>
 </header>
+
+    <input type="hidden" id="liked_username" value="<%= user.username %>">
+    <input type="hidden" id="user_id" value="<%= user._id%>">
+    <input type="hidden" id="curr_userUsername" value="<%= curr_userUsername %>">
+    <input type="hidden" id="curr_userId" value="<%= curr_userId %>">
+    
 <main>
     <%- include ('./partials/messages'); -%>
     <div class="row py-5 px-4">
@@ -11,9 +15,15 @@
             <div class="px-4 pt-0 pb-4 bg-danger">
                 <div class="mx-auto">
                     <form id="form" action="/profiles/<%= user.id %>" method="POST">
-                        <h5><button type="submit" class="btn btn-secondary"><i class="fa fa-heart "></i> <%= liked %></button></h5>
+                        <h5><button id="like_btn" type="submit" name="like_btn" value="like_btn" class="btn btn-secondary"><i class="fa fa-heart "></i> <%= liked %></button></h5>
+                        <h5><button id="block_btn" type="submit" name="block_btn" value="block_btn" class="btn btn-secondary"><i class="fa fa-heart "></i> <%=  %>block</button></h5>
                     </form>
                 </div>
+                <% if(user.loggedIn === true) { %>
+                    <p> online </p>
+                <% } else { %>
+                    <p>Last seen: <%= user.lastSeen %></p>
+                <% } %>
                 <div class="media align-items-end profile-header">
                     <div class="profile mr-3 mt-3"><a href="<%= user.profileImages.image1 %>"><img src="/<%= user.profileImages.image1 %>" alt="..." width="250" class="rounded mb-2 img-fluid"></a></div>
                     <div class="media-body text-white text-center mb-auto mt-3">
@@ -35,39 +45,40 @@
                 <hr class="mt-2 mb-3">
                 <p class="font-weight-light"><span class="text-danger">Gender</span> : <%= user.gender%></p>
                 <p class="font-weight-light"><span class="text-danger">Sexual Preference</span> : <%= user.sexPref%></p>
-                <p class="font-weight-light"><span class="text-danger">Interests</span> : #<%= user.first%> #<%= user.second%> #<%= user.third%> #<%= user.fourth%> #<%= user.fifth%></p>
+                <p class="font-weight-light"><span class="text-danger">Interests</span> : #<%= user.interests.first %> #<%= user.interests.second%> #<%= user.interests.third%> #<%= user.interests.fourth%> #<%= user.interests.fifth%></p>
                 <p class="font-weight-light"><span class="text-danger">Age</span> : <%= user.age%></p>
                 <p class="font-weight-light"><span class="text-danger">Bio</span> : <%= user.bio%></p>
-                <p class="font-weight-light"><span class="text-danger">Popularity Score</span> : </p>
+                <p class="font-weight-light"><span class="text-danger">Popularity Score</span> : <%= user.fame %></p>
                 <h5 class="text-danger text-lg-left mt-4 mb-0">Image Gallery</h5>
                 <hr class="mt-2 mb-5">
                 <div class="row text-center text-lg-left">
                     <div class="col-lg-3 col-md-4 col-6">
                         <a href="<%= user.image2 %>" class="d-block mb-4 h-100">
-                            <img class="img-fluid img-thumbnail" src="<%= user.image2 %>" alt="" style="height: 100%;width: 150%">
+                            <img class="img-fluid img-thumbnail" src="/<%= user.profileImages.image2 %>" alt="" style="height: 100%;width: 150%">
                         </a>
                     </div>
                     <div class="col-lg-3 col-md-4 col-6">
                         <a href="<%= user.image3 %>" class="d-block mb-4 h-100">
-                            <img class="img-fluid img-thumbnail" src="<%= user.image3 %>" alt="" style="height: 100%; width: 150%">
+                            <img class="img-fluid img-thumbnail" src="/<%= user.profileImages.image3 %>" alt="" style="height: 100%; width: 150%">
                         </a>
                     </div>
                     <div class="col-lg-3 col-md-4 col-6">
                         <a href="<%= user.image4 %>" class="d-block mb-4 h-100">
-                            <img class="img-fluid img-thumbnail" src="<%= user.image4 %>" alt="" style="height: 100%; width: 150%">
+                            <img class="img-fluid img-thumbnail" src="/<%= user.profileImages.image4 %>" alt="" style="height: 100%; width: 150%">
                         </a>
                     </div>
                     <div class="col-lg-3 col-md-4 col-6">
                         <a href="<%= user.image5 %>" class="d-block mb-4 h-100">
-                            <img class="img-fluid img-thumbnail" src="<%= user.image5 %>" alt="" style="height: 100%; width: 150%">
+                            <img class="img-fluid img-thumbnail" src="/<%= user.profileImages.image5 %>" alt="" style="height: 100%; width: 150%">
                         </a>
                     </div>
                 </div>
 
             </div>
         </div>
-    </div>
-</main>
+    </main>
+
+</div>
 <footer>
 	<%- include('./default/footer'); -%>
 </footer>
