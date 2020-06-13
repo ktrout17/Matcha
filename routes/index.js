@@ -337,6 +337,7 @@ router.get(
     res.render("dashboard", {
       name: req.user.username,
       pp: req.user.profileImages.image1,
+      country: req.user.country,
       province: req.user.province,
       city: req.user.city,
       image1: req.user.profileImages.image2,

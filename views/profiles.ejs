@@ -11,31 +11,31 @@
 <main>
     <%- include ('./partials/messages'); -%>
     <div class="row py-5 px-4">
-        <div class="bg-white shadow rounded overflow-hidden mx-auto">
-            <div class="px-4 pt-0 pb-4 bg-danger">
-                <div class="mx-auto">
-                    <form id="form" action="/profiles/<%= user.id %>" method="POST">
-                        <h5><button id="like_btn" type="submit" name="like_btn" value="like_btn" class="btn btn-secondary"><i class="fa fa-heart "></i> <%= liked %></button></h5>
-                        <h5><button id="block_btn" type="submit" name="block_btn" value="block_btn" class="btn btn-secondary"><i class="fa fa-heart "></i> <%=  %>block</button></h5>
-                    </form>
-                </div>
-                <% if(user.loggedIn === true) { %>
-                    <p> online </p>
-                <% } else { %>
-                    <p>Last seen: <%= user.lastSeen %></p>
-                <% } %>
+        <div class="bg-white shadow rounded overflow-hidden mx-auto container">
+            <div class="px-4 pt-0 pb-4 bg-danger mx-auto container overflow-hidden">
                 <div class="media align-items-end profile-header">
-                    <div class="profile mr-3 mt-3"><a href="<%= user.profileImages.image1 %>"><img src="/<%= user.profileImages.image1 %>" alt="..." width="250" class="rounded mb-2 img-fluid"></a></div>
+                    <div class="profile mr-3 mt-3"><a href="<%= user.profileImages.image1 %>"><img src="/<%= user.profileImages.image1 %>" alt="..." width="250" height="400" class="rounded mb-2 img-fluid"></a></div>
                     <div class="media-body text-white text-center mb-auto mt-3">
-                        <h4 class="mt-0 mb-0"><%= user.username %></h4>
-                        <p class="small mb-4"> <i class="fa fa-map-marker mr-2"></i><%= user.province %>, <%= user.city %></p>
+                        <h1 class="mt-0 mb-0"><%= user.username %></h1><br>
+                        <p class="small mb-4"> <i class="fa fa-map-marker mr-2"></i><%= user.city %> <%= user.province %> <%= user.country %></p>
+                        <% if(user.loggedIn === true) { %>
+                            <p> online </p>
+                        <% } else { %>
+                            <p>Last seen: <%= user.lastSeen %></p>
+                        <% } %>
+                    </div>
+                    <div class="media-body text-white text-right mb-auto mt-3 mr-0">
+                        <form id="form" action="/profiles/<%= user.id %>" method="POST">
+                            <h5><button id="like_btn" type="submit" name="like_btn" value="like_btn" class="btn btn-secondary"><i class="fa fa-heart "></i> <%= liked %></button></h5>
+                            <h5><button id="block_btn" type="submit" name="block_btn" value="block_btn" class="btn btn-secondary"><i class="fa fa-ban "></i> <%=  %>block</button></h5>
+                        </form>
                     </div>
                     <ul class="list-inline mb-0 bg-light p-4 d-flex justify-content-end rounded bg-transparent border border-dark">
                         <li class="list-inline-item">
-                            <h5 class="font-weight-bold mb-0 d-block"><%= user.likes %></h5><small class="text-muted"> <i class="fa fa-heart mr-1"></i>Likes</small>
+                            <h5 class="font-weight-bold mb-0 d-block text-center"><%= user.likes %></h5><small class="text-muted"> <i class="fa fa-heart mr-1"></i>Likes</small>
                         </li>
                         <li class="list-inline-item">
-                            <h5 class="font-weight-bold mb-0 d-block"><%= user.views %></h5><small class="text-muted"> <i class="fa fa-eye mr-1"></i>Views</small>
+                            <h5 class="font-weight-bold mb-0 d-block text-center"><%= user.views %></h5><small class="text-muted"> <i class="fa fa-eye mr-1"></i>Views</small>
                         </li>
                     </ul>
                 </div>
@@ -48,7 +48,7 @@
                 <p class="font-weight-light"><span class="text-danger">Interests</span> : #<%= user.interests.first %> #<%= user.interests.second%> #<%= user.interests.third%> #<%= user.interests.fourth%> #<%= user.interests.fifth%></p>
                 <p class="font-weight-light"><span class="text-danger">Age</span> : <%= user.age%></p>
                 <p class="font-weight-light"><span class="text-danger">Bio</span> : <%= user.bio%></p>
-                <p class="font-weight-light"><span class="text-danger">Popularity Score</span> : <%= user.fame %></p>
+                <p class="font-weight-light"><span class="text-danger">Fame Rating</span> : <%= user.fame %></p>
                 <h5 class="text-danger text-lg-left mt-4 mb-0">Image Gallery</h5>
                 <hr class="mt-2 mb-5">
                 <div class="row text-center text-lg-left">

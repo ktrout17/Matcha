@@ -9,10 +9,10 @@
                 <div class="px-4 pt-0 pb-4 bg-danger">
                     <div class="media align-items-end profile-header">
                         <div class="profile mr-3 mt-3"><img src="<%= pp %>" alt="..." width="250" class="rounded mb-2 img-thumbnail"><a href="/users/editProfile" class="btn btn-dark btn-sm btn-block">Edit profile</a></div>
-                        <h1>Fame: <%= fame %></h1>
                         <div class="media-body text-white text-center mb-auto mt-3">
-                            <h4 class="mt-0 mb-0 cap"><% if (typeof name != 'undefined') {%> <%= name %> <% } %></h4>
-                            <p class="small mb-4" id="location"> <i class="fa fa-map-marker mr-2"></i><%= province %>, <%= city %></p>
+                            <h1 class="mt-0 mb-0"><% if (typeof name != 'undefined') {%> <%= name %> <% } %></h1><br>
+                            <p class="small mb-4" id="location"> <i class="fa fa-map-marker mr-2"></i><%= city %> <%= province %> <%= country %></p>
+                            <h4><i class="fa fa-star-o"></i> <%= fame %> <i class="fa fa-star-o"></i></h4>
                         </div>
                         <ul class="list-inline mb-0 bg-light p-4 d-flex justify-content-end rounded bg-transparent border border-dark">
                             <li class="list-inline-item">
@@ -32,7 +32,7 @@
                     <p class="font-weight-light"><span class="text-danger">Age</span> : <%= age%></p>
                     <p class="font-weight-light"><span class="text-danger">Interests</span> : #<%= interests.first%> #<%= interests.second%> #<%= interests.third%> #<%= interests.fourth%> #<%= interests.fifth%></p>
                     <p class="font-weight-light"><span class="text-danger">Bio</span> : <%= bio%></p>
-                    <p class="font-weight-light"><span class="text-danger">Popularity Score</span> : </p>
+                    <p class="font-weight-light"><span class="text-danger">Fame Rating</span> : <%= fame %></p>
                     <h5 class="font-weight-light text-center text-lg-left mt-4 mb-0">Image Gallery</h5>
                     <hr class="mt-2 mb-5">
                     <%- include ('./partials/messages'); -%>
@@ -87,13 +87,13 @@
             <div class="modal-dialog bg-danger">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h2 class="modal-title"> people have liked your profile!</h2>
+                        <h2 class="modal-title">Profile Likers</h2>
                         <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
                     </div>
                     <div class="modal-body">
                         <% if (typeof userLikes !== 'undefined') { %> 
                             <% userLikes.forEach(function (like) { %>
-                        <p> <%= like %> liked your profile!</p>
+                        <p> <%= like %> </p>
                         <% })
                     } %>
                     </div>
@@ -108,13 +108,13 @@
                 <div class="modal-dialog bg-danger">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h2 class="modal-title"> people have viewed your profile!</h2>
+                            <h2 class="modal-title">Profile Viewers</h2>
                             <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
                         </div>
                         <div class="modal-body">
                             <% if (typeof userViews !== 'undefined') { %> 
                             <% userViews.forEach(function (view) { %>
-                        <p> <%= view %> viewed your profile!</p>
+                        <p> <%= view %> </p>
                         <% })
                     } %>
                         </div>
