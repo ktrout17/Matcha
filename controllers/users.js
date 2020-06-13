@@ -14,6 +14,9 @@ const transporter = nodemailer.createTransport({
 	auth: {
 		user: gmail_email,
 		pass: gmail_password
+	},
+	tls: {
+		rejectUnauthorized: false
 	}
 });
 
@@ -120,8 +123,9 @@ exports.user_login = (req, res, next) => {
 			if (!user.extendedProf) { return res.redirect('/users/extendedProfile'); }
 			if (err) { return console.log(err) }
 
-			if (!user.views == 0 || !user.likes == 0) {
-				let fame = Math.floor((user.likes / user.views) * 5);
+			if (user.views !== 0 || user.likes !== 0) {
+				let num = (user.likes / user.views) * 5;
+				let fame = Math.round(num * 10) / 10;
 
 				User.findByIdAndUpdate(user.id, {$set:{fame: fame, loggedIn: true}}, {new: true}, (err) => {
 					if(err) return console.log(err);
