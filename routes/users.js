@@ -19,7 +19,7 @@ router.get('/extendedProfile', (req, res) => {
     })
 });
 router.get('/forgotPwd', (req, res) => res.render('forgotPwd'));
-router.get('/changePwd', (req, res) => res.render('changePwd'));
+router.get('/changePwd/:userToken', (req, res) => res.render('changePwd', { token: req.params.userToken}));
 router.get('/editProfile', ensureAuthenticated, (req, res) => {
     res.render('editProfile', {
         name: req.user.username,
@@ -53,7 +53,7 @@ router.get('/logout', UsersController.user_logout);
 router.get('/confirmation/:userToken', UsersController.user_confirmation);
 router.post('/resend', UsersController.user_tokenResend);
 router.post('/forgotPwd', UsersController.user_forgotPwd);
-router.post('/changePwd', UsersController.user_changePwd);
+router.post('/changePwd/:userToken', UsersController.user_changePwd);
 router.post('/extendedProfile', (req,res, next) => { res.locals.upload = upload; next(); }, UsersController.user_extendedProfile);
 router.post('/editProfile', (req,res, next) => { res.locals.upload = upload; next(); },  UsersController.user_editProfile);
 
