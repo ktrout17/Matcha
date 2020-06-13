@@ -1,5 +1,5 @@
 node_modules/
 public/style/
-uploads/
+public/uploads/
 .idea
-.env
+npm-debug.log
