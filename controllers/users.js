@@ -24,6 +24,11 @@ exports.user_register = (req, res) => {
 	const { username, email, password, pwd_repeat, firstname, lastname } = req.body;
 	const errors = [];
 
+	let lowercase = new RegExp("^(?=.*[a-z])");
+	let uppercase = new RegExp("^(?=.*[A-Z])");
+	let numeric = new RegExp("^(?=.*[0-9])");
+	let spcharacter = new RegExp("^(?=.*[!@#\$%\^&\*])");
+	
 	// Check required fileds
 	if (!username || !email || !password || !pwd_repeat) {
 		errors.push({ msg: 'Please fill in all fields' });
@@ -35,8 +40,24 @@ exports.user_register = (req, res) => {
 	}
 
 	// Check pwd length
-	if (password.length < 6) {
-		errors.push({ msg: 'Password should be at least 6 characters' });
+	if (password.length < 8) {
+		errors.push({ msg: 'Password should be at least 8 characters' });
+	}
+
+	if (!lowercase.test(password)) {
+		errors.push({ msg: 'Password should contain at least 1 lowercase character'});
+	}
+
+	if (!uppercase.test(password)) {
+		errors.push({ msg: 'Password should contain at least 1 uppercase character'});
+	}
+
+	if (!numeric.test(password)) {
+		errors.push({ msg: 'Password should contain at least 1 numeric value'});
+	}
+
+	if (!spcharacter.test(password)) {
+		errors.push({ msg: 'Password should contain at least 1 special character'});
 	}
 
 	if (errors.length > 0) {
@@ -236,11 +257,19 @@ exports.user_forgotPwd = (req, res) => {
 			if (!user)
 				return res.status(400).render('forgotPwd', { 'error_msg': 'We were unable to find a user with that email.' });
 
+			const newToken = new Token({
+				_userId: user._id,
+				token: crypto.randomKey(32)
+			});
+			newToken.save((err) => {
+				if (err) { return res.status(500).send({ msg: err.message }); }
+			});
+
 			var mailOptions = {
 				from: '"Admin" <no-reply@matcha.com>',
 				to: user.email,
 				subject: 'Forgotten Password',
-				text: 'Hello,\n\n' + 'Please click the link bellow to reset your password: \nhttp:\/\/' + req.headers.host + '\/users\/changePwd.\n'
+				text: 'Hello,\n\n' + 'Please click the link bellow to reset your password: \nhttp:\/\/' + req.headers.host + '\/users\/changePwd\/' + newToken.token + '.\n'
 			};
 			transporter.sendMail(mailOptions, (err) => {
 				if (err) { return res.status(500).send({ msg: err.message }) };
@@ -254,12 +283,33 @@ exports.user_changePwd = (req, res) => {
 	const { email, password, pwd_repeat } = req.body;
 	const errors = [];
 
-	// regexp = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
-	// if (regexp.test(password))
-	// 	errors.push({ msg: 'Please use at least 1 Upper case letter'});
+	let lowercase = new RegExp("^(?=.*[a-z])");
+	let uppercase = new RegExp("^(?=.*[A-Z])");
+	let numeric = new RegExp("^(?=.*[0-9])");
+	let spcharacter = new RegExp("^(?=.*[!@#\$%\^&\*])");
 
 	if (!email || !password || !pwd_repeat) {
 		errors.push({ msg: 'Please fill in all fields' });
+	}
+
+	if (password.length < 8) {
+		errors.push({ msg: 'Password should be at least 8 characters' });
+	}
+
+	if (!lowercase.test(password)) {
+		errors.push({ msg: 'Password should contain at least 1 lowercase character'});
+	}
+
+	if (!uppercase.test(password)) {
+		errors.push({ msg: 'Password should contain at least 1 uppercase character'});
+	}
+
+	if (!numeric.test(password)) {
+		errors.push({ msg: 'Password should contain at least 1 numeric value'});
+	}
+
+	if (!spcharacter.test(password)) {
+		errors.push({ msg: 'Password should contain at least 1 special character'});
 	}
 
 	// Check passwords match
@@ -267,27 +317,37 @@ exports.user_changePwd = (req, res) => {
 		errors.push({ msg: 'Passwords do not match' });
 	}
 
-	// Check pwd length
-	console.log(password);
-	if (password.length < 6) {
-		errors.push({ msg: 'Password should be at least 6 characters' });
-	}
-
 	if (errors.length > 0) {
-		return res.status(400).render('changePwd', { errors });
+		return res.status(400).render('changePwd', { errors, token: req.params.userToken });
 	}
 	else {
-		User.findOne({ email: email }).then((user) => {
-			if (!user) { return res.status(400).render('changePwd', { 'error_msg': 'Incorrect email' }); }
-			bcrypt.genSalt(10, (err, salt) => {
-				bcrypt.hash(password, salt, (err, hash) => {
-					if (err) { return res.status(500).send({ msg: err.message }); }
+		Token.findOne({ token: req.params.userToken }, (err, token) => {
+			if (err) { return res.status(500).send({ msg: err.message }); }
 
-					user.password = hash;
+			if (!token) {
+				return res.status(404).render('changePwd', { 'error': 'We could not find the token. Your token might have expired', token: req.params.userToken });
+			}
 
-					user.save((err) => {
+			User.findOne({ _id: token._userId }, (err, user) => {
+				if (err) { return res.status(500).send({ msg: err.message }); }
+
+				if (!user)
+					return res.status(404).render('changePwd', { 'error': 'We were unable to find a user for this token.', token: req.params.userToken });
+
+				if (user.email != email) {
+					return res.status(400).render('changePwd', { 'error_msg': 'Incorrect email', token: req.params.userToken });
+				}
+			
+				bcrypt.genSalt(10, (err, salt) => {
+					bcrypt.hash(password, salt, (err, hash) => {
 						if (err) { return res.status(500).send({ msg: err.message }); }
-						return res.status(200).render('login', { 'success_msg': 'Your password has been updated and you can now login.' });
+
+						user.password = hash;
+
+						user.save((err) => {
+							if (err) { return res.status(500).send({ msg: err.message }); }
+							return res.status(200).render('login', { 'success_msg': 'Your password has been updated and you can now login.' });
+						});
 					});
 				});
 			});
