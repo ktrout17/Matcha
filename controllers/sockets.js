@@ -22,7 +22,7 @@ module.exports = function(io, connectedUsers) {
           chatId: chatId
         })
         newChat.save();
-        io.sockets.emit('recieve_message', {to: to, from, from, msg: msg, msgTime: msgTime, chatId: chatId})
+        io.sockets.emit('recieve_message', {to: to, from: from, msg: msg, msgTime: msgTime, chatId: chatId})
       } else {
        console.log('No message or chatId') 
       }

@@ -8,7 +8,7 @@
             <div class="bg-white shadow rounded overflow-hidden">
                 <div class="px-4 pt-0 pb-4 bg-danger">
                     <div class="media align-items-end profile-header">
-                        <div class="profile mr-3 mt-3"><img src="<%= pp %>" alt="..." width="250" class="rounded mb-2 img-thumbnail"><a href="/users/editProfile" class="btn btn-dark btn-sm btn-block">Edit profile</a></div>
+                        <div class="profile mr-3 mt-3"><img src="<%= pp %>" alt="..." width="250" id="pp" class="rounded mb-2 img-thumbnail"><a href="/users/editProfile" class="btn btn-dark btn-sm btn-block">Edit profile</a></div>
                         <div class="media-body text-white text-center mb-auto mt-3">
                             <h1 class="mt-0 mb-0"><% if (typeof name != 'undefined') {%> <%= name %> <% } %></h1><br>
                             <p class="small mb-4" id="location"> <i class="fa fa-map-marker mr-2"></i><%= city %> <%= province %> <%= country %></p>
