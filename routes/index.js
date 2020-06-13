@@ -172,7 +172,8 @@ router.get("/suggestedMatchas", ensureAuthenticated, (req, res) => {
         city: req.user.city
       },
       {
-        $and: [
+        $or: [
+          // change to $and for all 5 to match or change it to $or for at least one to match
           {
             "interests.first": {
               $in: [
@@ -248,7 +249,7 @@ router.get("/suggestedMatchas", ensureAuthenticated, (req, res) => {
         ]
       },
       // {
-      //   fame: 5
+      //   fame: 5  *NOTE: Not sure if needed, but pdf wants it.
       // },
       { _id: { $ne: req.user.id } },
       { username: {$nin: req.user.blocked} }
