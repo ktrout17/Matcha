@@ -423,6 +423,10 @@ exports.user_editProfile = (req, res, next) => {
 			req.flash('error_msg', err);
 			res.status(500).redirect('/users/editProfile');
 		}
+		const newDate = new Date(req.body.birthdate);
+					const ageDifMs = Date.now() - newDate.getTime();
+					const ageDate = new Date(ageDifMs);
+					const age = Math.abs(ageDate.getUTCFullYear() - 1970);
 		if (req.file) {
 			val = {
 				$set: {
@@ -434,6 +438,7 @@ exports.user_editProfile = (req, res, next) => {
 					dob: req.body.birthdate,
 					agePref: req.body.age_preference,
 					sexPref: req.body.sex_pref,
+					age: age,
 					bio: req.body.bio,
 					interests: {
 						first: req.body.interests[0],
@@ -461,6 +466,7 @@ exports.user_editProfile = (req, res, next) => {
 					dob: req.body.birthdate,
 					agePref: req.body.age_preference,
 					sexPref: req.body.sex_pref,
+					age: age,
 					bio: req.body.bio,
 					interests: {
 						first: req.body.interests[0],
