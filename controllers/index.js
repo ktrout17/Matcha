@@ -365,7 +365,7 @@ exports.index_advancedMathas = (req, res) => {
         locQuery = { province: req.user.province };
         break;
       case "any":
-        locQuery = {}; // or {country: req.user.country } to be specific to the country
+        locQuery = {};
         break;
       default:
         locQuery = {};

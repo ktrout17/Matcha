@@ -173,7 +173,6 @@ router.get("/suggestedMatchas", ensureAuthenticated, (req, res) => {
       },
       {
         $or: [
-          // change to $and for all 5 to match or change it to $or for at least one to match
           {
             "interests.first": {
               $in: [
@@ -309,27 +308,15 @@ router.get(
 
     Likes.find({ likedId: req.user.id }, (err, likesDoc) => {
       if (likesDoc.length != 0) {
-      likesDoc.forEach(value => {
-        User.find({ _id: value._userId }, (err, userLikesDoc) => {
-          userLikesDoc.forEach(valued => {
-            totalLikes.push(valued.username);
-          });
-         
-        })
-        .exec()
-        .then(() => {
+        likesDoc.forEach(value => {
+            totalLikes.push(value.user_username);
+        });
           res.locals.totalLikes = totalLikes;
-            next();
-          })
-          .catch();
-      });
+          next();
       } else {
         next();
       }
-    })
-      .exec()
-      .catch();
-
+    });
   },
   (req, res, next) => {
     const { totalLikes } = res.locals;
