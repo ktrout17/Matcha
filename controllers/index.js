@@ -83,10 +83,8 @@ exports.index_profile = (req, res, next) => {
   
   if (req.body.like_btn === 'like_btn') {
     
-    User.findByIdAndUpdate(id,
-      { $inc: { likes: 1 },
-      $push: {likedby: currUser.username}},
-      {new: true}, (err, doc) => {
+    User.findById(id,
+      (err, doc) => {
         if (err) throw err;
         
         if (doc) {
@@ -98,39 +96,77 @@ exports.index_profile = (req, res, next) => {
                 console.log("like already")
                 res.redirect('/profiles/' + id)
               } else {
-                const newLike = new Likes ({
-                  _userId: currUser.id,
-                  likedId: id,
-                  user_username: currUser.username,
-                  liked_username: doc.username
+                doc.likes++;
+                doc.likedby.push(currUser.username);
+
+                const index = doc.blocked.indexOf(currUser.username);
+                if (index > -1) {
+                  doc.blocked.splice(index, 1);
+                }
+
+                User.findById(currUser._id, (err, currentUserDoc) => {
+                  if (err) throw err;
+                  // console.log(currentUserDoc.blocked);
+                  const index = currentUserDoc.blocked.indexOf(doc.username);
+                  if (index > -1) {
+                    currentUserDoc.blocked.splice(index, 1);
+                  }
+                  
+                  const newLike = new Likes ({
+                    _userId: currUser.id,
+                    likedId: id,
+                    user_username: currUser.username,
+                    liked_username: doc.username
+                  });
+                  
+                  doc.save();
+                  currentUserDoc.save();
+                  newLike.save();
+                  res.redirect('/profiles/' + id);
                 });
-                
-                newLike.save();
-                res.redirect('/profiles/' + id);
               }
-            })
+            });
         }
-      })
+      });
   } else if (req.body.block_btn === 'block_btn') {
     const id = req.params.id;
     const currUser = req.user;
+    let blockedUser = false;
     
-    User.findByIdAndUpdate(id,
-      { $inc: { likes: -1 },
-      $pull: {likedby: currUser.username},
-      $push: {blocked: currUser.username}},
-      {new: true}, (err, doc) => {
+    User.findById(id,
+      (err, doc) => {
         if (err) throw err;
-        
-        User.findByIdAndUpdate(currUser.id,
-          {$push: {blocked: doc.username}}, (err) => {
-            if (err) throw err;
-          })
+
+        for (const i in doc.blocked) {
+          if (doc.blocked.hasOwnProperty(i)) {
+            blockedUser = true;
+          }
+        }
+
+        if (!blockedUser) {
+          if (doc.likes > 0) {
+            doc.likes--;
+          }
+          doc.blocked.push(currUser.username);
+          const index = doc.likedby.indexOf(currUser.username);
+          if (index > -1) {
+            doc.likedby.splice(index, 1);
+          }
+
+          doc.save();
+          User.findByIdAndUpdate(currUser.id,
+            {$push: {blocked: doc.username}}, (err) => {
+              if (err) throw err;
+            });
+
           Likes.findOneAndDelete({user_username: currUser.username, liked_username: doc.username},
             (err) => {
               if (err) throw err;
               res.redirect('/profiles/' + id)
-            })
+            });
+        } else {
+          res.redirect('/profiles/' + id)
+        }
       });
   }
 };
@@ -329,7 +365,7 @@ exports.index_advancedMathas = (req, res) => {
         locQuery = { province: req.user.province };
         break;
       case "any":
-        locQuery = {}; // or {country: req.user.country } to be specific to the country
+        locQuery = {};
         break;
       default:
         locQuery = {};

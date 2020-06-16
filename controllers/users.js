@@ -378,16 +378,26 @@ exports.user_extendedProfile = (req, res) => {
 					const ageDate = new Date(ageDifMs);
 					const age = Math.abs(ageDate.getUTCFullYear() - 1970);
 
+					if (checkInterest(req.body.interests)) {
+						user.interests.first = req.body.interests[0];
+						user.interests.second = req.body.interests[1];
+						user.interests.third = req.body.interests[2];
+						user.interests.fourth = req.body.interests[3];
+						user.interests.fifth = req.body.interests[4];
+					}
+					else {
+						user.interests.first = req.body.interests;
+						user.interests.second = null;
+						user.interests.third = null;
+						user.interests.fourth = null;
+						user.interests.fifth = null;
+					}
+
 					user.gender = req.body.gender;
 					user.dob = req.body.birthdate;
 					user.agePref = req.body.age_preference;
 					user.sexPref = req.body.sex_pref;
 					user.bio = req.body.bio;
-					user.interests.first = req.body.interests[0];
-					user.interests.second = req.body.interests[1];
-					user.interests.third = req.body.interests[2];
-					user.interests.fourth = req.body.interests[3];
-					user.interests.fifth = req.body.interests[4];
 					user.country = req.body.country;
 					user.province = req.body.province;
 					user.city = req.body.city;
@@ -414,6 +424,7 @@ exports.user_extendedProfile = (req, res) => {
 exports.user_editProfile = (req, res, next) => {
 	let uploads = res.locals.upload;
 	var val;
+
 	uploads(req, res, async function (err) {
 		if (err instanceof multer.MulterError) {
 			req.flash('error_msg', err);
@@ -423,6 +434,12 @@ exports.user_editProfile = (req, res, next) => {
 			req.flash('error_msg', err);
 			res.status(500).redirect('/users/editProfile');
 		}
+		
+		const newDate = new Date(req.body.birthdate);
+		const ageDifMs = Date.now() - newDate.getTime();
+		const ageDate = new Date(ageDifMs);
+		const age = Math.abs(ageDate.getUTCFullYear() - 1970);
+		
 		if (req.file) {
 			val = {
 				$set: {
@@ -434,14 +451,8 @@ exports.user_editProfile = (req, res, next) => {
 					dob: req.body.birthdate,
 					agePref: req.body.age_preference,
 					sexPref: req.body.sex_pref,
+					age: age,
 					bio: req.body.bio,
-					interests: {
-						first: req.body.interests[0],
-						second: req.body.interests[1],
-						third: req.body.interests[2],
-						fourth: req.body.interests[3],
-						fifth: req.body.interests[4]
-					},
 					"profileImages.image1": req.file.filename,
 					country: req.body.country,
 					province: req.body.province,
@@ -461,14 +472,8 @@ exports.user_editProfile = (req, res, next) => {
 					dob: req.body.birthdate,
 					agePref: req.body.age_preference,
 					sexPref: req.body.sex_pref,
+					age: age,
 					bio: req.body.bio,
-					interests: {
-						first: req.body.interests[0],
-						second: req.body.interests[1],
-						third: req.body.interests[2],
-						fourth: req.body.interests[3],
-						fifth: req.body.interests[4]
-					},
 					country: req.body.country,
 					province: req.body.province,
 					city: req.body.city,
@@ -498,13 +503,31 @@ exports.user_editProfile = (req, res, next) => {
 			req.user.lat !== req.body.lat ||
 			req.user.long !== req.body.long
 		) {
-			await User.findOneAndUpdate({ _id: req.user._id }, val, { new: true }, (err, doc) => {
+			await User.findOneAndUpdate({ _id: req.user._id }, val, { new: true }, (err, user) => {
 				if (err) {
 					req.flash('error_msg', err);
 					res.status(500).redirect('/users/editProfile');
 				}
-				req.flash('success_msg', 'Successfully updated information.');
-				res.redirect('/users/editProfile');
+				// return res.send(user.interests.first);
+				if (checkInterest(req.body.interests)) {
+					user.interests.first = req.body.interests[0];
+					user.interests.second = req.body.interests[1];
+					user.interests.third = req.body.interests[2];
+					user.interests.fourth = req.body.interests[3];
+					user.interests.fifth = req.body.interests[4];
+				}
+				else {
+					user.interests.first = req.body.interests;
+					user.interests.second = null;
+					user.interests.third = null;
+					user.interests.fourth = null;
+					user.interests.fifth = null;
+				}
+				user.save((err) => {
+					if (err) { return res.status(500).send({ msg: err.message }); }
+					req.flash('success_msg', 'Successfully updated information.');
+					res.redirect('/users/editProfile');
+				});
 			});
 		}
 	});
@@ -562,5 +585,16 @@ function getMonth(m){
 			return "Dec"
 		default:
 			console.log(m)
+	}
+}
+
+function checkInterest(interests) {
+
+	if (typeof interests !== "undefined") {
+		if (Array.isArray(interests)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
