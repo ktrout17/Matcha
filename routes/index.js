@@ -283,7 +283,7 @@ router.get(
     let totalViews = [];
 
     Views.find({ viewedId: req.user.id }, (err, viewsDoc) => {
-      if (viewsDoc. length != 0) {
+      if (viewsDoc. length > 0) {
       viewsDoc.forEach(value => {
         User.find({ _id: value._userId }, (err, userViewsDoc) => {
           userViewsDoc.forEach(valued => {
@@ -307,16 +307,17 @@ router.get(
     let totalLikes = [];
 
     Likes.find({ likedId: req.user.id }, (err, likesDoc) => {
-      if (likesDoc.length != 0) {
+      if (likesDoc.length > 0) {
         likesDoc.forEach(value => {
             totalLikes.push(value.user_username);
         });
           res.locals.totalLikes = totalLikes;
+          console.log(likesDoc);
           next();
       } else {
         next();
       }
-    });
+    }).exec();
   },
   (req, res, next) => {
     const { totalLikes } = res.locals;

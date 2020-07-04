@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "devStart": "nodemon server.js",
-    "start_local": "nodemon -r dotenv/config server.js"
+    "start_local": "nodemon -r dotenv/config server.js",
+    "start_eval": "node -r dotenv/config server.js"
   },
   "author": "Alvin",
   "license": "ISC",

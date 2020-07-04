@@ -21,9 +21,13 @@ const transporter = nodemailer.createTransport({
 });
 
 exports.user_register = (req, res) => {
-	const { username, email, password, pwd_repeat, firstname, lastname } = req.body;
+	const { password, pwd_repeat } = req.body;
+	const username = req.body.username.trim();
+	const email = req.body.email.trim();
+	const firstname = req.body.firstname.trim();
+	const lastname = req.body.lastname.trim();
 	const errors = [];
-
+	
 	let lowercase = new RegExp("^(?=.*[a-z])");
 	let uppercase = new RegExp("^(?=.*[A-Z])");
 	let numeric = new RegExp("^(?=.*[0-9])");
