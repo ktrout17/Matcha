@@ -251,7 +251,8 @@ router.get("/suggestedMatchas", ensureAuthenticated, (req, res) => {
       //   fame: 5  *NOTE: Not sure if needed, but pdf wants it.
       // },
       { _id: { $ne: req.user.id } },
-      { username: {$nin: req.user.blocked} }
+      { username: {$nin: req.user.blocked} },
+      { agePref: {$eq: req.user.agePref } }
     ]
   })
     .sort({ fame: -1 })
