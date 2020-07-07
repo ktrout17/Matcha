@@ -10,16 +10,17 @@ const upload = multer({
 }).single('profileImage');
 
 // Render ejs view pages
-router.get('/login', (req, res) => res.render('login',));
-router.get('/register', (req, res) => res.render('register'));
-router.get('/resend', (req, res) => res.render('resend'));
+router.get('/login', (req, res) => res.render('login', {userNameTag: ''}));
+router.get('/register', (req, res) => res.render('register', {userNameTag: ''}));
+router.get('/resend', (req, res) => res.render('resend', {userNameTag: ''}));
 router.get('/extendedProfile', (req, res) => {
     res.render('extendedProfile', {
-        name: req.user.username
+        name: req.user.username,
+        userNameTag: req.user.username
     })
 });
-router.get('/forgotPwd', (req, res) => res.render('forgotPwd'));
-router.get('/changePwd/:userToken', (req, res) => res.render('changePwd', { token: req.params.userToken}));
+router.get('/forgotPwd', (req, res) => res.render('forgotPwd', {userNameTag: ''}));
+router.get('/changePwd/:userToken', (req, res) => res.render('changePwd', { token: req.params.userToken, userNameTag: ''}));
 router.get('/editProfile', ensureAuthenticated, (req, res) => {
     res.render('editProfile', {
         name: req.user.username,
@@ -32,7 +33,8 @@ router.get('/editProfile', ensureAuthenticated, (req, res) => {
         sexPref: req.user.sexPref,
         bio: req.user.bio,
         interests: req.user.interests,
-        pp: req.user.profileImages.image1
+        pp: req.user.profileImages.image1,
+        userNameTag: req.user.username
     })
 });
 

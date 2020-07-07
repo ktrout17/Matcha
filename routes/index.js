@@ -19,7 +19,7 @@ const upload = multer({
 router.get("/", (req, res) => {
   res.setHeader("Content-Type", "text/html");
   // dummyData.fake();
-  res.render("welcome");
+  res.render("welcome", {userNameTag: ''});
 });
 
 router.get("/profiles/:id", ensureAuthenticated,(req, res, next) => {
@@ -74,7 +74,8 @@ router.get("/profiles/:id", ensureAuthenticated,(req, res, next) => {
                     user: doc,
                     liked: liked,
                     curr_userUsername: req.user.username,
-                    curr_userId: req.user.id
+                    curr_userId: req.user.id,
+                    userNameTag: req.user.username
                   });
                   next();
                 })
@@ -92,7 +93,8 @@ router.get("/profiles/:id", ensureAuthenticated,(req, res, next) => {
                   user: docs,
                   liked: liked,
                   curr_userUsername: req.user.username,
-                  curr_userId: req.user.id
+                  curr_userId: req.user.id,
+                  userNameTag: req.user.username
                 });
                 res.end();
               }
@@ -148,6 +150,7 @@ router.get("/chats", ensureAuthenticated, (req, res,next) => {
         user: user,
         chatId: chatId,
         messages: messages,
+        userNameTag: req.user.username,
         nonBlockedUsers: nonBlockedUsers.map(nonBlockedUser => {
           return {
             username: nonBlockedUser.username,
@@ -259,6 +262,7 @@ router.get("/suggestedMatchas", ensureAuthenticated, (req, res) => {
     .exec()
     .then(docs => {
       res.status(200).render("suggestedMatchas", {
+        userNameTag: req.user.username,
         users: docs.map(doc => {
           return {
             firstname: doc.firstname,
@@ -341,6 +345,7 @@ router.get(
       likes: req.user.likes,
       fame: req.user.fame,
       age: req.user.age,
+      userNameTag: req.user.username,
       userLikes: totalLikes,
       userViews: totalViews
     });

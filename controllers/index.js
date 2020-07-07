@@ -179,6 +179,7 @@ exports.index_advancedMathas = (req, res) => {
       .exec()
       .then(docs => {
         res.render("suggestedMatchas", {
+          userNameTag: req.user.username,
           users: docs.map(doc => {
             return {
               firstname: doc.firstname,
@@ -385,6 +386,7 @@ exports.index_advancedMathas = (req, res) => {
       .exec()
       .then(docs => {
         res.render("suggestedMatchas", {
+          userNameTag: req.user.username,
           users: docs.map(doc => {
             return {
               firstname: doc.firstname,

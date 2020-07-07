@@ -2,9 +2,27 @@ const User = require('../models/User');
 const Like = require('../models/Likes');
 const Chat = require('../models/Chats');
 
-module.exports = function(io, connectedUsers) {
+module.exports = function (io, connectedUsers) {
   io.on("connection", socket => {
     let user = {};
+
+    socket.on("update", data => {
+      var check = 0;
+      for (var i in connectedUsers) {
+        if (connectedUsers[i].user == data.user) {
+          connectedUsers[i].socketId = data.id;
+          check = 1;
+        }
+      }
+      if (check === 0) {
+        user.user = data.user
+        user.socketId = data.id
+        connectedUsers.push(user);
+      }
+      // console.log(connectedUsers);
+      // console.log(Object.keys(io.sockets.sockets));
+      console.log("reached update");
+    });
 
     socket.on("send_message", data => {
       let msg = data.message;
@@ -22,14 +40,22 @@ module.exports = function(io, connectedUsers) {
           chatId: chatId
         })
         newChat.save();
-        io.sockets.emit('recieve_message', {to: to, from: from, msg: msg, msgTime: msgTime, chatId: chatId})
+        for (var i in connectedUsers) {
+          if (connectedUsers[i].user === to) {
+            io.to(connectedUsers[i].socketId).emit('recieve_message', { to: to, from: from, msg: msg, msgTime: msgTime, chatId: chatId })
+          }
+          if (connectedUsers[i].user === from) {
+            io.to(connectedUsers[i].socketId).emit('recieve_message', { to: to, from: from, msg: msg, msgTime: msgTime, chatId: chatId })
+          }
+        }
+        // io.sockets.emit('recieve_message', { to: to, from: from, msg: msg, msgTime: msgTime, chatId: chatId })
       } else {
-       console.log('No message or chatId') 
+        console.log('No message or chatId')
       }
     });
 
     socket.on('login', (data) => {
-      User.findOne({$or: [{username: data.email}, {email: data.email}]}, (err, doc) => {
+      User.findOne({ $or: [{ username: data.email }, { email: data.email }] }, (err, doc) => {
         if (err) throw err;
         if (doc) {
           let verif = 0;
@@ -41,22 +67,44 @@ module.exports = function(io, connectedUsers) {
               verif = 1;
             }
           };
-          if (verif == 0){
+          if (verif == 0) {
             connectedUsers.push(user);
           }
+          // console.log(connectedUsers);
+          // console.log(Object.keys(io.sockets.sockets));
+          console.log("reached login");
         }
-      }).catch(err => {console.log(err)})
+      }).catch(err => { console.log(err) })
     });
 
     socket.on('like', (data) => {
-      
+
       // io.to(connectedUsers[0].socketId).emit('notification', {user: connectedUsers[0].user})
       // io.to(connectedUsers[1].socketId).emit('notification', {user: connectedUsers[1].user})
-      // io.to(data.id).emit('notification', {id: data.id})
+      // io.to(connectedUsers[2].socketId).emit('notification', {user: connectedUsers[2].user})
+      // io.sockets.to(data.id).emit('notification', {user: "io.sockets.to"})
+      // io.sockets.sockets[data.to].emit('notification', {user: "io.sockets.to"})
+      // socket.to(data.id).emit('notification', {user: "socket.to"})
+      // io.to(data.id).emit('notification', {user: "io.to"})
+      // io.sockets.emit('notification', {user: "io.sockets.emit"})
+      // console.log(data);
+      // console.log("Hello server");
+      // for (var i in connectedUsers) {
+      //   if (connectedUsers[i].user === data.likedUser) {
+      //     io.to(connectedUsers[i].socketId).emit('notification', { user: connectedUsers[i].user, who: "likedUser" })
+      //   }
+      //   if (connectedUsers[i].user === data.currUser) {
+      //     io.to(connectedUsers[i].socketId).emit('notification', { user: connectedUsers[i].user, who: "currUser" })
+      //   }
+      // }
 
       // console.log(connectedUsers[0].socketId)
       // console.log(connectedUsers[1].socketId)
+      // console.log(connectedUsers[2].socketId)
+      // console.log(connectedUsers[1].user)
       // console.log(data.id)
+      // console.log(connectedUsers)
+      // console.log(Object.keys(io.sockets.sockets));
 
       Like.findOne({user_username: data.likedUser, liked_username: data.currUser}, (err, likeDoc) => {
         if (err) throw err;
@@ -66,7 +114,7 @@ module.exports = function(io, connectedUsers) {
 
           if (likeDoc) {
             let isBlocked = 0;
-  
+
             if (typeof doc.blocked !== "undefined") {
             if (Array.isArray(doc.blocked)) {
             for (let i in doc.blocked) {
@@ -82,10 +130,17 @@ module.exports = function(io, connectedUsers) {
           }
         }
             if (isBlocked == 0)
-              io.sockets.emit('notification', {user: data.currUser, msg: "You have a new match with", match: 2})
+            {
+              for (var i in connectedUsers) {
+                if (connectedUsers[i].user === data.likedUser) {
+                  io.to(connectedUsers[i].socketId).emit('notification', { user: data.currUser, msg: "You have a new match with", match: 2 })
+                }
+              }
+              // io.sockets.emit('notification', {user: data.currUser, msg: "You have a new match with", match: 2})
+            }
           } else {
             let isBlocked = 0;
-  
+
             if (doc) {
             if (typeof doc.blocked !== "undefined") {
             if (Array.isArray(doc.blocked)) {
@@ -103,7 +158,14 @@ module.exports = function(io, connectedUsers) {
         }
         }
             if (isBlocked == 0)
-              io.sockets.emit('notification', {user: data.currUser, msg: "Liked your profile", match: 1})
+            {
+              for (var i in connectedUsers) {
+                if (connectedUsers[i].user === data.likedUser) {
+                  io.to(connectedUsers[i].socketId).emit('notification', { user: data.currUser, msg: "Liked your profile", match: 1 })
+                }
+              }
+              // io.sockets.emit('notification', {user: data.currUser, msg: "Liked your profile", match: 1})
+            }
           }
         })
       })
@@ -113,12 +175,18 @@ module.exports = function(io, connectedUsers) {
       //     io.sockets.emit('notification', {user: data.likedUser, msg: "Liked your profile!"})
       //   }
       // }
+      console.log("reached like");
     });
 
     socket.on('block', (data) => {
       console.log("blocking");
       console.log(data);
-        io.sockets.emit('notification', {user: data.currUser, msg: "Blocked / unliked you", match: 1})
+      for (var i in connectedUsers) {
+        if (connectedUsers[i].user === data.likedUser) {
+          io.to(connectedUsers[i].socketId).emit('notification', { user: data.currUser, msg: "Blocked / unliked you", match: 1  })
+        }
+      }
+      // io.sockets.emit('notification', { user: data.currUser, msg: "Blocked / unliked you", match: 1 })
     })
 
     socket.on('view', (data) => {

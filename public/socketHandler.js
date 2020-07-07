@@ -1,4 +1,4 @@
-(function() {
+$(function() {
     const socket = io.connect()
 
     var element = function(id) {
@@ -6,6 +6,8 @@
     }
 
     // Get Elements
+    // get current logged in username
+    var user = element('userNameTag');
     // Chat Page
     var chatBox = element('chatBox');
     var to = element('to');
@@ -13,7 +15,7 @@
     var chatId = element('chatId');
     var msgBox = element('msgBox');
     // Login Page
-    var login = element('login')
+    var login = element("login")
     var inputEmail = element('inputEmail');
     // Profiles Page
     var like_btn = element('like_btn');
@@ -26,6 +28,12 @@
     // Notification Tab
     var notify_message = element('notify-message');
 
+    socket.on('connect', () => update());
+    function update() {
+        console.log(socket.id);
+        socket.emit('update', {user: user.value, id: socket.id});
+    }
+    
     if(chatBox){
         chatBox.addEventListener('keydown', (event) => {
             if (event.which === 13 && event.shiftKey == false) {
@@ -49,12 +57,27 @@
             socket.emit("login", {email: inputEmail.value})
         });
     }
+    // login.click(function() {
+    //     socket.emit("login", {email: inputEmail.val()})
+    // })
+    
+    // like_btn.click(function () {
+    //     console.log("HI");
+    //     socket.emit('update', {user: user.val(), id: socket.id});
+    //      socket.emit('like', {
+    //          likedUser: liked_username.val(),
+    //          currUser: curr_userUsername.val(),
+    //          id: socket.id
+    //     })
+    // })
 
     if (like_btn){
         like_btn.addEventListener('click', () => {
+            // socket.emit('update', {user: user.value, id: socket.id});
             socket.emit('like', {
                 likedUser: liked_username.value,
                 currUser: curr_userUsername.value,
+                id : socket.id
             })
         });
     };
@@ -82,6 +105,8 @@
         } else if (data.match == 2) {
             notifTag.textContent = data.msg + " " + data.user + "!";
         }
+        // console.log(data);
+        // notifTag.textContent = data.user;
         notify_message.appendChild(notifTag)
     })
 
@@ -110,7 +135,7 @@
         msgBox.appendChild(div1).appendChild(div2).appendChild(div3).appendChild(p1)
         div2.appendChild(p2)
     })
-})();
+});
 
 function getDateTime() {
 

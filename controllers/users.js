@@ -71,7 +71,8 @@ exports.user_register = (req, res) => {
 			username,
 			firstname,
 			lastname,
-			email
+			email,
+			userNameTag: ''
 		});
 	} else {
 		// Validation pass
@@ -84,7 +85,8 @@ exports.user_register = (req, res) => {
 					username,
 					email,
 					firstname,
-					lastname
+					lastname,
+					userNameTag: ''
 				});
 			} else {
 				// Validation pass
@@ -128,7 +130,7 @@ exports.user_register = (req, res) => {
 							// Send email
 							transporter.sendMail(mailOptions, (err) => {
 								if (err) { return res.status(500).send({ msg: err.message }); }
-								res.status(200).render('login', { 'success_msg': 'Account created. Check your email to verify your account to log in.' });
+								res.status(200).render('login', { 'success_msg': 'Account created. Check your email to verify your account to log in.', userNameTag: '' });
 							});
 						});
 					});
@@ -142,7 +144,7 @@ exports.user_login = (req, res, next) => {
 	passport.authenticate('local', (err, user, info) => {
 		if (err) { return console.log(err) }
 
-		if (!user) { return res.render('login', { message: info.message }); }
+		if (!user) { return res.render('login', { message: info.message, userNameTag: '' }); }
 
 		req.logIn(user, (err) => {
 			if (!user.extendedProf) { return res.redirect('/users/extendedProfile'); }
@@ -177,22 +179,22 @@ exports.user_confirmation = (req, res) => {
 		if (err) { return res.status(500).send({ msg: err.message }); }
 
 		if (!token)
-			return res.status(404).render('login', { 'error': 'We could not find the token. Your token might have expired' });
+			return res.status(404).render('login', { 'error': 'We could not find the token. Your token might have expired', userNameTag: '' });
 
 		User.findOne({ _id: token._userId }, (err, user) => {
 			if (err) { return res.status(500).send({ msg: err.message }); }
 
 			if (!user)
-				return res.status(404).render('login', { 'error': 'We were unable to find a user for this token.' });
+				return res.status(404).render('login', { 'error': 'We were unable to find a user for this token.', userNameTag: '' });
 			console.log(user);
 			if (user.verified === true)
-				return res.status(400).render('login', { 'error': 'This user has already been verified.' });
+				return res.status(400).render('login', { 'error': 'This user has already been verified.', userNameTag: '' });
 
 			user.verified = true;
 			user.save((err) => {
 				if (err)
 					return res.status(500).send({ msg: err.message });
-				return res.status(200).render('login', { 'success_msg': 'Your account has been verified. You may now log in.' });
+				return res.status(200).render('login', { 'success_msg': 'Your account has been verified. You may now log in.', userNameTag: '' });
 			});
 		});
 	});
@@ -206,16 +208,16 @@ exports.user_tokenResend = (req, res) => {
 		errors.push({ msg: 'Please fill in all fields' });
 
 	if (errors.length > 0)
-		res.status(400).render('resend', { errors });
+		res.status(400).render('resend', { errors, userNameTag: '' });
 	else {
 		User.findOne({ email: email }, (err, user) => {
 			if (err) {
 				return res.status(500).send({ msg: err.message })
 			}
 			if (!user)
-				return res.status(400).render('resend', { 'error_msg': 'We were unable to find a user with that email.' });
+				return res.status(400).render('resend', { 'error_msg': 'We were unable to find a user with that email.', userNameTag: ''  });
 			if (user.verified)
-				return res.status(400).render('resend', { 'error_msg': 'This account is already verified.' });
+				return res.status(400).render('resend', { 'error_msg': 'This account is already verified.', userNameTag: ''  });
 
 			const newToken = new Token({
 				_userId: user.id,
@@ -234,7 +236,7 @@ exports.user_tokenResend = (req, res) => {
 					};
 					transporter.sendMail(mailOptions, (err) => {
 						if (err) { return res.status(500).send({ msg: err.message }) };
-						return res.status(200).render('login', { 'success_msg': 'A verification email has been sent to ' + user.email + '.' });
+						return res.status(200).render('login', { 'success_msg': 'A verification email has been sent to ' + user.email + '.', userNameTag: ''  });
 					});
 				})
 				.catch((err) => {
@@ -254,12 +256,12 @@ exports.user_forgotPwd = (req, res) => {
 		errors.push({ msg: 'Please fill in all fields' });
 
 	if (errors.length > 0)
-		res.status(400).render('forgotPwd', { errors });
+		res.status(400).render('forgotPwd', { errors, userNameTag: ''  });
 	else {
 		User.findOne({ email: email }, (err, user) => {
 			if (err) { return res.status(500).send({ msg: err.message }) };
 			if (!user)
-				return res.status(400).render('forgotPwd', { 'error_msg': 'We were unable to find a user with that email.' });
+				return res.status(400).render('forgotPwd', { 'error_msg': 'We were unable to find a user with that email.', userNameTag: ''  });
 
 			const newToken = new Token({
 				_userId: user._id,
@@ -277,7 +279,7 @@ exports.user_forgotPwd = (req, res) => {
 			};
 			transporter.sendMail(mailOptions, (err) => {
 				if (err) { return res.status(500).send({ msg: err.message }) };
-				return res.status(200).render('login', { 'success_msg': 'A password reset email has been sent to ' + user.email + '.' });
+				return res.status(200).render('login', { 'success_msg': 'A password reset email has been sent to ' + user.email + '.', userNameTag: ''  });
 			});
 		});
 	}
@@ -322,24 +324,24 @@ exports.user_changePwd = (req, res) => {
 	}
 
 	if (errors.length > 0) {
-		return res.status(400).render('changePwd', { errors, token: req.params.userToken });
+		return res.status(400).render('changePwd', { errors, token: req.params.userToken, userNameTag: ''  });
 	}
 	else {
 		Token.findOne({ token: req.params.userToken }, (err, token) => {
 			if (err) { return res.status(500).send({ msg: err.message }); }
 
 			if (!token) {
-				return res.status(404).render('changePwd', { 'error': 'We could not find the token. Your token might have expired', token: req.params.userToken });
+				return res.status(404).render('changePwd', { 'error': 'We could not find the token. Your token might have expired', token: req.params.userToken, userNameTag: ''  });
 			}
 
 			User.findOne({ _id: token._userId }, (err, user) => {
 				if (err) { return res.status(500).send({ msg: err.message }); }
 
 				if (!user)
-					return res.status(404).render('changePwd', { 'error': 'We were unable to find a user for this token.', token: req.params.userToken });
+					return res.status(404).render('changePwd', { 'error': 'We were unable to find a user for this token.', token: req.params.userToken, userNameTag: ''  });
 
 				if (user.email != email) {
-					return res.status(400).render('changePwd', { 'error_msg': 'Incorrect email', token: req.params.userToken });
+					return res.status(400).render('changePwd', { 'error_msg': 'Incorrect email', token: req.params.userToken, userNameTag: ''  });
 				}
 			
 				bcrypt.genSalt(10, (err, salt) => {
@@ -350,7 +352,7 @@ exports.user_changePwd = (req, res) => {
 
 						user.save((err) => {
 							if (err) { return res.status(500).send({ msg: err.message }); }
-							return res.status(200).render('login', { 'success_msg': 'Your password has been updated and you can now login.' });
+							return res.status(200).render('login', { 'success_msg': 'Your password has been updated and you can now login.', userNameTag: ''  });
 						});
 					});
 				});
