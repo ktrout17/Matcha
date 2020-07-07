@@ -2,17 +2,17 @@
 <h2 class="text-danger text-center">Edit Profile</h2>
 <h4 class="text-center">Make changes to your profile</h4>
 <br>
-<form action="/users/editProfile" enctype="multipart/form-data" method="POST">
+<form action="/users/editProfile" enctype="multipart/form-data" method="POST"><br>
+	
 	<div class="form-group">
 		<label for="inputfile">Change your Profile Picture</label>
+			<a href="" class="d-block mb-4 h-100">
+				<img class="img-fluid img-thumbnail" id="ppImage" src="/<%= pp %>" alt="" style="height: 10%;width: 40%">
+			</a>
+		
 		<input onchange="readFile()" type="file" name="profileImage" class="form-control-file" id="inputfile" aria-describedby="fileHelp">
 		<small id="fileHelp" class="form-text text-muted">A profile picture is required to connect with another user</small>
 	</div>
-	<div class="col-lg-3 col-md-4 col-6" style="float: right;">
-			<a href="" class="d-block mb-4 h-100">
-				<img class="img-fluid img-thumbnail" id="ppImage" src="/<%= pp %>" alt="" style="height: 100%;width: 150%">
-			</a>
-		</div>
 	<div class="form-group row">
 		<label for="username" class="col-4 col-form-label">Username</label>
 		<div class="col-8">
@@ -159,9 +159,9 @@
 	</div>
 	<div class="form-group row">
 		<div class="offset-4 col-8">
-			<button name="submit" type="submit" class="btn btn-danger bg-danger">Submit</button>
+			<button name="submit" type="submit" class="btn btn-danger bg-danger">Submit</button><br><br>
 		</div><br>
-		<span style="color: brown;">NOTE: Your location will automatically update when hitting submit.</span>
+		<span style="color: brown;">NOTE: Your location will automatically update when hitting submit.</span><br>
 	</div>
 	<input type="text" name="country" id="country" hidden>
     <input type="text" name="province" id="province" hidden>
