@@ -1,6 +1,6 @@
 node_modules/
 public/style/
-public/uploads/
-.env
+uploads/
 .idea
 npm-debug.log
+.env
