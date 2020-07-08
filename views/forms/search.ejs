@@ -68,7 +68,7 @@
             type="checkbox"
             class="custom-control-input"
             onclick="return maxSel()"
-            value="gaming"
+            value="#gaming"
             aria-describedby="interestsHelpBlock"
           />
           <label for="interests_0" class="custom-control-label">#gaming</label>
@@ -80,7 +80,7 @@
             type="checkbox"
             class="custom-control-input"
             onclick="return maxSel()"
-            value="coding"
+            value="#coding"
             aria-describedby="interestsHelpBlock"
           />
           <label for="interests_1" class="custom-control-label">#coding</label>
@@ -92,7 +92,7 @@
             type="checkbox"
             class="custom-control-input"
             onclick="return maxSel()"
-            value="love"
+            value="#love"
             aria-describedby="interestsHelpBlock"
           />
           <label for="interests_2" class="custom-control-label">#love</label>
@@ -104,7 +104,7 @@
             type="checkbox"
             class="custom-control-input"
             onclick="return maxSel()"
-            value="family"
+            value="#family"
             aria-describedby="interestsHelpBlock"
           />
           <label for="interests_3" class="custom-control-label">#family</label>
@@ -116,7 +116,7 @@
             type="checkbox"
             class="custom-control-input"
             onclick="return maxSel()"
-            value="friends"
+            value="#friends"
             aria-describedby="interestsHelpBlock"
           />
           <label for="interests_4" class="custom-control-label">#friends</label>
@@ -128,7 +128,7 @@
             type="checkbox"
             class="custom-control-input"
             onclick="return maxSel()"
-            value="geek"
+            value="#geek"
             aria-describedby="interestsHelpBlock"
           />
           <label for="interests_5" class="custom-control-label">#geek</label>
@@ -140,7 +140,7 @@
             type="checkbox"
             class="custom-control-input"
             onclick="return maxSel()"
-            value="exercise"
+            value="#exercise"
             aria-describedby="interestsHelpBlock"
           />
           <label for="interests_6" class="custom-control-label"
@@ -154,7 +154,7 @@
             type="checkbox"
             class="custom-control-input"
             onclick="return maxSel()"
-            value="photography"
+            value="#photography"
             aria-describedby="interestsHelpBlock"
           />
           <label for="interests_7" class="custom-control-label"
@@ -168,7 +168,7 @@
             type="checkbox"
             class="custom-control-input"
             onclick="return maxSel()"
-            value="traveling"
+            value="#traveling"
             aria-describedby="interestsHelpBlock"
           />
           <label for="interests_8" class="custom-control-label"
@@ -182,7 +182,7 @@
             type="checkbox"
             class="custom-control-input"
             onclick="return maxSel()"
-            value="cooking"
+            value="#cooking"
             aria-describedby="interestsHelpBlock"
           />
           <label for="interests_9" class="custom-control-label">#cooking</label>
@@ -194,7 +194,7 @@
             type="checkbox"
             class="custom-control-input"
             onclick="return maxSel()"
-            value="pets"
+            value="#pets"
             aria-describedby="interestsHelpBlock"
           />
           <label for="interests_10" class="custom-control-label">#pets</label>
@@ -206,7 +206,7 @@
             type="checkbox"
             class="custom-control-input"
             onclick="return maxSel()"
-            value="sport"
+            value="#sport"
             aria-describedby="interestsHelpBlock"
           />
           <label for="interests_11" class="custom-control-label">#sport</label>
@@ -223,6 +223,7 @@
       <div class="col-8 d-flex">
         <span class="font-weight-bold text-danger mr-2 mt-1" id="slider-range">
           <input
+            name="fameRange"
             type="text"
             id="range"
             readonly
@@ -264,15 +265,15 @@
   $(function () {
     $("#slider-range").slider({
       range: true,
-      min: 1,
+      min: 0,
       max: 5,
       slide: function (event, ui) {
-        $("#range").val(ui.values[0] + " - " + ui.values[1]);
+        $("#range").val(ui.values[0] + "-" + ui.values[1]);
       },
     });
     $("#range").val(
       $("#slider-range").slider("values", 0) +
-        " - " +
+        "-" +
         $("#slider-range").slider("values", 1)
     );
   });

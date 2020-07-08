@@ -197,6 +197,7 @@ exports.index_advancedMathas = (req, res) => {
     const agePref = req.body.age_preference;
     const interests = req.body.interests;
     const fame = parseInt(req.body.fame);
+    const fameRange = req.body.fameRange;
     const loc = req.body.loc;
     const sortby = req.body.sortby;
 
@@ -356,7 +357,8 @@ exports.index_advancedMathas = (req, res) => {
       interestsQuery = {};
     }
 
-    fameQuery = { fame: fame };
+    let fameRangeArray = fameRange.split("-");
+    fameQuery = { fame: {$gte: parseInt(fameRangeArray[0]), $lte: parseInt(fameRangeArray[1])} };
 
     switch (loc) {
       case "near":
