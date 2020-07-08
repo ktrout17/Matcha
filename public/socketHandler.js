@@ -39,47 +39,35 @@ $(function () {
 
     if (chatBox) {
         chatBox.addEventListener('keydown', (event) => {
-            if (event.which === 13 && event.shiftKey == false) {
-                socket.emit('send_message', {
-                    to: to.value,
-                    from: from.value,
-                    chatId: chatId.value,
-                    message: chatBox.value,
-                    time: getDateTime()
-                });
-                chatBox.value = '';
-                event.preventDefault();
+          if (event.which === 13 && event.shiftKey == false) {
+            socket.emit('send_message', {
+              to: to.value,
+              from: from.value,
+              chatId: chatId.value,
+              message: chatBox.value,
+              time: getDateTime()
+            });
+            chatBox.value = '';
+            event.preventDefault();
             } else {
                 console.log("no")
             }
         })
     }
 
-    if (login) {
-        login.addEventListener('click', (event) => {
-            socket.emit("login", { email: inputEmail.value })
-        });
-        chatBox.value = "";
-        event.preventDefault();
-      } else {
-        console.log("no");
-      }
-    });
-
-
-  if (send) {
-    send.addEventListener("click", (event) => {
-      socket.emit("send_message", {
-        to: to.value,
-        from: from.value,
-        chatId: chatId.value,
-        message: chatBox.value,
-        time: getDateTime(),
-      });
-      chatBox.value = "";
-      event.preventDefault();
-    });
-  }
+  // if (send) {
+  //   send.addEventListener("click", (event) => {
+  //     socket.emit("send_message", {
+  //       to: to.value,
+  //       from: from.value,
+  //       chatId: chatId.value,
+  //       message: chatBox.value,
+  //       time: getDateTime(),
+  //     });
+  //     chatBox.value = "";
+  //     event.preventDefault();
+  //   });
+  // }
 
   if (login) {
     login.addEventListener("click", (event) => {
@@ -104,14 +92,7 @@ $(function () {
       });
     });
   }
-
-  // function view() {
-  //     socket.emit('view', {
-  //         likedUser: liked_username.value,
-  //         currUser: curr_userUsername
-  //     })
-  // }
-
+  
   socket.on("notification", (data) => {
     let notifTag = document.createElement("p");
     if (data.match == 1) {
@@ -119,25 +100,7 @@ $(function () {
     } else if (data.match == 2) {
       notifTag.textContent = data.msg + " " + data.user + "!";
     }
-
-    if (like_btn) {
-        like_btn.addEventListener('click', () => {
-            socket.emit('like', {
-                likedUser: liked_username.value,
-                currUser: curr_userUsername.value,
-                id: socket.id
-            })
-        });
-    };
-
-    if (block_btn) {
-        block_btn.addEventListener('click', () => {
-            socket.emit('block', {
-                likedUser: liked_username.value,
-                currUser: curr_userUsername.value
-            })
-        })
-    };
+  });
 
     if (liked_username && curr_userUsername) {
         if (liked_username.value && curr_userUsername.value) {
@@ -232,8 +195,6 @@ function getDateTime() {
     day = (day < 10 ? "0" : "") + day;
 
     return hour + ":" + min + " | " + month + " " + day;
-
-  return hour + ":" + min + " | " + month + " " + day;
 }
 
 function getMonth(m) {

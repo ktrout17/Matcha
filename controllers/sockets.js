@@ -1,8 +1,6 @@
 const User = require('../models/User');
 const Like = require('../models/Likes');
 const Chat = require('../models/Chats');
-const View = require('../models/Views');
-const { object } = require('underscore');
 
 module.exports = function (io, connectedUsers) {
   io.on("connection", socket => {

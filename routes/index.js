@@ -316,6 +316,7 @@ router.get(
             likes: req.user.likes,
             fame: req.user.fame,
             age: req.user.age,
+            userNameTag: req.user.username,
             userLikes: req.user.likedby,
             userViews: viewUSER
           });
