@@ -94,15 +94,6 @@ $(function () {
     });
   }
 
-  socket.on("notification", (data) => {
-    let notifTag = document.createElement("p");
-    if (data.match == 1) {
-      notifTag.textContent = data.user + " " + data.msg + "!";
-    } else if (data.match == 2) {
-      notifTag.textContent = data.msg + " " + data.user + "!";
-    }
-  });
-
   if (liked_username && curr_userUsername) {
     if (liked_username.value && curr_userUsername.value) {
       socket.emit("view", {
