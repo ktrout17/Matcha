@@ -27,9 +27,9 @@
                             <div class="media"><img src="/<%= nonBlockedUser.pp %>" alt="user" width="50" class="rounded-circle">
                                 <div class="media-body ml-4">
                                     <div class="d-flex align-items-center justify-content-between mb-1">
-                                        <h6 style="text-transform: capitalize;" class="mb-0"><%= nonBlockedUser.username %></h6>
+                                        <h6 class="mb-0 text-danger"><%= nonBlockedUser.username %></h6>
                                         <% if(nonBlockedUser.loggedIn === true) { %>
-                                            <small class="small font-weight-bold">Online</small>
+                                            <small class="small font-weight-bold" style="color: green;">Online</small>
                                         <% } else { %>
                                             <small class="small font-weight-bold">Last Seen: <%= nonBlockedUser.lastSeen %></small>
                                         <% } %>
@@ -86,11 +86,11 @@
             <!-- <form class="bg-light"> -->
                <% if (typeof chatId !== 'undefined') { %>
                 <div class="input-group">
-                    <textarea type="text" id="chatBox" name="chatBox" placeholder="Type a message" aria-describedby="button-addon2" class="form-control rounded-0 border-0 py-4 bg-light"></textarea>
+                    <textarea type="text" id="chatBox" name="chatBox" placeholder="Type a message..." aria-describedby="button-addon2" class="form-control rounded-0 border-0 py-4 bg-light"></textarea>
                     <div class="input-group-append">
-                        <button id="send" type="submit" class="btn btn-link"> <i class="fa fa-paper-plane"></i></button>
+                        <button id="send" type="submit" class="btn" style="background-color: #dc3545; color: white;"> <i class="fa fa-paper-plane" aria-hidden="true"></i> Send</button>
                     </div>
-                </div>
+                </div><br>
             <% } %>
             <!-- </form> -->
 
