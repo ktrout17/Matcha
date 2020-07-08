@@ -183,6 +183,10 @@
 			document.getElementById('notvalid').innerHTML = "You can select a maximum of 5 interests"
 			return false;
 		}
+		if (i <= 0){
+			document.getElementById('notvalid').innerHTML = "You must have at least 1 interest"
+			return false;
+		}
 	}
 
 
