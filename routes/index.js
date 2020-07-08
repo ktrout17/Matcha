@@ -19,10 +19,10 @@ const upload = multer({
 router.get("/", (req, res) => {
   res.setHeader("Content-Type", "text/html");
   // dummyData.fake();
-  res.render("welcome", {userNameTag: ''});
+  res.render("welcome", { userNameTag: '' });
 });
 
-router.get("/profiles/:id", ensureAuthenticated,(req, res, next) => {
+router.get("/profiles/:id", ensureAuthenticated, (req, res, next) => {
   const id = req.params.id;
   let visitor = false;
   let liked;
@@ -67,7 +67,8 @@ router.get("/profiles/:id", ensureAuthenticated,(req, res, next) => {
             }
 
             if (visitor) {
-              User.findByIdAndUpdate(id, { $inc: { views: 1 } }, { new: true })
+              let query = { $inc: { views: 1 } }
+              User.findByIdAndUpdate(id, query, { new: true })
                 .exec()
                 .then(doc => {
                   res.render("profiles", {
@@ -118,52 +119,52 @@ function matches(likedByUsers, likedUsers) {
   return matches;
 }
 
-router.get("/chats", ensureAuthenticated, (req, res,next) => {
+router.get("/chats", ensureAuthenticated, (req, res, next) => {
   const user = req.user;
   let likedUsers = [];
   let likedByUsers = [];
   let matchedUsers = [];
 
-  Likes.find({user_username: user.username}, (err, likes) => {
+  Likes.find({ user_username: user.username }, (err, likes) => {
     likes.forEach(users => {
       likedUsers.push(users.liked_username)
     });
-      Likes.find({liked_username: user.username}, (err, currUserliked) => {
-        currUserliked.forEach(likedby => {
-          likedByUsers.push(likedby.user_username)
-        })
-       matchedUsers = matches(likedByUsers,likedUsers);
-       User.find({username: {$in: matchedUsers, $nin: user.blocked}}, (err, nonBlockedUsers) => {
-        res.locals.user = user;
-        res.locals.nonBlockedUsers = nonBlockedUsers; 
-        next()
-       });
+    Likes.find({ liked_username: user.username }, (err, currUserliked) => {
+      currUserliked.forEach(likedby => {
+        likedByUsers.push(likedby.user_username)
       })
+      matchedUsers = matches(likedByUsers, likedUsers);
+      User.find({ username: { $in: matchedUsers, $nin: user.blocked } }, (err, nonBlockedUsers) => {
+        res.locals.user = user;
+        res.locals.nonBlockedUsers = nonBlockedUsers;
+        next()
+      });
+    })
   })
 }, (req, res, next) => {
   let nonBlockedUsers = res.locals.nonBlockedUsers;
   let user = res.locals.user;
   let chatId = req.url.split('?', 2)[1];
 
-  Chat.find({$and: [{$or: [{to: user.username}, {from: user.username}]}, {chatId: chatId}]}).sort({time: 1}).then(messages => {
-      res.render("chats", {
-        user: user,
-        chatId: chatId,
-        messages: messages,
-        userNameTag: req.user.username,
-        nonBlockedUsers: nonBlockedUsers.map(nonBlockedUser => {
-          return {
-            username: nonBlockedUser.username,
-            pp: nonBlockedUser.profileImages.image1,
-            lastSeen: nonBlockedUser.lastSeen,
-            loggedIn: nonBlockedUser.loggedIn,
-            bio: nonBlockedUser.bio,
-            request: {
-              url: "/chats?" + [user.username, nonBlockedUser.username].sort().join('-')
-            }
+  Chat.find({ $and: [{ $or: [{ to: user.username }, { from: user.username }] }, { chatId: chatId }] }).sort({ time: 1 }).then(messages => {
+    res.render("chats", {
+      user: user,
+      chatId: chatId,
+      messages: messages,
+      userNameTag: req.user.username,
+      nonBlockedUsers: nonBlockedUsers.map(nonBlockedUser => {
+        return {
+          username: nonBlockedUser.username,
+          pp: nonBlockedUser.profileImages.image1,
+          lastSeen: nonBlockedUser.lastSeen,
+          loggedIn: nonBlockedUser.loggedIn,
+          bio: nonBlockedUser.bio,
+          request: {
+            url: "/chats?" + [user.username, nonBlockedUser.username].sort().join('-')
           }
-        })
-      });
+        }
+      })
+    });
   });
 });
 
@@ -254,7 +255,7 @@ router.get("/suggestedMatchas", ensureAuthenticated, (req, res) => {
       //   fame: 5  *NOTE: Not sure if needed, but pdf wants it.
       // },
       { _id: { $ne: req.user.id } },
-      { username: {$nin: req.user.blocked} }
+      { username: { $nin: req.user.blocked } }
     ]
   })
     .sort({ fame: -1 })
@@ -287,20 +288,20 @@ router.get(
     let totalViews = [];
 
     Views.find({ viewedId: req.user.id }, (err, viewsDoc) => {
-      if (viewsDoc. length > 0) {
-      viewsDoc.forEach(value => {
-        User.find({ _id: value._userId }, (err, userViewsDoc) => {
-          userViewsDoc.forEach(valued => {
-            totalViews.push(valued.username);
-          });
-        })
-        .exec()
-        .then(() => {
-          res.locals.totalViews = totalViews;
-          next();
+      if (viewsDoc.length > 0) {
+        viewsDoc.forEach(value => {
+          User.find({ _id: value._userId }, (err, userViewsDoc) => {
+            userViewsDoc.forEach(valued => {
+              totalViews.push(valued.username);
+            });
           })
-          .catch();
-      });
+            .exec()
+            .then(() => {
+              res.locals.totalViews = totalViews;
+              next();
+            })
+            .catch();
+        });
       } else {
         next()
       }
@@ -313,11 +314,11 @@ router.get(
     Likes.find({ likedId: req.user.id }, (err, likesDoc) => {
       if (likesDoc.length > 0) {
         likesDoc.forEach(value => {
-            totalLikes.push(value.user_username);
+          totalLikes.push(value.user_username);
         });
-          res.locals.totalLikes = totalLikes;
-          console.log(likesDoc);
-          next();
+        res.locals.totalLikes = totalLikes;
+        console.log(likesDoc);
+        next();
       } else {
         next();
       }
