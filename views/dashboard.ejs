@@ -113,10 +113,10 @@
                         </div>
                         <div class="modal-body">
                             <% if (typeof userViews !== 'undefined') { %> 
-                            <% userViews.forEach(function (view) { %>
-                        <p> <%= view %> </p>
-                        <% })
-                    } %>
+                                <% userViews.forEach(function (userViews) { %>
+                            <p> <%= userViews.userViewUsername %> </p>
+                            <% })
+                        } %>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Thanks</button>
