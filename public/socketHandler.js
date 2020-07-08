@@ -1,7 +1,7 @@
-$(function () {
+$(function() {
     const socket = io.connect()
 
-    var element = function (id) {
+    var element = function(id) {
         return document.getElementById(id);
     }
 
@@ -27,17 +27,14 @@ $(function () {
 
     // Notification Tab
     var notify_message = element('notify-message');
-    var noti_btn =  element('noti_btn');
-    var thanks =  element('thanks');
-    var thanks2 =  element('thanks2');
-    let notifTag;
 
     socket.on('connect', () => update());
     function update() {
-        socket.emit('update', { user: user.value, id: socket.id });
+        console.log(socket.id);
+        socket.emit('update', {user: user.value, id: socket.id});
     }
-
-    if (chatBox) {
+    
+    if(chatBox){
         chatBox.addEventListener('keydown', (event) => {
             if (event.which === 13 && event.shiftKey == false) {
                 socket.emit('send_message', {
@@ -55,18 +52,32 @@ $(function () {
         })
     }
 
-    if (login) {
+    if(login){
         login.addEventListener('click', (event) => {
-            socket.emit("login", { email: inputEmail.value })
+            socket.emit("login", {email: inputEmail.value})
         });
     }
+    // login.click(function() {
+    //     socket.emit("login", {email: inputEmail.val()})
+    // })
+    
+    // like_btn.click(function () {
+    //     console.log("HI");
+    //     socket.emit('update', {user: user.val(), id: socket.id});
+    //      socket.emit('like', {
+    //          likedUser: liked_username.val(),
+    //          currUser: curr_userUsername.val(),
+    //          id: socket.id
+    //     })
+    // })
 
-    if (like_btn) {
+    if (like_btn){
         like_btn.addEventListener('click', () => {
+            // socket.emit('update', {user: user.value, id: socket.id});
             socket.emit('like', {
                 likedUser: liked_username.value,
                 currUser: curr_userUsername.value,
-                id: socket.id
+                id : socket.id
             })
         });
     };
@@ -80,102 +91,78 @@ $(function () {
         })
     };
 
-    if (liked_username && curr_userUsername) {
-        if (liked_username.value && curr_userUsername.value) {
-            socket.emit('view', {
-                viewedUser: liked_username.value,
-                currUser: curr_userUsername.value,
-                viewedId: user_id.value,
-                currId: curr_userId.value
-            });
+    // function view() {
+    //     socket.emit('view', {
+    //         likedUser: liked_username.value,
+    //         currUser: curr_userUsername
+    //     })
+    // }
+
+    socket.on('notification', (data) => {
+        let notifTag = document.createElement('p');
+        if (data.match == 1) {
+            notifTag.textContent = data.user + " " + data.msg + "!";
+        } else if (data.match == 2) {
+            notifTag.textContent = data.msg + " " + data.user + "!";
         }
-    }
+        // console.log(data);
+        // notifTag.textContent = data.user;
+        notify_message.appendChild(notifTag)
+    })
 
-    if (noti_btn){
-        socket.on('notification', (data) => {
-            noti_btn.classList.remove("btn-danger");
-            notifTag = document.createElement('p');
-            if (data.match == 1) {
-                notifTag.textContent = data.user + " " + data.msg + "!";
-            } else if (data.match == 2) {
-                notifTag.textContent = data.msg + " " + data.user + "!";
-            }
-            notify_message.appendChild(notifTag)
-        })
-    }
+    socket.on('recieve_message', (data) => {
+        var div1 = document.createElement('div');
+        var div2 = document.createElement('div');
+        var div3 = document.createElement('div');
+        var p1 = document.createElement('p');
+        var p2 = document.createElement('p');
 
-    if (thanks && thanks2) {
-        thanks.addEventListener('click', () => {
-            noti_btn.classList.add("btn-danger");
-            while(notify_message.firstChild){
-                notify_message.removeChild(notify_message.lastChild);
-            }
-        })
-        thanks2.addEventListener('click', () => {
-            noti_btn.classList.add("btn-danger");
-            while(notify_message.firstChild){
-                notify_message.removeChild(notify_message.lastChild);
-            }
-        })
-    }
-
-    if (from) {
-        if (from.value) {
-            socket.on('recieve_message', (data) => {
-                var div1 = document.createElement('div');
-                var div2 = document.createElement('div');
-                var div3 = document.createElement('div');
-                var p1 = document.createElement('p');
-                var p2 = document.createElement('p');
-        
-                if (from.value === data.from) {
-                    div1.setAttribute('class', 'media w-50 ml-auto mb-3')
-                    div2.setAttribute('class', 'media-body bg-white')
-                    div3.setAttribute('class', 'bg-danger rounded py-2 px-3 mb-2')
-                    p1.setAttribute('class', 'text-small mb-0 text-white')
-                } else if (from.value === data.to) {
-                    div1.setAttribute('class', 'media w-50 mb-3')
-                    div2.setAttribute('class', 'media-body ml-3')
-                    div3.setAttribute('class', 'bg-light rounded py-2 px-3 mb-2')
-                    p1.setAttribute('class', 'text-small mb-0 text-muted')
-                }
-                p2.setAttribute('class', 'small text-muted');
-                p1.textContent = data.msg;
-                p2.textContent = 'from ' + data.from + ': ' + data.msgTime;
-        
-                msgBox.appendChild(div1).appendChild(div2).appendChild(div3).appendChild(p1)
-                div2.appendChild(p2)
-            })
+        if (from.value === data.from) {
+            div1.setAttribute('class', 'media w-50 ml-auto mb-3')
+            div2.setAttribute('class', 'media-body bg-white')
+            div3.setAttribute('class', 'bg-danger rounded py-2 px-3 mb-2')
+            p1.setAttribute('class', 'text-small mb-0 text-white')
+        } else if (from.value === data.to) {
+            div1.setAttribute('class', 'media w-50 mb-3')
+            div2.setAttribute('class', 'media-body ml-3')
+            div3.setAttribute('class', 'bg-light rounded py-2 px-3 mb-2')
+            p1.setAttribute('class', 'text-small mb-0 text-muted')
         }
-    }
+        p2.setAttribute('class', 'small text-muted');
+        p1.textContent = data.msg;
+        p2.textContent = 'from ' + data.from + ': ' + data.msgTime;
+
+        msgBox.appendChild(div1).appendChild(div2).appendChild(div3).appendChild(p1)
+        div2.appendChild(p2)
+    })
 });
 
 function getDateTime() {
 
-    var date = new Date();
+var date = new Date();
 
-    var hour = date.getHours();
-    hour = (hour < 10 ? "0" : "") + hour;
+var hour = date.getHours();
+hour = (hour < 10 ? "0" : "") + hour;
 
-    var min = date.getMinutes();
-    min = (min < 10 ? "0" : "") + min;
+var min  = date.getMinutes();
+min = (min < 10 ? "0" : "") + min;
 
-    var sec = date.getSeconds();
-    sec = (sec < 10 ? "0" : "") + sec;
+var sec  = date.getSeconds();
+sec = (sec < 10 ? "0" : "") + sec;
 
-    var year = date.getFullYear();
+var year = date.getFullYear();
 
-    var month = date.getMonth() + 1;
-    month = getMonth(parseInt((month < 10 ? "0" : "") + month));
+var month = date.getMonth() + 1;
+month = getMonth(parseInt((month < 10 ? "0" : "") + month));
 
-    var day = date.getDate();
-    day = (day < 10 ? "0" : "") + day;
+var day  = date.getDate();
+day = (day < 10 ? "0" : "") + day;
 
-    return hour + ":" + min + " | " + month + " " + day;
+return hour + ":" + min + " | " + month + " " + day;
 
 }
 
-function getMonth(m) {
+function getMonth(m){
     switch (m) {
         case 1:
             return "Jan"

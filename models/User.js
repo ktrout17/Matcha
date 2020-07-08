@@ -43,7 +43,6 @@ const UserSchema = new mongoose.Schema({
 	gender2: String,
 	likedby: [{type: String, default: null}],
 	blocked: [{type: String, default: null}],
-	viewedby: [{type: String, default: null}],
 	loggedIn: {type: Boolean, default: false},
 	lastSeen: {type: String}
 });

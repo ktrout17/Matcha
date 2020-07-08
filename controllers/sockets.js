@@ -1,8 +1,6 @@
 const User = require('../models/User');
 const Like = require('../models/Likes');
 const Chat = require('../models/Chats');
-const View = require('../models/Views');
-const { object } = require('underscore');
 
 module.exports = function (io, connectedUsers) {
   io.on("connection", socket => {
@@ -16,11 +14,14 @@ module.exports = function (io, connectedUsers) {
           check = 1;
         }
       }
-      if (check == 0) {
+      if (check === 0) {
         user.user = data.user
         user.socketId = data.id
         connectedUsers.push(user);
       }
+      // console.log(connectedUsers);
+      // console.log(Object.keys(io.sockets.sockets));
+      console.log("reached update");
     });
 
     socket.on("send_message", data => {
@@ -42,12 +43,14 @@ module.exports = function (io, connectedUsers) {
         for (var i in connectedUsers) {
           if (connectedUsers[i].user === to) {
             io.to(connectedUsers[i].socketId).emit('recieve_message', { to: to, from: from, msg: msg, msgTime: msgTime, chatId: chatId })
-            io.to(connectedUsers[i].socketId).emit('notification', { user: from, msg: "sent you a new message", match: 1 })
           }
           if (connectedUsers[i].user === from) {
             io.to(connectedUsers[i].socketId).emit('recieve_message', { to: to, from: from, msg: msg, msgTime: msgTime, chatId: chatId })
           }
         }
+        // io.sockets.emit('recieve_message', { to: to, from: from, msg: msg, msgTime: msgTime, chatId: chatId })
+      } else {
+        console.log('No message or chatId')
       }
     });
 
@@ -67,20 +70,44 @@ module.exports = function (io, connectedUsers) {
           if (verif == 0) {
             connectedUsers.push(user);
           }
+          // console.log(connectedUsers);
+          // console.log(Object.keys(io.sockets.sockets));
+          console.log("reached login");
         }
       }).catch(err => { console.log(err) })
     });
 
     socket.on('like', (data) => {
+
+      // io.to(connectedUsers[0].socketId).emit('notification', {user: connectedUsers[0].user})
+      // io.to(connectedUsers[1].socketId).emit('notification', {user: connectedUsers[1].user})
+      // io.to(connectedUsers[2].socketId).emit('notification', {user: connectedUsers[2].user})
+      // io.sockets.to(data.id).emit('notification', {user: "io.sockets.to"})
+      // io.sockets.sockets[data.to].emit('notification', {user: "io.sockets.to"})
+      // socket.to(data.id).emit('notification', {user: "socket.to"})
+      // io.to(data.id).emit('notification', {user: "io.to"})
+      // io.sockets.emit('notification', {user: "io.sockets.emit"})
+      // console.log(data);
+      // console.log("Hello server");
+      // for (var i in connectedUsers) {
+      //   if (connectedUsers[i].user === data.likedUser) {
+      //     io.to(connectedUsers[i].socketId).emit('notification', { user: connectedUsers[i].user, who: "likedUser" })
+      //   }
+      //   if (connectedUsers[i].user === data.currUser) {
+      //     io.to(connectedUsers[i].socketId).emit('notification', { user: connectedUsers[i].user, who: "currUser" })
+      //   }
+      // }
+
+      // console.log(connectedUsers[0].socketId)
+      // console.log(connectedUsers[1].socketId)
+      // console.log(connectedUsers[2].socketId)
+      // console.log(connectedUsers[1].user)
+      // console.log(data.id)
+      // console.log(connectedUsers)
+      // console.log(Object.keys(io.sockets.sockets));
+
       Like.findOne({user_username: data.likedUser, liked_username: data.currUser}, (err, likeDoc) => {
         if (err) throw err;
-        Like.findOne({user_username: data.currUser, liked_username: data.likedUser}, (err, isLiked) => {
-          if (err) throw err;
-
-          userIsLiked = 0;
-          if (isLiked != null){
-            userIsLiked = 1;
-          }
 
         User.findOne({username: data.likedUser}, (err, doc) => {
           if (err) throw err;
@@ -102,13 +129,14 @@ module.exports = function (io, connectedUsers) {
             isBlocked = 1;
           }
         }
-            if (isBlocked == 0 && userIsLiked == 0)
+            if (isBlocked == 0)
             {
               for (var i in connectedUsers) {
                 if (connectedUsers[i].user === data.likedUser) {
                   io.to(connectedUsers[i].socketId).emit('notification', { user: data.currUser, msg: "You have a new match with", match: 2 })
                 }
               }
+              // io.sockets.emit('notification', {user: data.currUser, msg: "You have a new match with", match: 2})
             }
           } else {
             let isBlocked = 0;
@@ -129,18 +157,25 @@ module.exports = function (io, connectedUsers) {
           }
         }
         }
-            if (isBlocked == 0 && userIsLiked == 0)
+            if (isBlocked == 0)
             {
               for (var i in connectedUsers) {
                 if (connectedUsers[i].user === data.likedUser) {
                   io.to(connectedUsers[i].socketId).emit('notification', { user: data.currUser, msg: "Liked your profile", match: 1 })
                 }
               }
+              // io.sockets.emit('notification', {user: data.currUser, msg: "Liked your profile", match: 1})
             }
           }
         })
-      });
       })
+
+      // for (var i in connectedUsers) {
+      //   if (connectedUsers[i].user === data.likedUser) {
+      //     io.sockets.emit('notification', {user: data.likedUser, msg: "Liked your profile!"})
+      //   }
+      // }
+      console.log("reached like");
     });
 
     socket.on('block', (data) => {
@@ -151,28 +186,12 @@ module.exports = function (io, connectedUsers) {
           io.to(connectedUsers[i].socketId).emit('notification', { user: data.currUser, msg: "Blocked / unliked you", match: 1  })
         }
       }
+      // io.sockets.emit('notification', { user: data.currUser, msg: "Blocked / unliked you", match: 1 })
     })
 
     socket.on('view', (data) => {
-      User.findById(data.viewedId).exec().then(userDoc => {
-        let isViewed = 0;
-        let viewedbyLength = userDoc.viewedby.length;
-
-        for (var i = 0; i < viewedbyLength; i++) {
-          if (userDoc.viewedby[i] == data.currUser) {
-            isViewed = 1;
-          }
-        }
-        if (isViewed == 0) {
-          for (var i in connectedUsers) {
-            if (connectedUsers[i].user === data.viewedUser) {
-              io.to(connectedUsers[i].socketId).emit('notification', { user: data.currUser, msg: "viewed your profile", match: 1 })
-            }
-          }
-          userDoc.viewedby.push(data.currUser);
-          userDoc.save();
-        }
-      }).catch();
+      console.log("viewing")
+      console.log(data);
     })
   });
 };
