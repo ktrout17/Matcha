@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
-const Chat = require('../models/Chats');
+const Chat = require("../models/Chats");
 const Likes = require("../models/Likes");
 const Views = require("../models/Views");
 const { ensureAuthenticated } = require("../config/auth");
@@ -12,7 +12,7 @@ const storage = require("../config/fileStorage");
 const upload = multer({
   storage: storage.storage,
   limits: storage.limits,
-  fileFilter: storage.fileFilter
+  fileFilter: storage.fileFilter,
 });
 
 // Render ejs view pages
@@ -29,21 +29,21 @@ router.get("/profiles/:id", ensureAuthenticated, (req, res, next) => {
 
   Likes.findOne({ _userId: req.user.id, likedId: id })
     .exec()
-    .then(doc => {
+    .then((doc) => {
       if (doc) {
         liked = "liked";
       } else {
         liked = "like";
       }
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       res.end();
     });
 
   User.findById(id)
     .exec()
-    .then(docs => {
+    .then((docs) => {
       if (!docs) {
         console.log("There was a weird error");
         res.end();
@@ -58,10 +58,11 @@ router.get("/profiles/:id", ensureAuthenticated, (req, res, next) => {
 
               const newView = new Views({
                 _userId: req.user.id,
-                viewedId: id
+                viewedId: id,
+                userViewUsername: req.user.username
               });
 
-              newView.save(err => {
+              newView.save((err) => {
                 if (err) throw err;
               });
             }
@@ -70,7 +71,7 @@ router.get("/profiles/:id", ensureAuthenticated, (req, res, next) => {
               let query = { $inc: { views: 1 } }
               User.findByIdAndUpdate(id, query, { new: true })
                 .exec()
-                .then(doc => {
+                .then((doc) => {
                   res.render("profiles", {
                     user: doc,
                     liked: liked,
@@ -80,7 +81,7 @@ router.get("/profiles/:id", ensureAuthenticated, (req, res, next) => {
                   });
                   next();
                 })
-                .catch(err => {
+                .catch((err) => {
                   console.log("catch err: " + err);
                 });
             }
@@ -101,21 +102,21 @@ router.get("/profiles/:id", ensureAuthenticated, (req, res, next) => {
               }
             }
           })
-          .catch(err => {
+          .catch((err) => {
             console.log(err);
           });
       }
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
     });
 });
 
 function matches(likedByUsers, likedUsers) {
-  let _ = require('underscore')
+  let _ = require("underscore");
   let matches = [];
 
-  matches = _.intersection(likedByUsers, likedUsers)
+  matches = _.intersection(likedByUsers, likedUsers);
   return matches;
 }
 
@@ -173,7 +174,7 @@ router.get("/suggestedMatchas", ensureAuthenticated, (req, res) => {
     $and: [
       // change $or back to $and for suggested searches
       {
-        city: req.user.city
+        city: req.user.city,
       },
       {
         $or: [
@@ -184,9 +185,9 @@ router.get("/suggestedMatchas", ensureAuthenticated, (req, res) => {
                 req.user.interests["second"],
                 req.user.interests["third"],
                 req.user.interests["fourth"],
-                req.user.interests["fifth"]
-              ]
-            }
+                req.user.interests["fifth"],
+              ],
+            },
           },
           {
             "interests.second": {
@@ -195,9 +196,9 @@ router.get("/suggestedMatchas", ensureAuthenticated, (req, res) => {
                 req.user.interests["second"],
                 req.user.interests["third"],
                 req.user.interests["fourth"],
-                req.user.interests["fifth"]
-              ]
-            }
+                req.user.interests["fifth"],
+              ],
+            },
           },
           {
             "interests.third": {
@@ -206,9 +207,9 @@ router.get("/suggestedMatchas", ensureAuthenticated, (req, res) => {
                 req.user.interests["second"],
                 req.user.interests["third"],
                 req.user.interests["fourth"],
-                req.user.interests["fifth"]
-              ]
-            }
+                req.user.interests["fifth"],
+              ],
+            },
           },
           {
             "interests.fourth": {
@@ -217,9 +218,9 @@ router.get("/suggestedMatchas", ensureAuthenticated, (req, res) => {
                 req.user.interests["second"],
                 req.user.interests["third"],
                 req.user.interests["fourth"],
-                req.user.interests["fifth"]
-              ]
-            }
+                req.user.interests["fifth"],
+              ],
+            },
           },
           {
             "interests.fifth": {
@@ -228,40 +229,41 @@ router.get("/suggestedMatchas", ensureAuthenticated, (req, res) => {
                 req.user.interests["second"],
                 req.user.interests["third"],
                 req.user.interests["fourth"],
-                req.user.interests["fifth"]
-              ]
-            }
-          }
-        ]
+                req.user.interests["fifth"],
+              ],
+            },
+          },
+        ],
       },
       {
         $or: [
           {
             $and: [
               { gender: { $eq: req.user.sexPref } },
-              { gender: { $eq: "male" } }
-            ]
+              { gender: { $eq: "male" } },
+            ],
           },
           {
             $and: [
               { gender: { $eq: req.user.sexPref } },
-              { gender: { $eq: "female" } }
-            ]
+              { gender: { $eq: "female" } },
+            ],
           },
-          { gender2: { $eq: req.user.sexPref } }
-        ]
+          { gender2: { $eq: req.user.sexPref } },
+        ],
       },
       // {
       //   fame: 5  *NOTE: Not sure if needed, but pdf wants it.
       // },
       { _id: { $ne: req.user.id } },
-      { username: { $nin: req.user.blocked } }
-    ]
+      { username: { $nin: req.user.blocked } },
+      { agePref: { $eq: req.user.agePref } },
+    ],
   })
     .sort({ fame: -1 })
     .select("firstname lastname username profileImages.image1 fame")
     .exec()
-    .then(docs => {
+    .then((docs) => {
       res.status(200).render("suggestedMatchas", {
         userNameTag: req.user.username,
         users: docs.map(doc => {
@@ -272,10 +274,10 @@ router.get("/suggestedMatchas", ensureAuthenticated, (req, res) => {
             fame: doc.fame,
             profileImage: doc.profileImages.image1,
             request: {
-              url: "/profiles/" + doc.id
-            }
+              url: "/profiles/" + doc.id,
+            },
           };
-        })
+        }),
       });
     })
     .catch();
@@ -284,75 +286,43 @@ router.get("/suggestedMatchas", ensureAuthenticated, (req, res) => {
 router.get(
   "/dashboard",
   ensureAuthenticated,
-  (req, res, next) => {
+  (req, res) => {
     let totalViews = [];
-
-    Views.find({ viewedId: req.user.id }, (err, viewsDoc) => {
-      if (viewsDoc.length > 0) {
-        viewsDoc.forEach(value => {
-          User.find({ _id: value._userId }, (err, userViewsDoc) => {
-            userViewsDoc.forEach(valued => {
-              totalViews.push(valued.username);
-            });
-          })
-            .exec()
-            .then(() => {
-              res.locals.totalViews = totalViews;
-              next();
-            })
-            .catch();
-        });
-      } else {
-        next()
-      }
-    })
-      .exec()
-      .catch();
-  }, (req, res, next) => {
     let totalLikes = [];
-
-    Likes.find({ likedId: req.user.id }, (err, likesDoc) => {
-      if (likesDoc.length > 0) {
-        likesDoc.forEach(value => {
-          totalLikes.push(value.user_username);
-        });
-        res.locals.totalLikes = totalLikes;
-        console.log(likesDoc);
-        next();
-      } else {
-        next();
-      }
-    }).exec();
-  },
-  (req, res, next) => {
-    const { totalLikes } = res.locals;
-    const { totalViews } = res.locals;
-
-    res.render("dashboard", {
-      name: req.user.username,
-      pp: req.user.profileImages.image1,
-      country: req.user.country,
-      province: req.user.province,
-      city: req.user.city,
-      image1: req.user.profileImages.image2,
-      image2: req.user.profileImages.image3,
-      image3: req.user.profileImages.image4,
-      image4: req.user.profileImages.image5,
-      gender: req.user.gender,
-      sexPref: req.user.sexPref,
-      interests: req.user.interests,
-      bio: req.user.bio,
-      views: req.user.views,
-      likes: req.user.likes,
-      fame: req.user.fame,
-      age: req.user.age,
-      userNameTag: req.user.username,
-      userLikes: totalLikes,
-      userViews: totalViews
-    });
-    next();
-  }
-);
+    Views.find({ viewedId: req.user.id }).then((viewUSER) => {
+      User.findOne({_id: req.user.id }, (err, doc) => {
+        if (err){
+          console.log('could not find user');
+        }
+        console.log(doc);
+      }).then((Viewusers) => {
+        if (Viewusers)
+        {
+          res.render("dashboard", {
+            name: req.user.username,
+            pp: req.user.profileImages.image1,
+            country: req.user.country,
+            province: req.user.province,
+            city: req.user.city,
+            image1: req.user.profileImages.image2,
+            image2: req.user.profileImages.image3,
+            image3: req.user.profileImages.image4,
+            image4: req.user.profileImages.image5,
+            gender: req.user.gender,
+            sexPref: req.user.sexPref,
+            interests: req.user.interests,
+            bio: req.user.bio,
+            views: req.user.views,
+            likes: req.user.likes,
+            fame: req.user.fame,
+            age: req.user.age,
+            userLikes: req.user.likedby,
+            userViews: viewUSER
+          });
+        }
+      })
+    })
+  });
 
 // Index Controller
 const IndexController = require("../controllers/index");

@@ -59,6 +59,65 @@ $(function () {
         login.addEventListener('click', (event) => {
             socket.emit("login", { email: inputEmail.value })
         });
+        chatBox.value = "";
+        event.preventDefault();
+      } else {
+        console.log("no");
+      }
+    });
+
+
+  if (send) {
+    send.addEventListener("click", (event) => {
+      socket.emit("send_message", {
+        to: to.value,
+        from: from.value,
+        chatId: chatId.value,
+        message: chatBox.value,
+        time: getDateTime(),
+      });
+      chatBox.value = "";
+      event.preventDefault();
+    });
+  }
+
+  if (login) {
+    login.addEventListener("click", (event) => {
+      socket.emit("login", { email: inputEmail.value });
+    });
+  }
+
+  if (like_btn) {
+    like_btn.addEventListener("click", () => {
+      socket.emit("like", {
+        likedUser: liked_username.value,
+        currUser: curr_userUsername.value,
+      });
+    });
+  }
+
+  if (block_btn) {
+    block_btn.addEventListener("click", () => {
+      socket.emit("block", {
+        likedUser: liked_username.value,
+        currUser: curr_userUsername.value,
+      });
+    });
+  }
+
+  // function view() {
+  //     socket.emit('view', {
+  //         likedUser: liked_username.value,
+  //         currUser: curr_userUsername
+  //     })
+  // }
+
+  socket.on("notification", (data) => {
+    let notifTag = document.createElement("p");
+    if (data.match == 1) {
+      notifTag.textContent = data.user + " " + data.msg + "!";
+    } else if (data.match == 2) {
+      notifTag.textContent = data.msg + " " + data.user + "!";
     }
 
     if (like_btn) {
@@ -151,6 +210,7 @@ $(function () {
 });
 
 function getDateTime() {
+  var date = new Date();
 
     var date = new Date();
 
@@ -173,35 +233,36 @@ function getDateTime() {
 
     return hour + ":" + min + " | " + month + " " + day;
 
+  return hour + ":" + min + " | " + month + " " + day;
 }
 
 function getMonth(m) {
-    switch (m) {
-        case 1:
-            return "Jan"
-        case 2:
-            return "Feb"
-        case 3:
-            return "Mar"
-        case 4:
-            return "Apr"
-        case 5:
-            return "May"
-        case 6:
-            return "Jun"
-        case 7:
-            return "Jul"
-        case 8:
-            return "Aug"
-        case 9:
-            return "Sep"
-        case 10:
-            return "Oct"
-        case 11:
-            return "Nov"
-        case 12:
-            return "Dec"
-        default:
-            console.log(m)
-    }
+  switch (m) {
+    case 1:
+      return "Jan";
+    case 2:
+      return "Feb";
+    case 3:
+      return "Mar";
+    case 4:
+      return "Apr";
+    case 5:
+      return "May";
+    case 6:
+      return "Jun";
+    case 7:
+      return "Jul";
+    case 8:
+      return "Aug";
+    case 9:
+      return "Sep";
+    case 10:
+      return "Oct";
+    case 11:
+      return "Nov";
+    case 12:
+      return "Dec";
+    default:
+      console.log(m);
+  }
 }

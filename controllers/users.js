@@ -1,23 +1,24 @@
-const bcrypt = require('bcryptjs');
-const passport = require('passport');
-const mongoose = require('mongoose');
-const crypto = require('crypto-extra');
-const nodemailer = require('nodemailer');
-const multer = require('multer');
-const { gmail_email, gmail_password } = require('../config/config');
+const bcrypt = require("bcryptjs");
+const passport = require("passport");
+const mongoose = require("mongoose");
+const crypto = require("crypto-extra");
+const nodemailer = require("nodemailer");
+const multer = require("multer");
+const { gmail_email, gmail_password } = require("../config/config");
 
-const User = require('../models/User');
-const Token = require('../models/Token');
+const User = require("../models/User");
+const Token = require("../models/Token");
 
 const transporter = nodemailer.createTransport({
-	service: 'gmail',
-	auth: {
-		user: gmail_email,
-		pass: gmail_password
-	},
-	tls: {
-		rejectUnauthorized: false
-	}
+  service: "gmail",
+  host: "smtp.gmail.com",
+  auth: {
+    user: gmail_email,
+    pass: gmail_password,
+  },
+  tls: {
+    rejectUnauthorized: false,
+  },
 });
 
 exports.user_register = (req, res) => {
@@ -165,13 +166,16 @@ exports.user_login = (req, res, next) => {
 };
 
 exports.user_logout = (req, res) => {
-	User.findByIdAndUpdate(req.user.id,
-		{$set: {loggedIn: false, lastSeen: getDateTime()}}, (err) => {
-			if (err) throw err;
-			req.logout();
-			req.flash('success_msg', 'You are logged out');
-			res.redirect('/users/login');
-		})
+  User.findByIdAndUpdate(
+    req.user.id,
+    { $set: { loggedIn: false, lastSeen: getDateTime() } },
+    (err) => {
+      if (err) throw err;
+      req.logout();
+      req.flash("success_msg", "You are logged out");
+      res.redirect("/users/login");
+    }
+  );
 };
 
 exports.user_confirmation = (req, res) => {
@@ -362,245 +366,281 @@ exports.user_changePwd = (req, res) => {
 };
 
 exports.user_extendedProfile = (req, res) => {
-	let uploads = res.locals.upload;
-	uploads(req, res, async function (err) {
-		if (err instanceof multer.MulterError) {
-			req.flash('error_msg', err.message);
-			res.status(500).redirect('/users/extendedProfile');
-		}
-		else if (err) {
-			req.flash('error_msg', err.message);
-			res.status(500).redirect('/users/extendedProfile');
-		}
+  let uploads = res.locals.upload;
+  uploads(req, res, async function (err) {
+    if (err instanceof multer.MulterError) {
+      req.flash("error_msg", err.message);
+      res.status(500).redirect("/users/extendedProfile");
+    } else if (err) {
+      req.flash("error_msg", err.message);
+      res.status(500).redirect("/users/extendedProfile");
+    }
 
-		if (req.file) {
-			await User.findById(req.user.id, (err, user) => {
-				if (!user) {
-					if (err) { return res.status(500).send({ msg: err.message }); }
-				}
-				else {
-					const newDate = new Date(req.body.birthdate);
-					const ageDifMs = Date.now() - newDate.getTime();
-					const ageDate = new Date(ageDifMs);
-					const age = Math.abs(ageDate.getUTCFullYear() - 1970);
+    if (req.file) {
+      await User.findById(req.user.id, (err, user) => {
+        if (!user) {
+          if (err) {
+            return res.status(500).send({ msg: err.message });
+          }
+        } else {
+          const newDate = new Date(req.body.birthdate);
+          const ageDifMs = Date.now() - newDate.getTime();
+          const ageDate = new Date(ageDifMs);
+          const age = Math.abs(ageDate.getUTCFullYear() - 1970);
 
-					if (checkInterest(req.body.interests)) {
-						user.interests.first = req.body.interests[0];
-						user.interests.second = req.body.interests[1];
-						user.interests.third = req.body.interests[2];
-						user.interests.fourth = req.body.interests[3];
-						user.interests.fifth = req.body.interests[4];
-					}
-					else {
-						user.interests.first = req.body.interests;
-						user.interests.second = null;
-						user.interests.third = null;
-						user.interests.fourth = null;
-						user.interests.fifth = null;
-					}
+          if (checkInterest(req.body.interests)) {
+            user.interests.first = req.body.interests[0];
+            user.interests.second = req.body.interests[1];
+            user.interests.third = req.body.interests[2];
+            user.interests.fourth = req.body.interests[3];
+            user.interests.fifth = req.body.interests[4];
+          } else {
+            user.interests.first = req.body.interests;
+            user.interests.second = null;
+            user.interests.third = null;
+            user.interests.fourth = null;
+            user.interests.fifth = null;
+          }
 
-					user.gender = req.body.gender;
-					user.dob = req.body.birthdate;
-					user.agePref = req.body.age_preference;
-					user.sexPref = req.body.sex_pref;
-					user.bio = req.body.bio;
-					user.country = req.body.country;
-					user.province = req.body.province;
-					user.city = req.body.city;
-					user.lat = req.body.lat;
-					user.long = req.body.long;
-					user.profileImages.image1 = req.file.filename;
-					user.profileImages.image2 = 'couple15.jpg';
-					user.profileImages.image3 = 'couple16.jpg';
-					user.profileImages.image4 = 'couple17.jpg';
-					user.profileImages.image5 = 'couple18.jpg';
-					user.gender2 = req.body.gender2;
-					user.age = age;
-					user.extendedProf = true;
-					user.save((err) => {
-						if (err) { return res.status(500).send({ msg: err.message }); }
-						return res.status(200).redirect('/dashboard');
-					});
-				}
-			});
-		}
-	});
+          user.gender = req.body.gender;
+          user.dob = req.body.birthdate;
+          user.agePref = req.body.age_preference;
+          user.sexPref = req.body.sex_pref;
+          user.bio = req.body.bio;
+          user.country = req.body.country;
+          user.province = req.body.province;
+          user.city = req.body.city;
+          user.lat = req.body.lat;
+          user.long = req.body.long;
+          user.profileImages.image1 = req.file.filename;
+          user.profileImages.image2 = "couple15.jpg";
+          user.profileImages.image3 = "couple16.jpg";
+          user.profileImages.image4 = "couple17.jpg";
+          user.profileImages.image5 = "couple18.jpg";
+          user.gender2 = req.body.gender2;
+          user.age = age;
+          user.extendedProf = true;
+          user.save((err) => {
+            if (err) {
+              return res.status(500).send({ msg: err.message });
+            }
+            return res.status(200).redirect("/dashboard");
+          });
+        }
+      });
+    }
+  });
 };
 
 exports.user_editProfile = (req, res, next) => {
-	let uploads = res.locals.upload;
-	var val;
+  let uploads = res.locals.upload;
+  var val;
 
-	uploads(req, res, async function (err) {
-		if (err instanceof multer.MulterError) {
-			req.flash('error_msg', err);
-			res.status(500).redirect('/users/editProfile');
-		}
-		else if (err) {
-			req.flash('error_msg', err);
-			res.status(500).redirect('/users/editProfile');
-		}
-		
-		const newDate = new Date(req.body.birthdate);
-		const ageDifMs = Date.now() - newDate.getTime();
-		const ageDate = new Date(ageDifMs);
-		const age = Math.abs(ageDate.getUTCFullYear() - 1970);
-		
-		if (req.file) {
-			val = {
-				$set: {
-					username: req.body.username,
-					firstname: req.body.firstname,
-					lastname: req.body.lastname,
-					email: req.body.email,
-					gender: req.body.gender,
-					dob: req.body.birthdate,
-					agePref: req.body.age_preference,
-					sexPref: req.body.sex_pref,
-					age: age,
-					bio: req.body.bio,
-					"profileImages.image1": req.file.filename,
-					country: req.body.country,
-					province: req.body.province,
-					city: req.body.city,
-					lat: req.body.lat,
-					long: req.body.long
-				}
-			}
-		} else if (!req.file) {
-			val = {
-				$set: {
-					username: req.body.username,
-					firstname: req.body.firstname,
-					lastname: req.body.lastname,
-					email: req.body.email,
-					gender: req.body.gender,
-					dob: req.body.birthdate,
-					agePref: req.body.age_preference,
-					sexPref: req.body.sex_pref,
-					age: age,
-					bio: req.body.bio,
-					country: req.body.country,
-					province: req.body.province,
-					city: req.body.city,
-					lat: req.body.lat,
-					long: req.body.long
-				}
-			};
-		}
-		if (req.user.username !== req.body.username ||
-			req.user.firstname !== req.body.firstname ||
-			req.user.lastname !== req.body.lastname ||
-			req.user.username !== req.body.username ||
-			req.user.email !== req.body.email ||
-			req.user.gender !== req.body.gender ||
-			req.user.dob !== req.body.birthdate ||
-			req.user.agePref !== req.body.age_preference ||
-			req.user.sexPref !== req.body.sex_pref ||
-			req.user.bio !== req.body.bio ||
-			req.user.interests.first !== req.body.interests[0] ||
-			req.user.interests.second !== req.body.interests[1] ||
-			req.user.interests.third !== req.body.interests[2] ||
-			req.user.interests.fourth !== req.body.interests[3] ||
-			req.user.interests.fifth !== req.body.interests[4] ||
-			req.user.country !== req.body.country ||
-			req.user.province !== req.body.province ||
-			req.user.city !== req.body.city ||
-			req.user.lat !== req.body.lat ||
-			req.user.long !== req.body.long
-		) {
-			await User.findOneAndUpdate({ _id: req.user._id }, val, { new: true }, (err, user) => {
-				if (err) {
-					req.flash('error_msg', err);
-					res.status(500).redirect('/users/editProfile');
-				}
-				// return res.send(user.interests.first);
-				if (checkInterest(req.body.interests)) {
-					user.interests.first = req.body.interests[0];
-					user.interests.second = req.body.interests[1];
-					user.interests.third = req.body.interests[2];
-					user.interests.fourth = req.body.interests[3];
-					user.interests.fifth = req.body.interests[4];
-				}
-				else {
-					user.interests.first = req.body.interests;
-					user.interests.second = null;
-					user.interests.third = null;
-					user.interests.fourth = null;
-					user.interests.fifth = null;
-				}
-				user.save((err) => {
-					if (err) { return res.status(500).send({ msg: err.message }); }
-					req.flash('success_msg', 'Successfully updated information.');
-					res.redirect('/users/editProfile');
-				});
-			});
-		}
-	});
+  uploads(req, res, async function (err) {
+    if (err instanceof multer.MulterError) {
+      req.flash("error_msg", err);
+      res.status(500).redirect("/users/editProfile");
+    } else if (err) {
+      req.flash("error_msg", err);
+      res.status(500).redirect("/users/editProfile");
+    }
+
+    const newDate = new Date(req.body.birthdate);
+    const ageDifMs = Date.now() - newDate.getTime();
+    const ageDate = new Date(ageDifMs);
+    const age = Math.abs(ageDate.getUTCFullYear() - 1970);
+
+    if (req.file) {
+      val = {
+        $set: {
+          username: req.body.username,
+          firstname: req.body.firstname,
+          lastname: req.body.lastname,
+          email: req.body.email,
+          gender: req.body.gender,
+          dob: req.body.birthdate,
+          agePref: req.body.age_preference,
+          sexPref: req.body.sex_pref,
+          age: age,
+          bio: req.body.bio,
+          "profileImages.image1": req.file.filename,
+          country: req.body.country,
+          province: req.body.province,
+          city: req.body.city,
+          lat: req.body.lat,
+          long: req.body.long,
+        },
+      };
+    } else if (!req.file) {
+      val = {
+        $set: {
+          username: req.body.username,
+          firstname: req.body.firstname,
+          lastname: req.body.lastname,
+          email: req.body.email,
+          gender: req.body.gender,
+          dob: req.body.birthdate,
+          agePref: req.body.age_preference,
+          sexPref: req.body.sex_pref,
+          age: age,
+          bio: req.body.bio,
+          country: req.body.country,
+          province: req.body.province,
+          city: req.body.city,
+          lat: req.body.lat,
+          long: req.body.long,
+        },
+      };
+    }
+    if (
+      req.user.username !== req.body.username ||
+      req.user.firstname !== req.body.firstname ||
+      req.user.lastname !== req.body.lastname ||
+      req.user.username !== req.body.username ||
+      req.user.email !== req.body.email ||
+      req.user.gender !== req.body.gender ||
+      req.user.dob !== req.body.birthdate ||
+      req.user.agePref !== req.body.age_preference ||
+      req.user.sexPref !== req.body.sex_pref ||
+      req.user.bio !== req.body.bio ||
+      req.user.interests.first !== req.body.interests[0] ||
+      req.user.interests.second !== req.body.interests[1] ||
+      req.user.interests.third !== req.body.interests[2] ||
+      req.user.interests.fourth !== req.body.interests[3] ||
+      req.user.interests.fifth !== req.body.interests[4] ||
+      req.user.country !== req.body.country ||
+      req.user.province !== req.body.province ||
+      req.user.city !== req.body.city ||
+      req.user.lat !== req.body.lat ||
+      req.user.long !== req.body.long
+    ) {
+      await User.findOneAndUpdate(
+        { _id: req.user._id },
+        val,
+        { new: true },
+        (err, user) => {
+          if (err) {
+            req.flash("error_msg", err);
+            res.status(500).redirect("/users/editProfile");
+          }
+          // return res.send(user.interests.first);
+          if (checkInterest(req.body.interests)) {
+            user.interests.first = req.body.interests[0];
+            user.interests.second = req.body.interests[1];
+            user.interests.third = req.body.interests[2];
+            user.interests.fourth = req.body.interests[3];
+            user.interests.fifth = req.body.interests[4];
+          } else {
+            user.interests.first = req.body.interests;
+            user.interests.second = null;
+            user.interests.third = null;
+            user.interests.fourth = null;
+            user.interests.fifth = null;
+          }
+          user.save((err) => {
+            if (err) {
+              return res.status(500).send({ msg: err.message });
+            }
+            req.flash("success_msg", "Successfully updated information.");
+            res.redirect("/users/editProfile");
+          });
+        }
+      );
+    }
+  });
 };
 
 function getDateTime() {
-	var date = new Date();
-	
-	var hour = date.getHours();
-	hour = (hour < 10 ? "0" : "") + hour;
-	
-	var min  = date.getMinutes();
-	min = (min < 10 ? "0" : "") + min;
-	
-	var sec  = date.getSeconds();
-	sec = (sec < 10 ? "0" : "") + sec;
-	
-	var year = date.getFullYear();
-	
-	var month = date.getMonth() + 1;
-	month = getMonth(parseInt((month < 10 ? "0" : "") + month));
-	
-	var day  = date.getDate();
-	day = (day < 10 ? "0" : "") + day;
-	
-	return month + " " + day + " " + hour + ":" + min;
-	
+  var date = new Date();
+
+  var hour = date.getHours();
+  hour = (hour < 10 ? "0" : "") + hour;
+
+  var min = date.getMinutes();
+  min = (min < 10 ? "0" : "") + min;
+
+  var sec = date.getSeconds();
+  sec = (sec < 10 ? "0" : "") + sec;
+
+  var year = date.getFullYear();
+
+  var month = date.getMonth() + 1;
+  month = getMonth(parseInt((month < 10 ? "0" : "") + month));
+
+  var day = date.getDate();
+  day = (day < 10 ? "0" : "") + day;
+
+  return month + " " + day + " " + hour + ":" + min;
 }
-	
-function getMonth(m){
-	switch (m) {
-		case 1:
-			return "Jan"
-		case 2:
-			return "Feb"
-		case 3:
-			return "Mar"
-		case 4:
-			return "Apr"
-		case 5:
-			return "May"
-		case 6:
-			return "Jun"
-		case 7:
-			return "Jul"
-		case 8:
-			return "Aug"
-		case 9:
-			return "Sep"
-		case 10:
-			return "Oct"
-		case 11:
-			return "Nov"
-		case 12:
-			return "Dec"
-		default:
-			console.log(m)
-	}
+
+function getMonth(m) {
+  switch (m) {
+    case 1:
+      return "Jan";
+    case 2:
+      return "Feb";
+    case 3:
+      return "Mar";
+    case 4:
+      return "Apr";
+    case 5:
+      return "May";
+    case 6:
+      return "Jun";
+    case 7:
+      return "Jul";
+    case 8:
+      return "Aug";
+    case 9:
+      return "Sep";
+    case 10:
+      return "Oct";
+    case 11:
+      return "Nov";
+    case 12:
+      return "Dec";
+    default:
+      console.log(m);
+  }
+}
+
+function getMonth(m) {
+  switch (m) {
+    case 1:
+      return "Jan";
+    case 2:
+      return "Feb";
+    case 3:
+      return "Mar";
+    case 4:
+      return "Apr";
+    case 5:
+      return "May";
+    case 6:
+      return "Jun";
+    case 7:
+      return "Jul";
+    case 8:
+      return "Aug";
+    case 9:
+      return "Sep";
+    case 10:
+      return "Oct";
+    case 11:
+      return "Nov";
+    case 12:
+      return "Dec";
+    default:
+      console.log(m);
+  }
 }
 
 function checkInterest(interests) {
-
-	if (typeof interests !== "undefined") {
-		if (Array.isArray(interests)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+  if (typeof interests !== "undefined") {
+    if (Array.isArray(interests)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
