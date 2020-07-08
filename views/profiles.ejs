@@ -25,10 +25,10 @@
                         <% } %>
                         <h4><i class="fa fa-star-o"></i> <%= user.fame %> <i class="fa fa-star-o"></i></h4>
                     </div>
-                    <div class="media-body text-white text-right mb-auto mt-3" style="position: absolute; right: 300px; top: 120px">
+                    <div class="media-body text-white text-right mb-auto mt-3" style="position: absolute; right: 240px; top: 120px">
                         <form id="form" action="/profiles/<%= user.id %>" method="POST">
-                            <h5><button id="like_btn" type="submit" name="like_btn" value="like_btn" class="btn btn-secondary"><i class="fa fa-heart "></i> <%= liked %></button></h5>
-                            <h5><button id="block_btn" type="submit" name="block_btn" value="block_btn" class="btn btn-secondary"><i class="fa fa-ban "></i> <%=  %>block</button></h5>
+                            <h5><button id="like_btn" type="submit" name="like_btn" value="like_btn" class="btn btn-secondary" style="width: 100px;"><i class="fa fa-heart "></i> <%= liked %></button></h5>
+                            <h5><button id="block_btn" type="submit" name="block_btn" value="block_btn" class="btn btn-secondary" style="width: 100px"><i class="fa fa-ban "></i> <%=  %>block</button></h5>
                         </form>
                     </div>
                     <ul class="list-inline mb-0 bg-light p-4 d-flex justify-content-end rounded bg-transparent border border-dark">
