@@ -1,50 +1,52 @@
-.form-signup
-{
-    width: 100%;
-    max-width: 1030px;
-    padding: 15px;
-    margin: auto;
+.form-signup {
+  width: 100%;
+  max-width: 1030px;
+  padding: 15px;
+  margin: auto;
 }
 
-.form-signin
-{
-    width: 100%;
-    max-width: 330px;
-    padding: 15px;
-    margin: auto;
+.form-signin {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: auto;
 }
 
 .container-marketing {
-    width: 100%;
-    padding: 15px;
-    margin-right: auto;
-    margin-left: auto;
-    /*background-color: #C7444A;*/
+  width: 100%;
+  padding: 15px;
+  margin-right: auto;
+  margin-left: auto;
+  /*background-color: #C7444A;*/
 }
 .container {
-    margin-bottom: 50px;
+  margin-bottom: 50px;
 }
 
 .cap {
-    text-transform: capitalize;
+  text-transform: capitalize;
 }
 
 #userSearch {
-    border: none;
-    background-color: inherit;
-    padding: 14px 28px;
-    font-size: 16px;
-    cursor: pointer;
-    display: inline-block;
-    text-decoration-color: red;
-    color: red;
-    font-size: x-large;
+  border: none;
+  background-color: inherit;
+  padding: 14px 28px;
+  font-size: 16px;
+  cursor: pointer;
+  display: inline-block;
+  text-decoration-color: red;
+  color: red;
+  font-size: x-large;
 }
 
 img #pp {
-    display: block;
-    max-width:250px;
-    max-height:500px;
-    width: auto;
-    height: auto;
-  }
+  display: block;
+  max-width: 250px;
+  max-height: 500px;
+  width: auto;
+  height: auto;
+}
+
+textarea {
+  resize: none;
+}
