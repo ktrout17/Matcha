@@ -13,6 +13,7 @@ const upload = multer({
 router.get('/login', (req, res) => res.render('login', {userNameTag: ''}));
 router.get('/register', (req, res) => res.render('register', {userNameTag: ''}));
 router.get('/resend', (req, res) => res.render('resend', {userNameTag: ''}));
+router.get('/updatePassword', (req, res) => res.render('updatePass', {id: req.user._id, userNameTag: ''}));
 router.get('/extendedProfile', (req, res) => {
     res.render('extendedProfile', {
         name: req.user.username,
@@ -56,6 +57,7 @@ router.get('/confirmation/:userToken', UsersController.user_confirmation);
 router.post('/resend', UsersController.user_tokenResend);
 router.post('/forgotPwd', UsersController.user_forgotPwd);
 router.post('/changePwd/:userToken', UsersController.user_changePwd);
+router.post('/updatePassword', UsersController.user_updatePwd);
 router.post('/extendedProfile', (req,res, next) => { res.locals.upload = upload; next(); }, UsersController.user_extendedProfile);
 router.post('/editProfile', (req,res, next) => { res.locals.upload = upload; next(); },  UsersController.user_editProfile);
 
