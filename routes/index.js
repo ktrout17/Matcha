@@ -59,6 +59,7 @@ router.get("/profiles/:id", ensureAuthenticated, (req, res, next) => {
               const newView = new Views({
                 _userId: req.user.id,
                 viewedId: id,
+                userViewUsername: req.user.username
               });
 
               newView.save((err) => {
@@ -297,74 +298,43 @@ router.get("/suggestedMatchas", ensureAuthenticated, (req, res) => {
 router.get(
   "/dashboard",
   ensureAuthenticated,
-  (req, res, next) => {
+  (req, res) => {
     let totalViews = [];
-
-    Views.find({ viewedId: req.user.id }, (err, viewsDoc) => {
-      if (viewsDoc.length != 0) {
-        viewsDoc.forEach((value) => {
-          User.find({ _id: value._userId }, (err, userViewsDoc) => {
-            userViewsDoc.forEach((valued) => {
-              totalViews.push(valued.username);
-            });
-          })
-            .exec()
-            .then(() => {
-              res.locals.totalViews = totalViews;
-              next();
-            })
-            .catch();
-        });
-      } else {
-        next();
-      }
-    })
-      .exec()
-      .catch();
-  },
-  (req, res, next) => {
     let totalLikes = [];
-
-    Likes.find({ likedId: req.user.id }, (err, likesDoc) => {
-      if (likesDoc.length != 0) {
-        likesDoc.forEach((value) => {
-          totalLikes.push(value.user_username);
-        });
-        res.locals.totalLikes = totalLikes;
-        next();
-      } else {
-        next();
-      }
-    });
-  },
-  (req, res, next) => {
-    const { totalLikes } = res.locals;
-    const { totalViews } = res.locals;
-
-    res.render("dashboard", {
-      name: req.user.username,
-      pp: req.user.profileImages.image1,
-      country: req.user.country,
-      province: req.user.province,
-      city: req.user.city,
-      image1: req.user.profileImages.image2,
-      image2: req.user.profileImages.image3,
-      image3: req.user.profileImages.image4,
-      image4: req.user.profileImages.image5,
-      gender: req.user.gender,
-      sexPref: req.user.sexPref,
-      interests: req.user.interests,
-      bio: req.user.bio,
-      views: req.user.views,
-      likes: req.user.likes,
-      fame: req.user.fame,
-      age: req.user.age,
-      userLikes: totalLikes,
-      userViews: totalViews,
-    });
-    next();
-  }
-);
+    Views.find({ viewedId: req.user.id }).then((viewUSER) => {
+      User.findOne({_id: req.user.id }, (err, doc) => {
+        if (err){
+          console.log('could not find user');
+        }
+        console.log(doc);
+      }).then((Viewusers) => {
+        if (Viewusers)
+        {
+          res.render("dashboard", {
+            name: req.user.username,
+            pp: req.user.profileImages.image1,
+            country: req.user.country,
+            province: req.user.province,
+            city: req.user.city,
+            image1: req.user.profileImages.image2,
+            image2: req.user.profileImages.image3,
+            image3: req.user.profileImages.image4,
+            image4: req.user.profileImages.image5,
+            gender: req.user.gender,
+            sexPref: req.user.sexPref,
+            interests: req.user.interests,
+            bio: req.user.bio,
+            views: req.user.views,
+            likes: req.user.likes,
+            fame: req.user.fame,
+            age: req.user.age,
+            userLikes: req.user.likedby,
+            userViews: viewUSER
+          });
+        }
+      })
+    })
+  });
 
 // Index Controller
 const IndexController = require("../controllers/index");
