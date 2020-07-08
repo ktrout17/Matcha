@@ -1,3 +1,14 @@
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link
+    rel="stylesheet"
+    href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"
+  />
+  <link rel="stylesheet" href="/resources/demos/style.css" />
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</head>
 <br />
 <form action="/suggestedMatchas" method="POST">
   <div class="container">
@@ -210,17 +221,16 @@
         >Popularity rating range between 1 and 5 (out of 5)</label
       >
       <div class="col-8 d-flex">
-        <span class="font-weight-bold text-danger mr-2 mt-1">0</span>
-        <input
-          class="border-0 range-field"
-          name="fame"
-          type="range"
-          min="0"
-          max="5"
-        />
-        <span class="font-weight-bold text-danger ml-2 mt-1">5</span>
+        <span class="font-weight-bold text-danger mr-2 mt-1" id="slider-range">
+          <input
+            type="text"
+            id="range"
+            readonly
+            style="border: 0; margin-top: 20px;"
+        /></span>
       </div>
     </div>
+    <br />
     <div class="form-group row">
       <label for="select" class="col-4 col-form-label">Locate by</label>
       <div class="col-8">
@@ -249,3 +259,21 @@
     </div>
   </div>
 </form>
+
+<script>
+  $(function () {
+    $("#slider-range").slider({
+      range: true,
+      min: 1,
+      max: 5,
+      slide: function (event, ui) {
+        $("#range").val(ui.values[0] + " - " + ui.values[1]);
+      },
+    });
+    $("#range").val(
+      $("#slider-range").slider("values", 0) +
+        " - " +
+        $("#slider-range").slider("values", 1)
+    );
+  });
+</script>

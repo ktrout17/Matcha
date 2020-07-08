@@ -50,3 +50,6 @@ img #pp {
 textarea {
   resize: none;
 }
+#slider-range {
+  width: 400px;
+}
