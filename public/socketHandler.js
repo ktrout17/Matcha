@@ -29,6 +29,7 @@ $(function () {
   // Notification Tab
   var notify_message = element("notify-message");
   var noti_btn = element("noti_btn");
+  var noti = element("noti");
   var thanks = element("thanks");
   var thanks2 = element("thanks2");
   let notifTag;
@@ -107,7 +108,7 @@ $(function () {
 
   if (noti_btn) {
     socket.on("notification", (data) => {
-      noti_btn.classList.remove("btn-danger");
+      noti_btn.classList.replace("btn-danger", "btn-success");
       notifTag = document.createElement("p");
       if (data.match == 1) {
         notifTag.textContent = data.user + " " + data.msg + "!";
