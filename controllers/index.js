@@ -245,27 +245,35 @@ exports.index_advancedMathas = (req, res) => {
     Object.keys(sortQuery).forEach(key => (SortResult[key] = sortQuery[key]));
     Object.keys(tagsSort).forEach(key => (SortResult[key] = tagsSort[key]));
 
+    let selectedage;
     switch (agePref) {
       case "age1":
         ageQuery = { age: { $gte: 18, $lte: 24 } };
+        selectedage = "age1";
         break;
       case "age2":
         ageQuery = { age: { $gte: 25, $lte: 31 } };
+        selectedage = "age2";
         break;
       case "age3":
         ageQuery = { age: { $gte: 32, $lte: 38 } };
+        selectedage = "age3";
         break;
       case "age4":
         ageQuery = { age: { $gte: 39, $lte: 45 } };
+        selectedage = "age4";
         break;
       case "age5":
         ageQuery = { age: { $gte: 46, $lte: 52 } };
+        selectedage = "age5";
         break;
       case "age6":
         ageQuery = { age: { $gte: 53, $lte: 59 } };
+        selectedage = "age6";
         break;
       case "age7":
         ageQuery = { age: { $gte: 60, $lte: 66 } };
+        selectedage = "age7";
         break;
       default:
         ageQuery = {};
@@ -373,15 +381,15 @@ exports.index_advancedMathas = (req, res) => {
       default:
         locQuery = {};
     }
-
     User.find({
       $and: [
-        ageQuery,
+        // ageQuery,
         interestsQuery,
         fameQuery,
         locQuery,
         { _id: { $ne: req.user.id } },
-        { username: {$nin: req.user.blocked} }
+        { username: {$nin: req.user.blocked} },
+        { agePref: { $eq: selectedage } }
       ]
     })
       .sort(SortResult)
