@@ -240,11 +240,9 @@ exports.index_advancedMathas = (req, res) => {
         };
     }
     sortQuery = { age: `${a}`, city: `${b}`, fame: `${c}` };
-
     const SortResult = {};
     Object.keys(sortQuery).forEach(key => (SortResult[key] = sortQuery[key]));
     Object.keys(tagsSort).forEach(key => (SortResult[key] = tagsSort[key]));
-
     let selectedage;
     switch (agePref) {
       case "age1":
@@ -380,6 +378,31 @@ exports.index_advancedMathas = (req, res) => {
         break;
       default:
         locQuery = {};
+    }
+    // gets the intresets that you are into and will filter it this way with your intresets been top
+    let count = 0;;
+    let userFirstChoice = 0;
+    let userSecondChoice = 0;
+    let userThirdChoice = 0;
+    let userFourthChoice = 0;
+    let userFirthChoice = 0;
+    let userIntresets = req.user.interests;
+    while (interests[count])
+    {
+      if (interests !== "undefined")
+      {
+        if (interests[count] == userIntresets.first)
+        userFirstChoice++;
+        else if (interests[count] == userIntresets.second)
+        userSecondChoice++;
+        else if (interests[count] == userIntresets.third)
+        userThirdChoice++;
+        else if (interests[count] == userIntresets.fourth)
+        userFourthChoice++;
+        else if (interests[count] == userIntresets.fifth)
+        userFirthChoice++;
+      }
+      count++;
     }
     User.find({
       $and: [
