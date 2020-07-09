@@ -365,6 +365,82 @@ exports.user_changePwd = (req, res) => {
 	}
 };
 
+exports.user_updatePwd = (req, res) => {
+  const { id, password, pwd_repeat } = req.body;
+	const errors = [];
+
+	let lowercase = new RegExp("^(?=.*[a-z])");
+	let uppercase = new RegExp("^(?=.*[A-Z])");
+	let numeric = new RegExp("^(?=.*[0-9])");
+	let spcharacter = new RegExp("^(?=.*[!@#\$%\^&\*])");
+
+	if (!password || !pwd_repeat) {
+		errors.push({ msg: 'Please fill in all fields' });
+	}
+
+	if (password.length < 8) {
+		errors.push({ msg: 'Password should be at least 8 characters' });
+	}
+
+	if (!lowercase.test(password)) {
+		errors.push({ msg: 'Password should contain at least 1 lowercase character'});
+	}
+
+	if (!uppercase.test(password)) {
+		errors.push({ msg: 'Password should contain at least 1 uppercase character'});
+	}
+
+	if (!numeric.test(password)) {
+		errors.push({ msg: 'Password should contain at least 1 numeric value'});
+	}
+
+	if (!spcharacter.test(password)) {
+		errors.push({ msg: 'Password should contain at least 1 special character'});
+	}
+
+	// Check passwords match
+	if (password != pwd_repeat) {
+		errors.push({ msg: 'Passwords do not match' });
+	}
+
+	if (errors.length > 0) {
+		return res.status(400).render('updatePass', { errors, id: req.user._id, userNameTag: ''});
+	}
+	else {
+			User.findById(id, (err, user) => {
+				if (err) { return res.status(500).send({ msg: err.message }); }
+
+				bcrypt.genSalt(10, (err, salt) => {
+					bcrypt.hash(password, salt, (err, hash) => {
+						if (err) { return res.status(500).send({ msg: err.message }); }
+
+						user.password = hash;
+
+						user.save((err) => {
+							if (err) { return res.status(500).send({ msg: err.message }); }
+              return res.status(200).render('editProfile', {
+                'success_msg': 'Your password has been updated.',
+                userNameTag: '',
+                name: req.user.username,
+                firstname: req.user.firstname,
+                lastname: req.user.lastname,
+                email: req.user.email,
+                gender: req.user.gender,
+                date: req.user.dob,
+                agePref: req.user.agePref,
+                sexPref: req.user.sexPref,
+                bio: req.user.bio,
+                interests: req.user.interests,
+                pp: req.user.profileImages.image1,
+                userNameTag: req.user.username
+            })
+						});
+					});
+				});
+			});
+	}
+};
+
 exports.user_extendedProfile = (req, res) => {
   let uploads = res.locals.upload;
   uploads(req, res, async function (err) {

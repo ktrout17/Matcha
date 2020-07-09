@@ -252,9 +252,9 @@ router.get("/suggestedMatchas", ensureAuthenticated, (req, res) => {
           { gender2: { $eq: req.user.sexPref } },
         ],
       },
-      // {
-      //   fame: 5  *NOTE: Not sure if needed, but pdf wants it.
-      // },
+      {
+        fame: {$lte: parseInt(req.user.fame)}
+      },
       { _id: { $ne: req.user.id } },
       { username: { $nin: req.user.blocked } },
       { agePref: { $eq: req.user.agePref } },
