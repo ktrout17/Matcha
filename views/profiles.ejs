@@ -27,14 +27,16 @@
                     </div>
                     <ul class="list-inline mb-0 bg-light p-4 d-flex justify-content-end rounded bg-transparent border border-dark wrapper">
                         <form id="form" action="" method="POST" class="wrapper">
-                            <h5><button id="like_btn" type="submit" name="like_btn" value="like_btn" class="btn btn-secondary wrapper" style="width: 80px;"><i class="fa fa-heart wrapper"></i> <%= liked %></button></h5>
-                            <h5><button id="block_btn" type="submit" name="block_btn" value="block_btn" class="btn btn-secondary wrapper" style="width: 80px;"><i class="fa fa-ban wrapper"></i> <%=  %>block</button></h5>
+                            <h5><button id="like_btn" type="submit" name="like_btn" value="like_btn" class="btn btn-secondary wrapper" style="width: 100%;"><i class="fa fa-heart wrapper"></i> <%= liked %></button></h5>
+                            <h5><button id="block_btn" type="submit" name="block_btn" value="block_btn" class="btn btn-secondary wrapper" style="width: 100%;"><i class="fa fa-ban wrapper"></i> <%=  %>block</button></h5>
                         </form>
                         <li class="list-inline-item ml-3"><br>
-                            <h5 class="font-weight-bold mb-0 d-block wrapper"><%= user.likes %></h5><small class="text-muted wrapper"> <i class="fa fa-heart mr-1 wrapper"></i>Likes</small>
+                            <h5 class="font-weight-bold mb-0 d-block wrapper"><%= user.likes %></h5>
+                            <small class="text-muted wrapper"> <i class="fa fa-heart mr-1 wrapper"></i>Likes</small>
                         </li>
                         <li class="list-inline-item"><br>
-                            <h5 class="font-weight-bold mb-0 d-block wrapper"><%= user.views %></h5><small class="text-muted wrapper"> <i class="fa fa-eye mr-1 wrapper"></i>Views</small>
+                            <h5 class="font-weight-bold mb-0 d-block wrapper"><%= user.views %></h5>
+                            <small class="text-muted wrapper"> <i class="fa fa-eye mr-1 wrapper"></i>Views</small>
                         </li>
                     </ul>
                 </div>

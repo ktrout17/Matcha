@@ -8,7 +8,7 @@
             <div class="bg-white shadow rounded overflow-hidden container wrapper text-center mx-auto">
                 <div class="px-4 pt-0 pb-4 bg-danger container mx-auto">
                     <div class="media align-items-end profile-header container wrapper mx-auto">
-                        <div class="profile mr-3 mt-3 wrapper"><img src="<%= pp %>" alt="..." width="100vw" id="pp" class="rounded mb-2 img-thumbnail wrapper"><a href="/users/editProfile" class="btn btn-dark btn-sm btn-block">Edit profile</a></div>
+                        <div class="profile mr-3 mt-3 wrapper"><img src="<%= pp %>" alt="..." width="100vw" id="pp" class="rounded mb-2 img-thumbnail wrapper"><a href="/users/editProfile" class="btn btn-dark btn-sm btn-block wrapper">Edit profile</a></div>
                         <div class="media-body text-white text-center mb-auto mt-3">
                             <h1 class="mt-0 mb-0"><% if (typeof name != 'undefined') {%> <%= name %> <% } %></h1><br>
                             <p class="small mb-4" id="location"> <i class="fa fa-map-marker mr-2"></i><%= city %> <%= province %> <%= country %></p>
@@ -16,10 +16,16 @@
                         </div>
                         <ul class="list-inline mb-0 bg-light p-4 d-flex justify-content-end rounded bg-transparent border border-dark container wrapper">
                             <li class="list-inline-item wrapper">
-                                <button class="btn wrapper btn-secondary" data-toggle="modal" data-target="#likes"><h5 class="font-weight-bold mb-0 d-block"><%= likes %></h5><small style="color: white;"> <i class="fa fa-heart mr-1"></i>Likes</small></button>
+                                <button class="btn wrapper btn-secondary" data-toggle="modal" data-target="#likes">
+                                    <h5 class="font-weight-bold mb-0 d-block"><%= likes %></h5>
+                                    <small style="color: white;"> <i class="fa fa-heart mr-1"></i>Likes</small>
+                                </button>
                             </li>
                             <li class="list-inline-item wrapper">
-                                <button class="btn wrapper btn-secondary" data-toggle="modal" data-target="#views"><h5 class="font-weight-bold mb-0 d-block"><%= views %></h5><small style="color: white;"> <i class="fa fa-eye mr-1"></i>Views</small></button>
+                                <button class="btn wrapper btn-secondary" data-toggle="modal" data-target="#views">
+                                    <h5 class="font-weight-bold mb-0 d-block"><%= views %></h5>
+                                    <small style="color: white;"> <i class="fa fa-eye mr-1"></i>Views</small>
+                                </button>
                             </li>
                         </ul>
                     </div>
