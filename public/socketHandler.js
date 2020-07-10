@@ -156,13 +156,14 @@ $(function () {
         p2.setAttribute("class", "small text-muted");
         p1.textContent = data.msg;
         p2.textContent = "from " + data.from + ": " + data.msgTime;
-
+        
         msgBox
-          .appendChild(div1)
-          .appendChild(div2)
-          .appendChild(div3)
-          .appendChild(p1);
+        .appendChild(div1)
+        .appendChild(div2)
+        .appendChild(div3)
+        .appendChild(p1);
         div2.appendChild(p2);
+        
         scrollToBottom();
       });
     }
@@ -170,8 +171,8 @@ $(function () {
 });
 
 function scrollToBottom() {
-  let recieved = document.querySelector("#send").lastElementChild;
-  recieved.scrollIntoView;
+  let recieved = document.querySelector("#msgBox").lastElementChild;
+  recieved.scrollIntoView();
 }
 
 function getDateTime() {

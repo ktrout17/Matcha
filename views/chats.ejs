@@ -62,7 +62,7 @@
                           <div class="media w-50 mb-3 wrapper">
                             <div class="media-body ml-3 wrapper">
                                 <div class="bg-light rounded py-2 px-3 mb-2 wrapper">
-                                    <p id="recieved" class="text-small mb-0 text-muted wrapper"><%= msg.message %></p>
+                                    <p class="text-small mb-0 text-muted wrapper"><%= msg.message %></p>
                                 </div>
                                 <p class="small text-muted"><%= msg.msgTime %></p>
                             </div>
@@ -85,7 +85,7 @@
             <!-- Typing area -->
             <!-- <form class="bg-light"> -->
                <% if (typeof chatId !== 'undefined') { %>
-                <div class="input-group">
+                <div id="scroll" class="input-group">
                     <textarea type="text" id="chatBox" name="chatBox" placeholder="Type a message..." aria-describedby="button-addon2" class="form-control rounded-0 border-0 py-4 bg-light"></textarea>
                     <div class="input-group-append">
                         <button id="send" type="submit" class="btn" style="background-color: #dc3545; color: white; width: 80px;"> Send</button>
@@ -99,12 +99,8 @@
     </div>
 </main>
 <script type ="text/javascript"> 
-    $(document).ready(function (){ 
-        var $scroll_down_chat = $('#send'); // on broadcast event (i.e., chat window updates) 
-        $scroll_down_chat.animate({ 
-            scrollTop: $scroll_down_chat[0].scrollHeight 
-        }, 'fast'); 
-    })
+  var scroll = document.getElementById("scroll");
+  scroll.scrollIntoView();
 </script>
 <footer>
     <%- include('./default/footer'); -%>
