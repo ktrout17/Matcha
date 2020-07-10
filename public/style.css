@@ -54,3 +54,10 @@ textarea {
 #slider-range {
   width: 400px;
 }
+
+.wrapper {
+  display: inline-block; /* shrink to fit */
+  width: 100%; /* whatever width you like */
+  position: relative; /* so .content can use position: absolute */
+  padding: auto;
+}

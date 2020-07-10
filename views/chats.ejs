@@ -10,10 +10,10 @@
         
     <div class="container mx-auto row rounded-lg overflow-hidden shadow">
         <!-- Users box-->
-        <div class="col-5 px-0">
+        <div class="col-5 px-0 wrapper">
             <div class="bg-white">
 
-                <div class="bg-gray px-4 py-2 bg-light">
+                <div class="bg-gray px-4 py-2 bg-light>
                     <p class="h5 mb-0 py-1">Recent Chats</p>
                 </div>
 
@@ -25,16 +25,16 @@
                             <% nonBlockedUsers.forEach(function (nonBlockedUser) { %>
                             <div onclick="window.location='<%= nonBlockedUser.request.url %>'" class="list-group-item list-group-item-action  rounded-0" style="cursor: pointer;">
                             <div class="media"><img src="/<%= nonBlockedUser.pp %>" alt="user" width="50" class="rounded-circle">
-                                <div class="media-body ml-4">
-                                    <div class="d-flex align-items-center justify-content-between mb-1">
+                                <div class="media-body ml-4 wrapper">
+                                    <div class="d-flex align-items-center justify-content-between mb-1 wrapper">
                                         <h6 class="mb-0 text-danger"><%= nonBlockedUser.username %></h6>
                                         <% if(nonBlockedUser.loggedIn === true) { %>
-                                            <small class="small font-weight-bold" style="color: green;">Online</small>
+                                            <small class="small font-weight-bold wrapper" style="color: green;">Online</small>
                                         <% } else { %>
-                                            <small class="small font-weight-bold">Last Seen: <%= nonBlockedUser.lastSeen %></small>
+                                            <small class="small font-weight-bold wrapper">Last Seen: <%= nonBlockedUser.lastSeen %></small>
                                         <% } %>
                                     </div>
-                                    <p class="font-italic text-muted mb-0 text-small"><%= nonBlockedUser.bio %></p>
+                                    <p class="font-italic text-muted mb-0 text-small wrapper"><%= nonBlockedUser.bio %></p>
                                 </div>
                             </div>
                         </div>
@@ -54,7 +54,7 @@
         </div>
         <!-- Chat Box-->
         <div class="col-7 px-0">
-            <div id="msgBox" class="px-4 py-5 chat-box bg-white">
+            <div id="msgBox" class="px-4 py-5 chat-box bg-white wrapper">
                 <% if (typeof chatId !== 'undefined') { %>
                 <% if (typeof messages !== 'undefined') { %>
                     <% messages.forEach(function (msg) { %>
