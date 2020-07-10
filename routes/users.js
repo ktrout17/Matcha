@@ -14,7 +14,7 @@ router.get('/login', (req, res) => res.render('login', {userNameTag: ''}));
 router.get('/register', (req, res) => res.render('register', {userNameTag: ''}));
 router.get('/resend', (req, res) => res.render('resend', {userNameTag: ''}));
 router.get('/updatePassword', (req, res) => res.render('updatePass', {id: req.user._id, userNameTag: ''}));
-router.get('/extendedProfile', (req, res) => {
+router.get('/extendedProfile', ensureAuthenticated, (req, res) => {
     res.render('extendedProfile', {
         name: req.user.username,
         userNameTag: req.user.username
