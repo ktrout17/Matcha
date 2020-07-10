@@ -19,9 +19,9 @@
                         <h1 class="mt-0 mb-0 text-center"><%= user.username %></h1><br>
                         <p class="small mb-4 text-center"> <i class="fa fa-map-marker mr-2"></i><%= user.city %> <%= user.province %> <%= user.country %></p>
                         <% if(user.loggedIn === true) { %>
-                            <p> online </p>
+                            <p style="color: rgb(14, 112, 37);"> online </p>
                         <% } else { %>
-                            <p>Last seen: <%= user.lastSeen %></p>
+                            <p style="color: rgb(14, 112, 37);">Last seen: <%= user.lastSeen %></p>
                         <% } %>
                         <h4><i class="fa fa-star-o"></i> <%= user.fame %> <i class="fa fa-star-o"></i></h4>
                     </div>

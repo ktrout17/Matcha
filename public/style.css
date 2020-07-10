@@ -64,7 +64,7 @@ textarea {
 
 .wrapper2 {
   display: inline-block; /* shrink to fit */
-  width: 50%; /* whatever width you like */
+  width: 70%; /* whatever width you like */
   position: relative; /* so .content can use position: absolute */
   padding: auto;
 }
