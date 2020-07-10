@@ -18,7 +18,7 @@ const upload = multer({
 // Render ejs view pages
 router.get("/", (req, res) => {
   res.setHeader("Content-Type", "text/html");
-  // dummyData.fake();
+  //dummyData.fake();
   res.render("welcome", { userNameTag: '' });
 });
 

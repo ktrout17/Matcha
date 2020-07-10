@@ -29,7 +29,6 @@ $(function () {
   // Notification Tab
   var notify_message = element("notify-message");
   var noti_btn = element("noti_btn");
-  var noti = element("noti");
   var thanks = element("thanks");
   var thanks2 = element("thanks2");
   let notifTag;
@@ -164,10 +163,16 @@ $(function () {
           .appendChild(div3)
           .appendChild(p1);
         div2.appendChild(p2);
+        scrollToBottom();
       });
     }
   }
 });
+
+function scrollToBottom() {
+  let recieved = document.querySelector("#send").lastElementChild;
+  recieved.scrollIntoView;
+}
 
 function getDateTime() {
   var date = new Date();

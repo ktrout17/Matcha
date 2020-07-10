@@ -25,17 +25,15 @@
                         <% } %>
                         <h4><i class="fa fa-star-o"></i> <%= user.fame %> <i class="fa fa-star-o"></i></h4>
                     </div>
-                    <div class="media-body text-right mb-auto mt-3 d-flex flex-row justify-content-end container">
+                    <ul class="list-inline mb-0 bg-light p-4 d-flex justify-content-end rounded bg-transparent border border-dark">
                         <form id="form" action="" method="POST">
                             <h5><button id="like_btn" type="submit" name="like_btn" value="like_btn" class="btn btn-secondary" style="width: 100px;"><i class="fa fa-heart"></i> <%= liked %></button></h5>
                             <h5><button id="block_btn" type="submit" name="block_btn" value="block_btn" class="btn btn-secondary" style="width: 100px;"><i class="fa fa-ban "></i> <%=  %>block</button></h5>
                         </form>
-                    </div>
-                    <ul class="list-inline mb-0 bg-light p-4 d-flex justify-content-end rounded bg-transparent border border-dark">
-                        <li class="list-inline-item">
+                        <li class="list-inline-item ml-3"><br>
                             <h5 class="font-weight-bold mb-0 d-block text-center"><%= user.likes %></h5><small class="text-muted"> <i class="fa fa-heart mr-1"></i>Likes</small>
                         </li>
-                        <li class="list-inline-item">
+                        <li class="list-inline-item"><br>
                             <h5 class="font-weight-bold mb-0 d-block text-center"><%= user.views %></h5><small class="text-muted"> <i class="fa fa-eye mr-1"></i>Views</small>
                         </li>
                     </ul>
