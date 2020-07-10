@@ -180,11 +180,19 @@ exports.index_advancedMathas = (req, res) => {
       .then(docs => {
         res.render("suggestedMatchas", {
           userNameTag: req.user.username,
+          userLat: req.user.lat,
+          userLong: req.user.long,
+          userInterests: req.user.interests,
           users: docs.map(doc => {
             return {
               firstname: doc.firstname,
               lastname: doc.lastname,
               username: doc.username,
+              fame: doc.fame,
+              age: doc.age,
+              lat: doc.lat,
+              long: doc.long,
+              interests: doc.interests,
               profileImage: doc.profileImages.image1,
               request: {
                 url: "/profiles/" + doc.id
@@ -196,54 +204,33 @@ exports.index_advancedMathas = (req, res) => {
   } else if (req.body.aSubmit === "aSubmit") {
     const agePref = req.body.age_preference;
     const interests = req.body.interests;
-    const fame = parseInt(req.body.fame);
     const fameRange = req.body.fameRange;
     const loc = req.body.loc;
-    const sortby = req.body.sortby;
 
     let interestsQuery;
     let ageQuery;
     let fameQuery;
     let locQuery;
-    let sortQuery;
+    let sexPrefQuery;
 
+    sexPrefQuery = {
+      $or: [
+        {
+          $and: [
+            { gender: { $eq: req.user.sexPref } },
+            { gender: { $eq: "male" } },
+          ],
+        },
+        {
+          $and: [
+            { gender: { $eq: req.user.sexPref } },
+            { gender: { $eq: "female" } },
+          ],
+        },
+        { gender2: { $eq: req.user.sexPref } },
+      ],
+    };
 
-    let a = -1,
-      b = -1,
-      c = -1,
-      tagsSort = {};
-    if (Array.isArray(sortby)) {
-      sortby.forEach(function(value) {
-        if (value === "age") a = 1;
-        if (value === "loc") b = 1;
-        if (value === "fame") c = 1;
-        if (value === "tags")
-          tagsSort = {
-            "interests.first": 1,
-            "interests.second": 1,
-            "interests.third": 1,
-            "interests.fourth": 1,
-            "interests.fifth": 1
-          };
-      });
-    } else {
-      if (sortby === "age") a = 1;
-      if (sortby === "loc") b = 1;
-      if (sortby === "fame") c = 1;
-      if (sortby === "tags")
-        tagsSort = {
-          "interests.first": 1,
-          "interests.second": 1,
-          "interests.third": 1,
-          "interests.fourth": 1,
-          "interests.fifth": 1
-        };
-    }
-    sortQuery = { age: `${a}`, city: `${b}`, fame: `${c}` };
-    const SortResult = {};
-    Object.keys(sortQuery).forEach(key => (SortResult[key] = sortQuery[key]));
-    Object.keys(tagsSort).forEach(key => (SortResult[key] = tagsSort[key]));
-    let selectedage;
     switch (agePref) {
       case "age1":
         ageQuery = { age: { $gte: 18, $lte: 24 } };
@@ -410,21 +397,29 @@ exports.index_advancedMathas = (req, res) => {
         interestsQuery,
         fameQuery,
         locQuery,
+        sexPrefQuery,
         { _id: { $ne: req.user.id } },
         { username: {$nin: req.user.blocked} },
         { agePref: { $eq: selectedage } }
       ]
     })
-      .sort(SortResult)
       .exec()
       .then(docs => {
         res.render("suggestedMatchas", {
           userNameTag: req.user.username,
+          userLat: req.user.lat,
+          userLong: req.user.long,
+          userInterests: req.user.interests,
           users: docs.map(doc => {
             return {
               firstname: doc.firstname,
               lastname: doc.lastname,
               username: doc.username,
+              fame: doc.fame,
+              age: doc.age,
+              lat: doc.lat,
+              long: doc.long,
+              interests: doc.interests,
               profileImage: doc.profileImages.image1,
               request: {
                 url: "/profiles/" + doc.id

@@ -261,17 +261,24 @@ router.get("/suggestedMatchas", ensureAuthenticated, (req, res) => {
     ],
   })
     .sort({ fame: -1 })
-    .select("firstname lastname username profileImages.image1 fame")
+    .select("firstname lastname username profileImages.image1 fame age lat long interests")
     .exec()
     .then((docs) => {
       res.status(200).render("suggestedMatchas", {
         userNameTag: req.user.username,
+        userLat: req.user.lat,
+        userLong: req.user.long,
+        userInterests: req.user.interests,
         users: docs.map(doc => {
           return {
             firstname: doc.firstname,
             lastname: doc.lastname,
             username: doc.username,
             fame: doc.fame,
+            age: doc.age,
+            lat: doc.lat,
+            long: doc.long,
+            interests: doc.interests,
             profileImage: doc.profileImages.image1,
             request: {
               url: "/profiles/" + doc.id,
@@ -294,7 +301,6 @@ router.get(
         if (err){
           console.log('could not find user');
         }
-        console.log(doc);
       }).then((Viewusers) => {
         if (Viewusers)
         {
