@@ -142,8 +142,6 @@ module.exports = function (io, connectedUsers) {
     });
 
     socket.on('block', (data) => {
-      console.log("blocking");
-      console.log(data);
       for (var i in connectedUsers) {
         if (connectedUsers[i].user === data.likedUser) {
           io.to(connectedUsers[i].socketId).emit('notification', { user: data.currUser, msg: "Blocked / unliked you", match: 1  })

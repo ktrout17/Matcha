@@ -38,7 +38,6 @@ router.get("/profiles/:id", ensureAuthenticated, (req, res, next) => {
     })
     .catch((err) => {
       console.log(err);
-      res.end();
     });
 
   User.findById(id)
@@ -46,7 +45,6 @@ router.get("/profiles/:id", ensureAuthenticated, (req, res, next) => {
     .then((docs) => {
       if (!docs) {
         console.log("There was a weird error");
-        res.end();
       } else {
         Views.findOne(
           { $and: [{ _userId: req.user.id }, { viewedId: id }] },
