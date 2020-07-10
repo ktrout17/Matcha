@@ -93,7 +93,6 @@ exports.index_profile = (req, res, next) => {
               if (err) throw err;
 
               if (isLiked != null){
-                console.log("like already")
                 res.redirect('/profiles/' + id)
               } else {
                 doc.likes++;
@@ -106,7 +105,6 @@ exports.index_profile = (req, res, next) => {
 
                 User.findById(currUser._id, (err, currentUserDoc) => {
                   if (err) throw err;
-                  // console.log(currentUserDoc.blocked);
                   const index = currentUserDoc.blocked.indexOf(doc.username);
                   if (index > -1) {
                     currentUserDoc.blocked.splice(index, 1);

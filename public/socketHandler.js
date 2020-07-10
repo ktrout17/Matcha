@@ -50,8 +50,6 @@ $(function () {
         });
         chatBox.value = "";
         event.preventDefault();
-      } else {
-        console.log("no");
       }
     });
   }

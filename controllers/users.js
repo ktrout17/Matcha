@@ -66,7 +66,6 @@ exports.user_register = (req, res) => {
 	}
 
 	if (errors.length > 0) {
-		console.log(errors);
 		res.status(400).render('register', {
 			errors,
 			username,
@@ -190,7 +189,6 @@ exports.user_confirmation = (req, res) => {
 
 			if (!user)
 				return res.status(404).render('login', { 'error': 'We were unable to find a user for this token.', userNameTag: '' });
-			console.log(user);
 			if (user.verified === true)
 				return res.status(400).render('login', { 'error': 'This user has already been verified.', userNameTag: '' });
 
@@ -231,7 +229,6 @@ exports.user_tokenResend = (req, res) => {
 			newToken.save()
 				.then(token => {
 					if (err) throw err;
-					console.log(user.email);
 					var mailOptions = {
 						from: '"Admin" <no-reply@matcha.com>',
 						to: user.email,
