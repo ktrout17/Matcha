@@ -26,7 +26,24 @@ router.get("/profiles/:id", ensureAuthenticated, (req, res, next) => {
   const id = req.params.id;
   let visitor = false;
   let liked;
-
+  User.findOne({_id: id}).then((userInfo) => {
+    if (userInfo){
+      let count = 0;
+      let count2 = 0;
+      while(req.user.likedby[count])
+      {
+        if (req.user.likedby[count] == userInfo.username)
+        {
+          count2++;
+          break;
+        }
+        count++;
+      }
+      if (count2 == 0)
+      username = "undefined";
+      if (count2 == 1)
+      username = userInfo.username
+    }
   Likes.findOne({ _userId: req.user.id, likedId: id })
     .exec()
     .then((doc) => {
@@ -38,6 +55,7 @@ router.get("/profiles/:id", ensureAuthenticated, (req, res, next) => {
     })
     .catch((err) => {
       console.log(err);
+      res.end();
     });
 
   User.findById(id)
@@ -45,6 +63,7 @@ router.get("/profiles/:id", ensureAuthenticated, (req, res, next) => {
     .then((docs) => {
       if (!docs) {
         console.log("There was a weird error");
+        res.end();
       } else {
         Views.findOne(
           { $and: [{ _userId: req.user.id }, { viewedId: id }] },
@@ -64,7 +83,6 @@ router.get("/profiles/:id", ensureAuthenticated, (req, res, next) => {
                 if (err) throw err;
               });
             }
-
             if (visitor) {
               let query = { $inc: { views: 1 } }
               User.findByIdAndUpdate(id, query, { new: true })
@@ -73,6 +91,7 @@ router.get("/profiles/:id", ensureAuthenticated, (req, res, next) => {
                   res.render("profiles", {
                     user: doc,
                     liked: liked,
+                    userliked: username,
                     curr_userUsername: req.user.username,
                     curr_userId: req.user.id,
                     userNameTag: req.user.username
@@ -92,6 +111,7 @@ router.get("/profiles/:id", ensureAuthenticated, (req, res, next) => {
                 res.render("profiles", {
                   user: docs,
                   liked: liked,
+                  userliked: username,
                   curr_userUsername: req.user.username,
                   curr_userId: req.user.id,
                   userNameTag: req.user.username
@@ -108,6 +128,7 @@ router.get("/profiles/:id", ensureAuthenticated, (req, res, next) => {
     .catch((err) => {
       console.log(err);
     });
+  })
 });
 
 function matches(likedByUsers, likedUsers) {

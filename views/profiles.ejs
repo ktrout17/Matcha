@@ -50,6 +50,9 @@
                 <p class="font-weight-light"><span class="text-danger">Age</span> : <%= user.age%></p>
                 <p class="font-weight-light"><span class="text-danger">Bio</span> : <%= user.bio%></p>
                 <p class="font-weight-light"><span class="text-danger">Fame Rating</span> : <%= user.fame %></p>
+                <% if(userliked != "undefined") { %>
+                <p class="font-weight-light"><span class="text-danger"><%= userliked %></span> : Liked you</p>
+                <% } %>
                 <h5 class="text-danger text-lg-left mt-4 mb-0">Image Gallery</h5>
                 <hr class="mt-2 mb-5">
                 <div class="row text-center text-lg-left">
