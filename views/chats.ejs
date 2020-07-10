@@ -100,7 +100,8 @@
 </main>
 <script type ="text/javascript"> 
   var scroll = document.getElementById("scroll");
-  scroll.scrollIntoView();
+  if (scroll)
+      scroll.scrollIntoView();
 </script>
 <footer>
     <%- include('./default/footer'); -%>
