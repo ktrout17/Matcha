@@ -301,7 +301,6 @@ router.get(
         if (err){
           console.log('could not find user');
         }
-        console.log(doc);
       }).then((Viewusers) => {
         if (Viewusers)
         {
