@@ -105,7 +105,7 @@ $(function () {
 
   if (noti_btn) {
     socket.on("notification", (data) => {
-      noti_btn.classList.remove("btn-danger");
+      noti_btn.classList.replace("btn-danger", "btn-success");
       notifTag = document.createElement("p");
       if (data.match == 1) {
         notifTag.textContent = data.user + " " + data.msg + "!";
@@ -154,17 +154,24 @@ $(function () {
         p2.setAttribute("class", "small text-muted");
         p1.textContent = data.msg;
         p2.textContent = "from " + data.from + ": " + data.msgTime;
-
+        
         msgBox
-          .appendChild(div1)
-          .appendChild(div2)
-          .appendChild(div3)
-          .appendChild(p1);
+        .appendChild(div1)
+        .appendChild(div2)
+        .appendChild(div3)
+        .appendChild(p1);
         div2.appendChild(p2);
+        
+        scrollToBottom();
       });
     }
   }
 });
+
+function scrollToBottom() {
+  let recieved = document.querySelector("#msgBox").lastElementChild;
+  recieved.scrollIntoView();
+}
 
 function getDateTime() {
   var date = new Date();
