@@ -108,10 +108,10 @@
 		if (sort){
 			arrayOfUsers.sort((a, b) => {
 				if (age == 1) {
-					return (b.fame - a.fame);
+					return (a.age - b.age);
 				}
 				if (fame == 1) {
-					return (a.age - b.age);
+					return (b.fame - a.fame);
 				}
 				if (loc == 1) {
 					var first = distance(userLat, userLong, b.lat, b.long, "K");
