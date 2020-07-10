@@ -3,12 +3,12 @@
     <%- include('./default/profileHeader'); -%>
 </header>
 <main>
-    <div class="row py-5 px-4 container" style="margin-right: 0;">
-        <div class="mx-auto container">
-            <div class="bg-white shadow rounded overflow-hidden container wrapper text-center">
-                <div class="px-4 pt-0 pb-4 bg-danger container">
-                    <div class="media align-items-end profile-header container wrapper">
-                        <div class="profile mr-3 mt-3 wrapper"><img src="<%= pp %>" alt="..." width="250vw" id="pp" class="rounded mb-2 img-thumbnail wrapper"><a href="/users/editProfile" class="btn btn-dark btn-sm btn-block">Edit profile</a></div>
+    <div class="row py-5 px-4 container-fluid" style="margin-right: 0;">
+        <div class="mx-auto container container-fluid wrapper">
+            <div class="bg-white shadow rounded overflow-hidden container wrapper text-center mx-auto">
+                <div class="px-4 pt-0 pb-4 bg-danger container mx-auto">
+                    <div class="media align-items-end profile-header container wrapper mx-auto">
+                        <div class="profile mr-3 mt-3 wrapper"><img src="<%= pp %>" alt="..." width="100vw" id="pp" class="rounded mb-2 img-thumbnail wrapper"><a href="/users/editProfile" class="btn btn-dark btn-sm btn-block">Edit profile</a></div>
                         <div class="media-body text-white text-center mb-auto mt-3">
                             <h1 class="mt-0 mb-0"><% if (typeof name != 'undefined') {%> <%= name %> <% } %></h1><br>
                             <p class="small mb-4" id="location"> <i class="fa fa-map-marker mr-2"></i><%= city %> <%= province %> <%= country %></p>
@@ -43,8 +43,8 @@
                                 <img class="img-fluid img-thumbnail" src="<%= image1 %>" alt="" style="height: 100%;width: 150%">
                             </a>
                             <input type="file" id="image1" name="image1" style="display: none;">
-                            <input type="button" value="Change" onclick="document.getElementById('image1').click();" />
-                            <button type="submit">save</button>
+                            <input class="btn btn-secondary" type="button" value="Change" onclick="document.getElementById('image1').click();" />
+                            <button class="btn btn-danger" type="submit">Save</button>
                             </form>
                         </div>
                         <div class="col-lg-3 col-md-4 col-6">
@@ -53,8 +53,8 @@
                                 <img class="img-fluid img-thumbnail" src="<%= image2 %>" alt="" style="height: 100%; width: 150%">
                             </a>
                             <input type="file" id="image2" name="image2" style="display: none;">
-                            <input type="button" value="Change" onclick="document.getElementById('image2').click();" />
-                            <button type="submit">save</button>
+                            <input class="btn btn-secondary" type="button" value="Change" onclick="document.getElementById('image2').click();" />
+                            <button class="btn btn-danger" type="submit">Save</button>
                             </form>
                         </div>
                         <div class="col-lg-3 col-md-4 col-6">
@@ -63,8 +63,8 @@
                                 <img class="img-fluid img-thumbnail" src="<%= image3 %>" alt="" style="height: 100%; width: 150%">
                             </a>
                             <input type="file" id="image3" name="image3" style="display: none;">
-                            <input type="button" value="Change" onclick="document.getElementById('image3').click();" />
-                            <button type="submit">save</button>
+                            <input class="btn btn-secondary" type="button" value="Change" onclick="document.getElementById('image3').click();" />
+                            <button class="btn btn-danger" type="submit">Save</button>
                             </form>
                         </div>
                         <div class="col-lg-3 col-md-4 col-6">
@@ -73,8 +73,8 @@
                                 <img class="img-fluid img-thumbnail" src="<%= image4 %>" alt="" style="height: 100%; width: 150%">
                             </a>
                             <input type="file" id="image4" name="image4" style="display: none;">
-                            <input type="button" value="Change" onclick="document.getElementById('image4').click();" />
-                            <button type="submit">save</button>
+                            <input class="btn btn-secondary" type="button" value="Change" onclick="document.getElementById('image4').click();" />
+                            <button class="btn btn-danger" type="submit">Save</button>
                             </form>
                         </div>
                     </div>
