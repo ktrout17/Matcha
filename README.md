@@ -2,6 +2,6 @@
 
    Matcha is an online dating website created using Nodejs, Javascript and Bootstrap.
    
-   Contributors: amaquena, Deathshadowon
+   Contributors: Amaquena, Deathshadowown
    
    Final Mark 96/100.
